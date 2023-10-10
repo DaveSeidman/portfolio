@@ -8,14 +8,22 @@ import Carousel from 'ds-carousel';
 function App() {
   const carouselRef = useRef();
   const [carouselPercent, setCarouselPercent] = useState(0);
+  const [carouselSpeed, setCarouselSpeed] = useState(0);
+  const [currentProject, setCurrentProject] = useState(null);
+  let carousel;
 
+
+  const updateScene = (e) => {
+    setCarouselPercent(e.detail);
+    setCarouselSpeed(carousel.state.speed);
+  };
   useEffect(() => {
-    console.log(carouselRef);
-    const carousel = new Carousel(carouselRef.current);
-    carousel.el.addEventListener('update', (e) => {
-      // carouselPercent.current = e.detail;
-      setCarouselPercent(e.detail);
-    });
+    carousel = new Carousel(carouselRef.current, { debug: false, arrows: true, autoResize: true, full: true });
+    carousel.el.addEventListener('update', updateScene);
+
+    return () => {
+      carousel.el.removeEventListener('update', updateScene);
+    };
   }, []);
 
   return (
@@ -27,12 +35,19 @@ function App() {
             <div className="app">
               <Scene
                 carouselPercent={carouselPercent}
+                carouselSpeed={carouselSpeed}
               />
               <div className="carousel projects" ref={carouselRef}>
-                {projects.map(project => (
+                {projects.map((project, index) => (
                   // <Link key={project.slug} className="project" to={project.slug}>{project.name}</Link>
-                  <div className="projects-project" key={project.slug}>
-                    <div className="projects-project-header">
+                  <div className={`projects-project ${currentProject === index ? 'open' : ''}`} key={project.slug}>
+                    <div
+                      className="projects-project-header"
+                      onClick={() => {
+                        console.log(project, index);
+                        setCurrentProject(currentProject === index ? null : index);
+                      }}
+                    >
                       <span className="nobreak">
                         <h1 className="projects-project-header-name">{project.name}</h1>
                         <button type="button" className="projects-project-header-close">×</button>

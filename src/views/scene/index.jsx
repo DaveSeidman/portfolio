@@ -1,21 +1,20 @@
 import React, { useEffect, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
-import { OrbitControls, useGLTF, Environment, MeshTransmissionMaterial } from '@react-three/drei';
-import { BoxGeometry, DoubleSide, MeshNormalMaterial, MeshStandardMaterial } from 'three';
+import { useGLTF, Environment, MeshTransmissionMaterial } from '@react-three/drei';
 import SimplexNoise from 'simplex-noise';
 import { lerp } from 'three/src/math/MathUtils';
 import models from '../../assets/models/all.gltf';
-import envImage from '../../assets/images/small_empty_room_1_2k.hdr';
 import tvStudio from '../../assets/images/tv_studio_2k.hdr';
 import './index.scss';
 import { projects } from '../../projects.json';
 
 function Blob(props) {
-  const { carouselPercent } = props;
+  const { carouselPercent, carouselSpeed } = props;
   const start = useRef();
   const end = useRef();
   const percent = useRef();
+  const speedAccumulated = useRef(0);
   const gltf = useGLTF(models);
   const baseRef = useRef();
   const positionCount = 8820;
@@ -25,6 +24,7 @@ function Blob(props) {
   const targetPositions = useRef();
   const targetNormals = useRef();
   const noiseRef = useRef(new SimplexNoise());
+  const restingSpeed = 50;
 
   const base = gltf.scene.getObjectByName('_Default');
 
@@ -60,6 +60,11 @@ function Blob(props) {
     if (start.current < 0) start.current = projects.length - 1;
     if (end.current === projects.length) end.current = 0;
     percent.current = (carouselPercent * projects.length) - start.current;
+
+    speedAccumulated.current += carouselSpeed * 1.5;
+    if (Math.abs(speedAccumulated.current) > restingSpeed) speedAccumulated.current *= 0.975;
+    baseRef.current.rotation.y += speedAccumulated.current / 100000;
+    // console.log(carouselSpeed);
 
     if (baseRef.current && targetPositions.current) {
       for (let i = 0; i < positionCount; i += 3) {
@@ -124,25 +129,24 @@ function Blob(props) {
 }
 
 function Scene(props) {
-  const { carouselPercent } = props;
+  const { carouselPercent, carouselSpeed } = props;
   return (
     <div className="scene">
       <Canvas
         dpr={[0.5, 1.5]}
-        camera={{ position: [0, 0, 5], fov: 25 }}
-        style={{ backgroundColor: 'black' }}
+      camera={{ position: [0, 0, 5], fov: 35 }}
+      style={{ backgroundColor: 'black' }}
       >
-        <OrbitControls />
-        <Blob
-          carouselPercent={carouselPercent}
-        />
-        <Environment
-          files={tvStudio}
-          // background
-          blur={0.2}
-        />
-      </Canvas>
-    </div>
+      <Blob
+        carouselPercent={carouselPercent}
+        carouselSpeed={carouselSpeed}
+      />
+      <Environment
+        files={tvStudio}
+        blur={0.2}
+      />
+    </Canvas>
+    </div >
   );
 }
 

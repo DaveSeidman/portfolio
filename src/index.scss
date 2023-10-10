@@ -14,8 +14,7 @@ html, body {
 
 .carousel {
   position: absolute;
-  display: flex;
-  flex-direction: column;
+  inset: 0;
   // pointer-events: none;
 }
 
@@ -142,7 +141,7 @@ html, body {
       margin-left: -2rem;
       overflow-x: hidden;
       overflow-y: auto;
-      transform: skew(-14deg);
+      // transform: skew(-14deg);
       transition:  height 0.75s cubic-bezier(0.83, 0, 0.17, 1);
 
       & > p, & > .container {
@@ -189,7 +188,7 @@ html, body {
         max-height: calc(100vh - 10rem);
         margin-bottom: -6px;
         outline: none;
-        transform: skew(14deg) translateX(-50%);
+        // transform: skew(14deg) translateX(-50%);
       }
     }
 
