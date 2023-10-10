@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Scene from './views/scene';
 import { projects } from './projects.json';
@@ -7,10 +7,15 @@ import Carousel from 'ds-carousel';
 
 function App() {
   const carouselRef = useRef();
+  const [carouselPercent, setCarouselPercent] = useState(0);
 
   useEffect(() => {
     console.log(carouselRef);
     const carousel = new Carousel(carouselRef.current);
+    carousel.el.addEventListener('update', (e) => {
+      // carouselPercent.current = e.detail;
+      setCarouselPercent(e.detail);
+    });
   }, []);
 
   return (
@@ -20,11 +25,13 @@ function App() {
           path="/*"
           element={(
             <div className="app">
-              <Scene />
+              <Scene
+                carouselPercent={carouselPercent}
+              />
               <div className="carousel projects" ref={carouselRef}>
                 {projects.map(project => (
                   // <Link key={project.slug} className="project" to={project.slug}>{project.name}</Link>
-                  <div className="projects-project">
+                  <div className="projects-project" key={project.slug}>
                     <div className="projects-project-header">
                       <span className="nobreak">
                         <h1 className="projects-project-header-name">{project.name}</h1>

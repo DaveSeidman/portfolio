@@ -4,14 +4,18 @@ import { useLocation } from 'react-router-dom';
 import { OrbitControls, useGLTF, Environment, MeshTransmissionMaterial } from '@react-three/drei';
 import { BoxGeometry, DoubleSide, MeshNormalMaterial, MeshStandardMaterial } from 'three';
 import SimplexNoise from 'simplex-noise';
+import { lerp } from 'three/src/math/MathUtils';
 import models from '../../assets/models/all.gltf';
 import envImage from '../../assets/images/small_empty_room_1_2k.hdr';
 import tvStudio from '../../assets/images/tv_studio_2k.hdr';
-
 import './index.scss';
 import { projects } from '../../projects.json';
 
 function Blob(props) {
+  const { carouselPercent } = props;
+  const start = useRef();
+  const end = useRef();
+  const percent = useRef();
   const gltf = useGLTF(models);
   const baseRef = useRef();
   const positionCount = 8820;
@@ -51,11 +55,34 @@ function Blob(props) {
 
 
   useFrame((state, delta) => {
+    start.current = Math.floor(carouselPercent * projects.length);
+    end.current = Math.ceil(carouselPercent * projects.length);
+    if (start.current < 0) start.current = projects.length - 1;
+    if (end.current === projects.length) end.current = 0;
+    percent.current = (carouselPercent * projects.length) - start.current;
+
     if (baseRef.current && targetPositions.current) {
       for (let i = 0; i < positionCount; i += 3) {
-        baseRef.current.geometry.attributes.position.array[i + 0] += ((targetPositions.current[i + 0] || 0) - baseRef.current.geometry.attributes.position.array[i + 0]) / 20;
-        baseRef.current.geometry.attributes.position.array[i + 1] += ((targetPositions.current[i + 1] || 0) - baseRef.current.geometry.attributes.position.array[i + 1]) / 20;
-        baseRef.current.geometry.attributes.position.array[i + 2] += ((targetPositions.current[i + 2] || 0) - baseRef.current.geometry.attributes.position.array[i + 2]) / 20;
+        const x1 = projects[start.current].positions[i + 0];
+        const y1 = projects[start.current].positions[i + 1];
+        const z1 = projects[start.current].positions[i + 2];
+        const x2 = projects[end.current].positions[i + 0];
+        const y2 = projects[end.current].positions[i + 1];
+        const z2 = projects[end.current].positions[i + 2];
+
+        const x = lerp(x1, x2, percent.current);
+        const y = lerp(y1, y2, percent.current);
+        const z = lerp(z1, z2, percent.current);
+        // position.array[i + 0] = x;
+        // position.array[i + 1] = y;
+        // position.array[i + 2] = z;
+
+        // baseRef.current.geometry.attributes.position.array[i + 0] += ((targetPositions.current[i + 0] || 0) - baseRef.current.geometry.attributes.position.array[i + 0]) / 20;
+        // baseRef.current.geometry.attributes.position.array[i + 1] += ((targetPositions.current[i + 1] || 0) - baseRef.current.geometry.attributes.position.array[i + 1]) / 20;
+        // baseRef.current.geometry.attributes.position.array[i + 2] += ((targetPositions.current[i + 2] || 0) - baseRef.current.geometry.attributes.position.array[i + 2]) / 20;
+        baseRef.current.geometry.attributes.position.array[i + 0] = x;
+        baseRef.current.geometry.attributes.position.array[i + 1] = y;
+        baseRef.current.geometry.attributes.position.array[i + 2] = z;
 
         // const noise = noiseRef.current.noise4D(originalPosition.current[i + 0], originalPosition.current[i + 1], originalPosition.current[i + 2], delta);
 
@@ -96,8 +123,8 @@ function Blob(props) {
   );
 }
 
-function Scene() {
-  console.log('scene');
+function Scene(props) {
+  const { carouselPercent } = props;
   return (
     <div className="scene">
       <Canvas
@@ -106,7 +133,9 @@ function Scene() {
         style={{ backgroundColor: 'black' }}
       >
         <OrbitControls />
-        <Blob />
+        <Blob
+          carouselPercent={carouselPercent}
+        />
         <Environment
           files={tvStudio}
           // background
