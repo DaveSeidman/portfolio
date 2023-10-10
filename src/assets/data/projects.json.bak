@@ -1,0 +1,11 @@
+{
+  "url": "rockem-sockem",
+  "name": "Rock'em Sock'em Robots",
+  "headline": "Multiplayer AR Game",
+  "tags": ["JavaScript", "ARjs", "ThreeJS"],
+  "file": "brain", "video": "motiongraphics.mp4",
+  "description": "Using sockets.io, ARjs and Threejs I created a networked multiplayer AR game",
+  "gitlab": "http://DaveSeidman.gitlab.com/rockem-sockem",
+  "backColor": { "r": 230, "g": 116, "b": 110 },
+  "foreColor": { "r": 255, "g": 162, "b": 134 }
+},
