@@ -1,10 +1,18 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Scene from './views/scene';
 import { projects } from './projects.json';
 import './index.scss';
+import Carousel from 'ds-carousel';
 
 function App() {
+  const carouselRef = useRef();
+
+  useEffect(() => {
+    console.log(carouselRef);
+    const carousel = new Carousel(carouselRef.current);
+  }, []);
+
   return (
     <Router>
       <Routes>
@@ -13,7 +21,7 @@ function App() {
           element={(
             <div className="app">
               <Scene />
-              <div className="carousel projects">
+              <div className="carousel projects" ref={carouselRef}>
                 {projects.map(project => (
                   // <Link key={project.slug} className="project" to={project.slug}>{project.name}</Link>
                   <div className="projects-project">
