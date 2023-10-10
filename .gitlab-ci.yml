@@ -5,9 +5,7 @@ before_script:
   - npm ci
 pages:
   script:
-    - npm run build
-    - cp -a dist/. public/
-    - cp public/index.html public/404.html
+    - npm build
   artifacts:
     paths:
       # The folder that contains the files to be exposed at the Page URL
