@@ -13,9 +13,18 @@ function App() {
           element={(
             <div className="app">
               <Scene />
-              <div className="carousel">
+              <div className="carousel projects">
                 {projects.map(project => (
-                  <Link key={project.slug} className="project" to={project.slug}>{project.name}</Link>
+                  // <Link key={project.slug} className="project" to={project.slug}>{project.name}</Link>
+                  <div className="projects-project">
+                    <div className="projects-project-header">
+                      <span className="nobreak">
+                        <h1 className="projects-project-header-name">{project.name}</h1>
+                        <button type="button" className="projects-project-header-close">×</button>
+                      </span>
+                    </div>
+                    <div className="projects-project-body" dangerouslySetInnerHTML={{ __html: project.desc }} />
+                  </div>
                 ))}
               </div>
             </div>
@@ -27,6 +36,7 @@ function App() {
 }
 
 export default App;
+
 
 // class Portfolio {
 // constructor() {
