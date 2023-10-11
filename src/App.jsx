@@ -1,30 +1,18 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import {
+  BrowserRouter as Router, Routes, Route, Link,
+} from 'react-router-dom';
 import Scene from './views/scene';
+import Carousel from './views/carousel';
 import { projects } from './projects.json';
 import './index.scss';
-import Carousel from 'ds-carousel';
+// import Carousel from 'ds-carousel';
 
 function App() {
-  const carouselRef = useRef();
-  const [carouselPercent, setCarouselPercent] = useState(0);
-  const [carouselSpeed, setCarouselSpeed] = useState(0);
-  const [currentProject, setCurrentProject] = useState(null);
-  let carousel;
+  const [scrollPercent, setScrollPercent] = useState(0);
+  const [scrollSpeed, setScrollSpeed] = useState(0);
+  // const [currentProject, setCurrentProject] = useState(null);
 
-
-  const updateScene = (e) => {
-    setCarouselPercent(e.detail);
-    setCarouselSpeed(carousel.state.speed);
-  };
-  useEffect(() => {
-    carousel = new Carousel(carouselRef.current, { debug: false, arrows: true, autoResize: true, full: true });
-    carousel.el.addEventListener('update', updateScene);
-
-    return () => {
-      carousel.el.removeEventListener('update', updateScene);
-    };
-  }, []);
 
   return (
     <Router>
@@ -34,29 +22,15 @@ function App() {
           element={(
             <div className="app">
               <Scene
-                carouselPercent={carouselPercent}
-                carouselSpeed={carouselSpeed}
+                projects={projects}
+                scrollPercent={scrollPercent}
+                scrollSpeed={scrollSpeed}
               />
-              <div className="carousel projects" ref={carouselRef}>
-                {projects.map((project, index) => (
-                  // <Link key={project.slug} className="project" to={project.slug}>{project.name}</Link>
-                  <div className={`projects-project ${currentProject === index ? 'open' : ''}`} key={project.slug}>
-                    <div
-                      className="projects-project-header"
-                      onClick={() => {
-                        console.log(project, index);
-                        setCurrentProject(currentProject === index ? null : index);
-                      }}
-                    >
-                      <span className="nobreak">
-                        <h1 className="projects-project-header-name">{project.name}</h1>
-                        <button type="button" className="projects-project-header-close">×</button>
-                      </span>
-                    </div>
-                    <div className="projects-project-body" dangerouslySetInnerHTML={{ __html: project.desc }} />
-                  </div>
-                ))}
-              </div>
+              <Carousel
+                projects={projects}
+                setScrollPercent={setScrollPercent}
+                setScrollSpeed={setScrollSpeed}
+              />
             </div>
           )}
         />
