@@ -47,8 +47,9 @@ function Carousel(props) {
     if (pointerDown.current) {
       speed.current = e.clientX - pointer.current.x;
       setScrollSpeed(speed.current);
-      pointer.current.x = e.clientX;
     }
+    pointer.current.y = e.clientY;
+    pointer.current.x = e.clientX;
   };
 
   const animate = () => {
@@ -81,16 +82,9 @@ function Carousel(props) {
   };
 
   useEffect(() => {
-    addEventListener('wheel', wheel);
-    carouselRef.current.addEventListener('pointerdown', handlePointerDown);
-    carouselRef.current.addEventListener('pointerup', handlePointerUp);
-    carouselRef.current.addEventListener('pointermove', handlePointerMove);
-
     animate();
 
-    // if (carouselRef.current) {
     slides.current = Array.from(slidesRef.current.children);
-
     width = carouselRef.current.getBoundingClientRect().width;
 
     slides.current.forEach((slide, index) => {
@@ -98,7 +92,11 @@ function Carousel(props) {
       slide.offset = width * index;
       slide.style.transform = `translateX(${slide.offset}px)`;
     });
-    // }
+
+    addEventListener('wheel', wheel);
+    carouselRef.current.addEventListener('pointerdown', handlePointerDown);
+    carouselRef.current.addEventListener('pointerup', handlePointerUp);
+    carouselRef.current.addEventListener('pointermove', handlePointerMove);
 
     return () => {
       removeEventListener('wheel', wheel);

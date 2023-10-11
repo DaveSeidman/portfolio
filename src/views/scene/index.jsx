@@ -55,6 +55,7 @@ function Blob(props) {
     targetNormals.current = base.geometry.attributes.normal.array;
   }
 
+
   useEffect(() => {
     const slug = location.pathname.slice(1);
     const project = projects.find(p => p.slug === slug) || projects[0];
@@ -72,11 +73,11 @@ function Blob(props) {
     if (start.current < 0) start.current = projects.length - 1;
     if (end.current === projects.length) end.current = 0;
     percent.current = (scrollPercent * projects.length) - start.current;
-    // console.log(projects[start.current].name, projects[end.current].name, percent.current);
+    // console.log(start.current, end.current, percent.current);
 
     speedAccumulated.current += scrollSpeed * 1.5;
     if (Math.abs(speedAccumulated.current) > restingSpeed) speedAccumulated.current *= 0.975;
-    baseRef.current.rotation.y += speedAccumulated.current / 100000;
+    baseRef.current.rotation.y += speedAccumulated.current / 10000;
 
     if (baseRef.current && targetPositions.current) {
       const normal = baseRef.current.geometry.attributes.normal.clone().array;
@@ -113,7 +114,6 @@ function Blob(props) {
         transmission={0.95}
         roughness={0.3}
         thickness={10}
-        transparent
         ior={1.5}
         reflectivity={0.1}
         color={0xCCCCCC}
@@ -131,6 +131,8 @@ function Blob(props) {
 
 function Scene(props) {
   const { projects, scrollPercent, scrollSpeed } = props;
+
+
   return (
     <div className="scene">
       <Canvas

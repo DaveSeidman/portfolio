@@ -101,6 +101,51 @@
       ],
       "tags" : [ "PC", "LIV", "FED", "BED" ],
       "theme": { "color": "0x666666", "background": "0x411636", "roughness": 0.5, "metalness": 0.5, "envIntensity": 1.0 }
+    },
+    {
+      "name": "HoloChat",
+      "title": "Realtime Holographic Chat Application",
+      "slug": "HoloChat",
+      "shape": "Head",
+      "desc": "<p>Holochat is a browser-based holographic chat application. It extrudes user's face in 3D allowing them to pan, zoom and rotate around their features. Users can also drag and drop the window into a <a href='https://lookingglassfactory.com/product/overview' target='_blank'>Looking Glass</a> to view themselves as a live hologram. Users can also connect to others for two-way holographic calls:</p><video src='src/assets/videos/holochat.mp4' poster='src/assets/images/holochat1.png' controls='true' playsinline='true'></video><p>I used <a href='https://google.github.io/mediapipe/' target='_blank'>MediaPipe's</a> facial tracking and body segmentation to create an approximate mesh with the webcam image. WebRTC allows the video and mesh data to be streamed to the other user's screen.</p><p>Check it out for yourself: <a href='https://holochat.app' target='_blank'>holochat.app</a></p>'",
+      "tags" : [ "HOL", "FED", "BED", "EXP" ],
+      "theme": { "color": "0xfd5099", "background": "0x997799", "roughness": 0.5, "metalness": 0.5, "envIntensity": 1.0 }
+    },
+    {
+      "name": "Living Distance",
+      "title": "Zero-G Robot Guidance System",
+      "slug": "LivingDistance",
+      "shape": "Periscope",
+      "tags": [ "CV", "PC" ],
+      "desc": "<p>The inspirational <a href='https://www.xxxxxxxxxinliu.com/' target='_blank'>Xin Liu</a> partnered up with the <a href='https://newlab.com/' target='_blank'>New Lab</a> to design and build a small robot that was sent into space aboard one of the first Blue Origin rockets. The robot was mounted to the floor of a small locker during liftoff. Once in space, the rocket's main computer sent a signal to the locker triggering the mounting clips to release. The robot was then free to float around the locker.</p><img src='src/assets/images/living-distance.gif'><p>Xin's team was looking for a software engineer to design a guidance system to help the bot determine its relative position and orientation. For propulsion, the bot was designed to have several high-speed gyroscopic motors that would turn relatively heavy discs, creating torque in the weightless conditions of space.</p><video src='src/assets/videos/living-distance.mp4' poster='src/assets/images/BackOnEarth.jpg' controls='true' playsinline='true'></video><p>Because the locker was outfitted with bright LEDs, we decided to create a visual system. I started with a virtual camera inside 3D software and placed it inside a cube with the AR tracking images as textures on its inner panels. I used OpenCV's homography library to calculate the position based on Aruco markers attached to the inside of the locker. Read more <a href='https://www.xxxxxxxxxinliu.com/#/living-distance/' target='_blank'>here</a></p><img src='src/assets/images/living-distance-1.png' />",
+      "theme": { "color": "0x2e6def", "background": "0x09030d", "roughness": 0.5, "metalness": 0.5, "envIntensity": 1.0 }
+    },
+    {
+      "name": "Pride Parade",
+      "title": "Interactive Face Tracking App",
+      "tags": ["CV", "FED"],
+      "slug": "Pride-Parade",
+      "shape": "Rainbow",
+      "desc": "<p>To kick off Pride Month, <a href='https://b-reel.com/' target='_blank'>B-Reel</a> wanted to do something big, but personal at the same time. “To create a personal, empathetic experience while still showcasing the users' place in a massive community, we decided to create a 'parade' of faces. We built a mobile / desktop website that streamed the user's face into a 3D float that they could customize, record, and then add to the larger \"virtual parade.\"</p><video src='src/assets/videos/pride-parade.mp4' poster='src/assets/images/pride-parade1.png' controls='true' playsinline='true'></video><p>We used Beyond Reality's latest JavaScript framework to detect a user's face in their webcam or mobile camera, then place it on a Pride float.  We did the compositing by moving an invisible 3D head in  sync with the user's head in real time. Everything from eyebrow raises to mouth positions were tracked, even unlocking easter eggs with secret facial gestures. Users could record their float and add it to the 'parade' of other floats.</p><p>The site received great traffic and averge engagement times of over 5 minutes. We found that users were making lots of videos and sharing them on social media which helped further promote the experience.</p>",
+      "theme": { "color": "0xa11d23", "background": "0xDDDDDD", "roughness": 0.5, "metalness": 0.5, "envIntensity": 1.0 }
+    },
+    {
+      "name": "Stranger Tees",
+      "title": "Interactive Tee Shirt",
+      "slug": "StrangerTees",
+      "shape": "TeeShirt",
+      "desc": "<p>A scene from the cult classic show <span class='italic'>Stranger Things</span> featured a wall of Christmas lights that lit up in succession to spell out messages from another dimension. With Halloween approaching, I got to work on a quick build-out to replicate the iconic scene as an interactive tee shirt.</p><img src='src/assets/images/stranger-tee.gif' /><p>The Raspberry Pi Zero has just enough pins that can be set to output for each letter of the alphabet, so instead of charlieplexing or using an LED driver, I connected each LED directly to the board using a thin-guage wire wrap.</p><img src='src/assets/images/stranger-tee1.jpg' /><p>Once the hardware was built and tested, I wrote a small server that listened for messages over WiFi. I finished it off with a front-end that allowed me to either tap directly on the screen to light up the LEDs or type out messages and play the sequence on the shirt. A small backup battery kept the system running long enough to fill a pillow case full of candy.</p>",
+      "tags" : [ "EXP", "PC", "BED" ],
+      "theme": { "color": "0xbbbbbb", "background": "0x212428", "roughness": 0.99, "metalness": 0.5, "envIntensity": 1.0 }
+    },
+    {
+      "name": "Fakebook",
+      "title": "Simulated Chat Application",
+      "slug": "Fakebook",
+      "shape": "Laptop",
+      "desc": "<p>Movies and TV shows often feature actors sending and receiving text messages, and a common visual technique is to display the text bubbles in the foreground similar to closed captions. For Patton Oswalt's latest film <span class='italic'>I Love My Dad</span>, director James Morosini wanted to focus the camera on the phone and laptop screens instead. This presents a few challenges: 1) The actors had to compose the messages without making any typos, 2) you need someone on the other end to type out and reply to those messages at the right time, and 3) shooting screens in general is difficult. The lighting conditions and refresh rates of the cameras and screens need to be synced up. The last problem was handled by skilled DPs, but for the first two I created a single page app and database we affectionately called 'Fakebook' internally.</p><img src='src/assets/images/fakebook1.png' /><p>The app has a simple front-end to input conversations. It allows for things like message history, message delays, and typing durations in order to simulate someone responding in real time. It didn't matter where on the keyboard the actor pressed, the correct message would appear every time – this freed the actors up to focus on their performances and meant less work for the post production team as well.</p><video src='src/assets/videos/fakebook.mp4' poster='src/assets/images/fakebook-poster.png' controls='true' playsinline='true'></video><p“The finished product is highly reusable, ready for a role in future tv and film productions.</p>",
+      "theme": { "color": "0x23b888", "background": "0xe229fcc" , "roughness": 0.5, "metalness": 0.5, "envIntensity": 1.0},
+      "tags" : [ "APP" ]
     }
   ]
 }
