@@ -135,6 +135,9 @@ function Carousel(props) {
                 {project.name}
               </h1>
             </div>
+            <div className="carousel-slides-slide-body">
+              {project.desc.map(p => (<p>{p}</p>))}
+            </div>
 
           </div>
         ))
