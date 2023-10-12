@@ -14,39 +14,38 @@ function Carousel(props) {
 
   const [current, setCurrent] = useState(0); // denotes slide closes to center. must always be something between 0 and projects.length
   const [selected, setSelected] = useState(null); // denotes selected slide / project. can be 0 - slides.length but can also be null if no project selected
-  const [locked, setLocked] = useState(false);
-  const [wheeling, setWheeling] = useState(false);
+  // const [locked, setLocked] = useState(false);
+  // const [wheeling, setWheeling] = useState(false);
   const slides = useRef([]);
   const forceUpdate = useForceUpdate();
   const slidesRef = useRef();
   const carouselRef = useRef();
-  const pointerDown = useRef(false);
   const pointer = useRef({ x: 0, y: 0 });
   let width;
-  // let slides;
 
   const position = useRef(0);
   const speed = useRef(0);
   let animation;
 
   const wheel = (e) => {
-    if (locked) return;
+    if (selected !== null) return;
     speed.current = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? -e.deltaY / 3 : -e.deltaX;
     setScrollSpeed(speed.current);
   };
 
   const handlePointerDown = (e) => {
-    pointerDown.current = true;
+    if (selected !== null) return;
+    pointer.current.down = true;
     pointer.current.x = e.clientX;
     pointer.current.y = e.clientY;
   };
 
   const handlePointerUp = (e) => {
-    pointerDown.current = false;
+    pointer.current.down = false;
   };
 
   const handlePointerMove = (e) => {
-    if (pointerDown.current) {
+    if (pointer.current.down) {
       speed.current = e.clientX - pointer.current.x;
       setScrollSpeed(speed.current);
     }
@@ -73,11 +72,8 @@ function Carousel(props) {
 
       let nextScrollPercent = (-position.current % (width * slides.current.length)) / (width * slides.current.length);
       if (nextScrollPercent < 0) nextScrollPercent = 1 + nextScrollPercent;
-      // console.log(-position.current, width * slides.current.length);
       setScrollPercent(nextScrollPercent);
       setCurrent(Math.round(nextScrollPercent * slides.current.length));
-
-      // const nextScrollPercent = position.current / (width * slides)
 
       forceUpdate();
     }
@@ -117,7 +113,7 @@ function Carousel(props) {
       }
       cancelAnimationFrame(animation);
     };
-  }, []);
+  }, [selected]);
 
   return (
     <div className="carousel" ref={carouselRef}>
@@ -142,7 +138,7 @@ function Carousel(props) {
               </h1>
             </div>
             <div className="carousel-slides-slide-body">
-              {project.desc.map(p => (<p>{p}</p>))}
+              {project.desc.map((p, index) => (<p key={index + p.substring(0, 10)}>{p}</p>))}
             </div>
 
           </div>
