@@ -84,4 +84,11 @@
       }
     }
   }
+
+  &-debug {
+    position: absolute;
+    a {
+      display: block;
+    }
+  }
 }

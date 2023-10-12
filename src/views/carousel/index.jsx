@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+// import { processText } from '../../utils';
 import './index.scss';
 
 // TODO: move to utils
@@ -6,6 +7,32 @@ const useForceUpdate = () => {
   const [, forceUpdate] = useState();
   return () => forceUpdate(prevState => !prevState);
 };
+
+function Body(props) {
+  // contentTypes = {
+  //   'jpg': { path: 'assets/images/' },
+  //   'png' : {path: 'assets/images/'},
+  //   'gif': { path: 'assets/images/'},
+  //   'mp4': { path: 'assets/videos'}
+  // };
+
+
+  const { text } = props;
+  return (
+    <div className="carousel-slides-slide-body">
+      {
+        text.map((item, index) => {
+          const regex = /!\[([^\]]*)\]\(([^)]*)\)/;
+          const match = item.match(regex);
+          const string = match ? `alt=${match[1]}: ${match[2]}` : item;
+
+
+          return (<p key={index}>{string}</p>);
+        })
+      }
+    </div>
+  );
+}
 
 function Carousel(props) {
   const {
@@ -134,15 +161,19 @@ function Carousel(props) {
     // keeping in mind the shortest method
     const { length } = slides.current;
     const leftStraight = { direction: 1, amount: current - selected };
-    const leftWrap = { direction: 1, amount: current - selected + length };
+    const leftWrapped = { direction: 1, amount: current - selected + length };
     const rightStraight = { direction: -1, amount: selected - current };
-    const rightWrap = { direction: -1, amount: selected - current + length };
-    const values = [leftStraight, rightStraight, leftWrap, rightWrap];
-    values.sort((a, b) => (a.amount > b.amount ? 1 : -1));
-    const shortestMove = values.filter(item => item.amount >= 0)[0];
+    const rightWrapped = { direction: -1, amount: selected - current + length };
+    console.log(`to go from slide ${current} to slide ${selected} it would take`);
+    console.log({
+      leftStraight, leftWrapped, rightStraight, rightWrapped,
+    });
+    const moves = [leftStraight, rightStraight, leftWrapped, rightWrapped];
+    moves.sort((a, b) => (a.amount > b.amount ? 1 : -1));
+    const shortestMove = moves.filter(item => item.amount >= 0)[0];
     console.log(shortestMove);
     // speed.current = (shortestMove.amount * shortestMove.direction) * 40;
-    // speed.current = (((width / slides.current.length) / 3.09) * 1.95) * shortestMove.amount; // TODO <- Figure out the reason for these numbers
+    speed.current = (((width / slides.current.length) / 3.09) * 1.95) * (shortestMove.direction * shortestMove.amount); // TODO <- Figure out the reason for these numbers
     // let velocityTemp = speed.current;
     // let finalPosition = position.current;
 
@@ -162,7 +193,9 @@ function Carousel(props) {
         style={{ transform: `translateX(${position.current}px)` }}
         ref={slidesRef}
       >
-        {projects.map((project, index) => (
+        {projects.map((project, index) =>
+        // const body = processText(project.body);
+        (
           <div
             key={project.slug}
             className={`carousel-slides-slide ${index === selected ? 'open' : ''}`}
@@ -177,9 +210,12 @@ function Carousel(props) {
                 {project.name}
               </h1>
             </div>
-            <div className="carousel-slides-slide-body">
-              {project.desc.map((p, index) => (<p key={index + p.substring(0, 10)}>{p}</p>))}
-            </div>
+            <Body
+              text={project.desc}
+            />
+            {/* <div className="carousel-slides-slide-body">
+                {body}
+              </div> */}
 
           </div>
         ))
@@ -192,6 +228,11 @@ function Carousel(props) {
           if (i > slides.current.length) i -= slides.current.length;
           return (<span key={project.slug} className={`carousel-dots-dot ${i === current ? 'active' : ''}`} />);
         })}
+      </div>
+      <div className="carousel-debug">
+        {
+          projects.map((project, index) => (<a key={project.slug} onClick={() => { setSelected(index); }}>{project.name}</a>))
+        }
       </div>
     </div>
   );
