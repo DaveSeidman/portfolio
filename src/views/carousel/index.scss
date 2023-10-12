@@ -35,4 +35,27 @@
       outline: 1px solid pink;
     }
   }
+
+  &-dots {
+    position: absolute;
+    bottom: 1rem;
+    left: 0;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+
+    &-dot {
+      width: .625rem;
+      height: .625rem;
+      border-radius: 50%;
+      margin: 0.1875rem;
+      background-color: $white;
+      opacity: .25;
+      transition: opacity .5s;
+
+      &.active {
+        opacity: 1;
+      }
+    }
+  }
 }

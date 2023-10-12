@@ -11,8 +11,6 @@ import './index.scss';
 function App() {
   const [scrollPercent, setScrollPercent] = useState(0);
   const [scrollSpeed, setScrollSpeed] = useState(0);
-  // const [currentProject, setCurrentProject] = useState(null);
-
 
   return (
     <Router>

@@ -32,29 +32,30 @@ function Blob(props) {
   const elapsedTime = useRef(0);
   const restingSpeed = 50;
 
-  if (!gltf) gltf = useGLTF(models);
-  // console.log(gltf);
-  const base = gltf.scene.getObjectByName('Sphere');
+  if (!gltf) {
+    gltf = useGLTF(models);
+    // console.log(gltf);
+    const base = gltf.scene.getObjectByName('Sphere');
 
-  if (base) {
-    // originalPosition.current = base.geometry.attributes.position.clone().array;
-  }
-  projects.forEach((project) => {
-    const shape = gltf.scene.getObjectByName(project.shape);
-    // console.log(shape);
-    if (shape) {
-      shape.geometry.computeVertexNormals();
-      project.positions = shape.geometry.attributes.position.array;
-      project.normals = shape.geometry.attributes.normal.array;
+    if (base) {
+      originalPosition.current = base.geometry.attributes.position.clone().array;
     }
-  });
+    projects.forEach((project) => {
+      const shape = gltf.scene.getObjectByName(project.shape);
+      // console.log(shape);
+      if (shape && project.name !== 'Sphere') {
+        shape.geometry.computeVertexNormals();
+        project.positions = shape.geometry.attributes.position.array;
+        project.normals = shape.geometry.attributes.normal.array;
+      }
+    });
 
-  if (base) {
-    originalPosition.current = base.geometry.attributes.position.clone().array;
-    targetPositions.current = base.geometry.attributes.position.array;
-    targetNormals.current = base.geometry.attributes.normal.array;
+    if (base) {
+      originalPosition.current = base.geometry.attributes.position.clone().array;
+      targetPositions.current = base.geometry.attributes.position.array;
+      targetNormals.current = base.geometry.attributes.normal.array;
+    }
   }
-
 
   useEffect(() => {
     const slug = location.pathname.slice(1);
@@ -67,6 +68,7 @@ function Blob(props) {
 
   useFrame((state, delta) => {
     // console.log(scrollSpeed);
+
     elapsedTime.current += delta;
     start.current = Math.floor(scrollPercent * projects.length);
     end.current = Math.ceil(scrollPercent * projects.length);

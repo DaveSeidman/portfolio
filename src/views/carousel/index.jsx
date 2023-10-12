@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './index.scss';
-// import 'inobounce';
 
 const useForceUpdate = () => {
   const [, forceUpdate] = useState();
@@ -12,6 +11,9 @@ function Carousel(props) {
     projects, setScrollPercent, setScrollSpeed,
     resize, direction, snap,
   } = props;
+
+  const [current, setCurrent] = useState(0); // denotes slide closes to center. must always be something between 0 and projects.length
+  const [selected, setSelected] = useState(null); // denotes selected slide / project. can be 0 - slides.length but can also be null if no project selected
   const [locked, setLocked] = useState(false);
   const [wheeling, setWheeling] = useState(false);
   const slides = useRef([]);
@@ -73,6 +75,7 @@ function Carousel(props) {
       if (nextScrollPercent < 0) nextScrollPercent = 1 + nextScrollPercent;
       // console.log(-position.current, width * slides.current.length);
       setScrollPercent(nextScrollPercent);
+      setCurrent(Math.round(nextScrollPercent * slides.current.length));
 
       // const nextScrollPercent = position.current / (width * slides)
 
@@ -80,6 +83,7 @@ function Carousel(props) {
     }
     animation = requestAnimationFrame(animate);
   };
+
 
   useEffect(() => {
     animate();
@@ -100,14 +104,14 @@ function Carousel(props) {
 
     return () => {
       removeEventListener('wheel', wheel);
-      carouselRef.current.removeEventListener('pointerdown', handlePointerDown);
-      carouselRef.current.removeEventListener('pointerup', handlePointerUp);
-      carouselRef.current.removeEventListener('pointermove', handlePointerMove);
-
+      if (carouselRef.current) {
+        carouselRef.current.removeEventListener('pointerdown', handlePointerDown);
+        carouselRef.current.removeEventListener('pointerup', handlePointerUp);
+        carouselRef.current.removeEventListener('pointermove', handlePointerMove);
+      }
       cancelAnimationFrame(animation);
     };
   }, []);
-
 
   return (
     <div className="carousel" ref={carouselRef}>
@@ -116,14 +120,18 @@ function Carousel(props) {
         style={{ transform: `translateX(${position.current}px)` }}
         ref={slidesRef}
       >
-        {projects.map(project => (
+        {projects.map((project, index) => (
           <div
             key={project.slug}
-            className="carousel-slides-slide
-          "
+            className={`carousel-slides-slide ${index === selected ? 'open' : ''}`}
           >
-            <div className="carousel-slides-slide-title">
-              <h1>
+            <div className="carousel-slides-slide-header">
+              <h1
+                onClick={() => {
+                  if (index === selected) setSelected(null);
+                  else setSelected(index);
+                }}
+              >
                 {project.name}
               </h1>
             </div>
@@ -131,6 +139,14 @@ function Carousel(props) {
           </div>
         ))
         }
+      </div>
+      <div className="carousel-dots">
+        {projects.map((project, index) => {
+          // offset so that the middle dot is the 0th
+          let i = index + slides.current.length / 2;
+          if (i > slides.current.length) i -= slides.current.length;
+          return (<span key={project.slug} className={`carousel-dots-dot ${i === current ? 'active' : ''}`} />);
+        })}
       </div>
     </div>
   );
