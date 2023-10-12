@@ -9,7 +9,7 @@ const useForceUpdate = () => {
 function Carousel(props) {
   const {
     projects, setScrollPercent, setScrollSpeed,
-    resize, direction, snap,
+    autoResize, direction, snap,
   } = props;
 
   const [current, setCurrent] = useState(0); // denotes slide closes to center. must always be something between 0 and projects.length
@@ -84,11 +84,7 @@ function Carousel(props) {
     animation = requestAnimationFrame(animate);
   };
 
-
-  useEffect(() => {
-    animate();
-
-    slides.current = Array.from(slidesRef.current.children);
+  const resize = () => {
     width = carouselRef.current.getBoundingClientRect().width;
 
     slides.current.forEach((slide, index) => {
@@ -96,14 +92,24 @@ function Carousel(props) {
       slide.offset = width * index;
       slide.style.transform = `translateX(${slide.offset}px)`;
     });
+  };
+
+
+  useEffect(() => {
+    slides.current = Array.from(slidesRef.current.children);
+    resize();
+    animate();
 
     addEventListener('wheel', wheel);
+    addEventListener('resize', resize);
     carouselRef.current.addEventListener('pointerdown', handlePointerDown);
     carouselRef.current.addEventListener('pointerup', handlePointerUp);
     carouselRef.current.addEventListener('pointermove', handlePointerMove);
 
     return () => {
       removeEventListener('wheel', wheel);
+      removeEventListener('resize', resize);
+
       if (carouselRef.current) {
         carouselRef.current.removeEventListener('pointerdown', handlePointerDown);
         carouselRef.current.removeEventListener('pointerup', handlePointerUp);

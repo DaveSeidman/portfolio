@@ -33,6 +33,13 @@
       font-size: 1rem;
       outline: 1px solid pink;
 
+      &-header, &-body {
+        width: 100%;
+        max-width: $maxWidth;
+        outline: 1px solid blue;
+        
+      }
+
       &-header {
         cursor: pointer;
       }
