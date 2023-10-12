@@ -40,6 +40,7 @@
       }
 
       &-header {
+        height: 5rem;
         cursor: pointer;
         text-align: center;
       }
@@ -55,7 +56,7 @@
 
       &.open {
         .carousel-slides-slide-body {
-          height: 100%;
+          height: calc(100% - 10rem);
         }
       }
     }

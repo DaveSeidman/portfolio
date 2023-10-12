@@ -37,9 +37,9 @@ function Blob(props) {
     // console.log(gltf);
     const base = gltf.scene.getObjectByName('Sphere');
 
-    if (base) {
-      originalPosition.current = base.geometry.attributes.position.clone().array;
-    }
+    // if (base) {
+    //   originalPosition.current = base.geometry.attributes.position.clone().array;
+    // }
     projects.forEach((project) => {
       const shape = gltf.scene.getObjectByName(project.shape);
       // console.log(shape);

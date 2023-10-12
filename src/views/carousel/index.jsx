@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './index.scss';
 
+// TODO: move to utils
 const useForceUpdate = () => {
   const [, forceUpdate] = useState();
   return () => forceUpdate(prevState => !prevState);
@@ -21,6 +22,7 @@ function Carousel(props) {
   const slidesRef = useRef();
   const carouselRef = useRef();
   const pointer = useRef({ x: 0, y: 0 });
+  const inertia = 0.95;
   let width;
 
   const position = useRef(0);
@@ -42,6 +44,17 @@ function Carousel(props) {
 
   const handlePointerUp = (e) => {
     pointer.current.down = false;
+    let velocityTemp = speed.current;
+    let finalPosition = position.current;
+
+    for (let i = 0; i < 200; i += 1) {
+      velocityTemp *= inertia;
+      finalPosition += velocityTemp;
+    }
+
+    const snappedFinalPosition = Math.round(finalPosition / width) * width;
+    const velocityAdjustment = (snappedFinalPosition - finalPosition) / 19;
+    speed.current += velocityAdjustment;
   };
 
   const handlePointerMove = (e) => {
@@ -55,7 +68,7 @@ function Carousel(props) {
 
   const animate = () => {
     if (Math.abs(speed.current) >= 0.001) {
-      speed.current *= 0.975;
+      speed.current *= inertia;
       setScrollSpeed(speed.current);
       position.current += speed.current;
       slides.current.forEach((slide, index) => {
@@ -90,7 +103,6 @@ function Carousel(props) {
     });
   };
 
-
   useEffect(() => {
     slides.current = Array.from(slidesRef.current.children);
     resize();
@@ -113,6 +125,34 @@ function Carousel(props) {
       }
       cancelAnimationFrame(animation);
     };
+  }, [selected]);
+
+  useEffect(() => {
+    console.log('selected changed', selected, current);
+
+    // calculate the shortest move from the current index to the selected index
+    // keeping in mind the shortest method
+    const { length } = slides.current;
+    const leftStraight = { direction: 1, amount: current - selected };
+    const leftWrap = { direction: 1, amount: current - selected + length };
+    const rightStraight = { direction: -1, amount: selected - current };
+    const rightWrap = { direction: -1, amount: selected - current + length };
+    const values = [leftStraight, rightStraight, leftWrap, rightWrap];
+    values.sort((a, b) => (a.amount > b.amount ? 1 : -1));
+    const shortestMove = values.filter(item => item.amount >= 0)[0];
+    console.log(shortestMove);
+    // speed.current = (shortestMove.amount * shortestMove.direction) * 40;
+    // speed.current = (((width / slides.current.length) / 3.09) * 1.95) * shortestMove.amount; // TODO <- Figure out the reason for these numbers
+    // let velocityTemp = speed.current;
+    // let finalPosition = position.current;
+
+    // for (let i = 0; i < 200; i += 1) {
+    //   velocityTemp *= inertia;
+    //   finalPosition += velocityTemp;
+    // }
+    // const snappedFinalPosition = Math.round(finalPosition / this.state.width) * this.state.width;
+    // const velocityAdjustment = (snappedFinalPosition - finalPosition) / 19.5; // TODO: not sure why 19.5 the value that works??? Maybe it's actually 1.95 and the .95 matches our damping value?
+    // this.state.speed += velocityAdjustment;
   }, [selected]);
 
   return (
