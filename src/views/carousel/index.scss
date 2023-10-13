@@ -46,20 +46,26 @@
 
       &-body {
         height: 0;
+        box-shadow:inset;
         line-height: 1.5rem;
+
+        mask-image: linear-gradient(black, black 90%, transparent);
+        outline: 1px solid pink;
         overflow-x: hidden;
-        overflow-y: scroll;
-        transition: height .5s;
+        overflow-y: auto;
+        transition: height .5s, padding .5s;
         
-        img {
+        img, video {
           width: 100%;
+          max-height: 100%;
         }
 
       }
 
       &.open {
         .carousel-slides-slide-body {
-          height: calc(100% - 10rem);
+          height: calc(100% - 12rem);
+          padding-bottom: 2rem;
         }
       }
     }

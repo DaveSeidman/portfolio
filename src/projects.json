@@ -1,7 +1,7 @@
 {
   "projects": [
     {
-      "name": "DaveSeidman",
+      "name": "Dave Seidman",
       "title": "Computer Scientist",
       "slug": "About",
       "shape": "Sphere",
@@ -38,9 +38,9 @@
       "shape": "Furby",
       "desc": [
         "AfterPay reached out to B-Reel to help drive up their Winter holiday shoppables. They dug deep into the archives of perfect gifts over the years and came up with a 1998 original Furby™. Our mission: turn the doll into a mystical fortune teller to help shoppers find the perfect holiday gift for the tough ones on their list.",
-        "<video src='src/assets/videos/furby.mp4' poster='src/assets/images/furby_poster.png' controls='true' playsinline='true'></video>",
+        "![text](videos/furby.mp4)",
         "Interestingly, this wasn’t the first, or even the tenth time a Furby had been re-engineered, so I was able to find plenty of circuit diagrams and teardown videos online. I started by dissecting a few of them and measuring voltage in various places.  I chose a Teensy 3.6 as the main microcontroller and added things like an audio amplifier, motor driver, IR receiver and a USB rechargeable battery. All of the doll's \"animations\" are driven by a single motor, so it was really just a matter of driving it forward and backwards while measuring how many revolutions the main cam was making. The original mechanism is quite an interesting piece of technology involving switches and light sensors to measure motor movement. This allowed the original engineers of the doll to run the motor at high speed without losing track of things like how far open the eyes and mouth are. The teensy comes with an SD card reader, so I used that to store the custom MP3 files. I also swapped out the tiny remote control that comes with the IR receiver for a generic TV remote, which gave us 10 times the range.",
-        "<img src='src/assets/images/furby.gif'>",
+        "![furby](images/furby.gif)",
         "The final dolls were “reskinned” with handsome turquoise AfterPay suits and performed beautifully. To see some videos of the campaign just go on <a href='https://www.tiktok.com/@afterpayusa/video/7038967684603727110?lang=en&is_copy_url=1&is_from_webapp=v1' target='_blank'>AfterPay’s TikTok account</a>."
       ],
       "tags" : [ "PC" ],
@@ -53,7 +53,7 @@
       "shape": "Bell",
       "desc": [
         "For our wedding, I wanted to create a simple, informational site that everyone from our younger cousins to our older relatives could easily access on desktop or mobile. We had a couple of events leading up to the wedding, a guestbook, a photo gallery, directions and hotel information, a blog and a few other pages. I had been inspired by Blaise Arcas' <a href='https://www.ted.com/talks/blaise_aguera_y_arcas_how_photosynth_can_connect_the_world_s_images' target='_blank'>Ted Talk</a> about an exciting new technology called PhotoSynth. So I turned each of those into a \"vignette\" that became part of a larger canvas. I used Photoshop's Large Document Format to stitch it all into a single image that tipped the scales at over 4GBs. There was a large background plate, but each of the \"vignettes\" were linked as smart objects so I could work on them individually without overloading my graphics card.",
-        "<video src='src/assets/videos/wedding.mp4' poster='src/assets/images/wedding.png' controls='true' playsinline='true'></video>",
+        "![zooming website](videos/wedding.mp4)",
         "I used Seadragon's (now Microsoft's) DeepZoom JavaScript library to implement the navigation. It was pretty free-form, allowing the user to zoom in / out and pan in any direction. I also included links that performed the zoom and pan automatically. The code was intelligent enough to keep the live content onscreen no matter the user's aspect ratio.",
         "The end result was fun but informative, and I'm proud to say that even the octogenarians on our list were able to use it.<a href='https://chrystelleand.daveseidman.com/' target='_blank'>ChrystelleAnd.DaveSeidman.com</a>"
       ],

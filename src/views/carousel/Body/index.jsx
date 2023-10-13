@@ -1,18 +1,7 @@
 import React from 'react';
 
+const prefix = location.hostname === 'localhost' ? '' : 'https://daveseidmancom.s3.amazonaws.com/';
 function Body(props) {
-  const contentTypes = {
-    jpg: { path: 'assets/images/' },
-    png: { path: 'assets/images/' },
-    gif: { path: 'assets/images/' },
-    mp4: { path: 'assets/videos/' },
-  };
-  const typeFromFile = (asset) => {
-    const ext = asset.substring(asset.lastIndexOf('.'), asset.length);
-    // console.log(ext)
-    return 'image';
-  };
-
   const { text } = props;
   return (
     <div className="carousel-slides-slide-body">
@@ -22,13 +11,34 @@ function Body(props) {
           const match = item.match(regex);
           if (!match) return (<p key={index}>{item}</p>);
 
+          const filename = match[2];
+          const altText = match[1];
+
+          const extension = filename.substring(filename.lastIndexOf('.') + 1, filename.length);
           let asset;
-          switch (typeFromFile(match[2])) {
-            case 'image':
-              asset = (<img key={index} src={match[2]} alt={match[1]} />);
+          switch (extension) {
+            case 'jpg':
+            case 'jpeg':
+            case 'png':
+            case 'gif':
+              asset = (
+                <img
+                  key={index}
+                  src={`${prefix}${filename}`}
+                  alt={altText}
+                />
+              );
               break;
-            case 'video':
-              asset = (<video key={index} src={match[2]} />);
+            case 'mp4':
+              asset = (
+                <video
+                  key={index}
+                  src={`${prefix}${filename}`}
+                  controls
+                  playsInline
+                  poster={filename.replace('mp4', 'png')}
+                />
+              );
               break;
 
             default:

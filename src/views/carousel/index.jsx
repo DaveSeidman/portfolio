@@ -22,7 +22,9 @@ function Carousel(props) {
   const forceUpdate = useForceUpdate();
   const slidesRef = useRef();
   const carouselRef = useRef();
-  const pointer = useRef({ x: 0, y: 0 });
+  const pointer = useRef({
+    x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0,
+  });
   const inertia = 0.95;
   let width;
 
@@ -41,10 +43,17 @@ function Carousel(props) {
     pointer.current.down = true;
     pointer.current.x = e.clientX;
     pointer.current.y = e.clientY;
+    pointer.current.previousX = e.clientX;
+    pointer.current.previousY = e.clientY;
   };
 
   const handlePointerUp = (e) => {
+    console.log(pointer.current.speedX, pointer.current.speedY);
     pointer.current.down = false;
+
+    // if (Math.abs(pointer.current.speedX) < 2) {
+    //   speed.current = pointer.current.speedX > 0 ? -35 : 35;
+    // }
     let velocityTemp = speed.current;
     let finalPosition = position.current;
 
@@ -59,15 +68,20 @@ function Carousel(props) {
   };
 
   const handlePointerMove = (e) => {
+    pointer.current.previousX = pointer.current.x;
+    pointer.current.previousY = pointer.current.y;
     if (pointer.current.down) {
       speed.current = e.clientX - pointer.current.x;
+      pointer.current.speedX = pointer.current.previousX - e.clientX;
+      pointer.current.speedY = pointer.current.previousY - e.clientY;
       setScrollSpeed(speed.current);
     }
-    pointer.current.y = e.clientY;
     pointer.current.x = e.clientX;
+    pointer.current.y = e.clientY;
   };
 
   const animate = () => {
+    // TODO: turn this to a const
     if (Math.abs(speed.current) >= 0.001) {
       speed.current *= inertia;
       setScrollSpeed(speed.current);
@@ -105,7 +119,9 @@ function Carousel(props) {
   };
 
   useEffect(() => {
-    console.log('location changed', location.pathname);
+    const nextSelected = projects.findIndex(p => p.slug === location.pathname.slice(1));
+    // setSelected(nextSelected);
+    console.log('set selected to', nextSelected);
   }, [location]);
 
 
@@ -120,6 +136,7 @@ function Carousel(props) {
     carouselRef.current.addEventListener('pointerdown', handlePointerDown);
     carouselRef.current.addEventListener('pointerup', handlePointerUp);
     carouselRef.current.addEventListener('pointermove', handlePointerMove);
+    carouselRef.current.addEventListener('pointerleave', handlePointerUp);
 
     return () => {
       removeEventListener('wheel', wheel);
@@ -129,6 +146,7 @@ function Carousel(props) {
         carouselRef.current.removeEventListener('pointerdown', handlePointerDown);
         carouselRef.current.removeEventListener('pointerup', handlePointerUp);
         carouselRef.current.removeEventListener('pointermove', handlePointerMove);
+        carouselRef.current.removeEventListener('pointerleave', handlePointerUp);
       }
       cancelAnimationFrame(animation);
     };
