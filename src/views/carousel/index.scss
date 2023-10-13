@@ -31,12 +31,10 @@
       justify-content: center;
       color: $white;
       font-size: 1rem;
-      outline: 1px solid pink;
 
       &-header, &-body {
         width: calc(100% - 4rem);
         max-width: $maxWidth;
-        outline: 1px solid blue;
       }
 
       &-header {
