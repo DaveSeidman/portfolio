@@ -24,8 +24,7 @@ function Blob(props) {
   const baseRef = useRef();
   const positionCount = 1476;
   const location = useLocation();
-  const originalPosition = useRef();
-  // const targetProject = useRef(projects[0]);
+  const originalPositions = useRef();
   const targetPositions = useRef();
   const targetNormals = useRef();
   const noiseRef = useRef(new SimplexNoise());
@@ -38,7 +37,7 @@ function Blob(props) {
     const base = gltf.scene.getObjectByName('Sphere');
 
     if (base) {
-      originalPosition.current = base.geometry.attributes.position.clone().array;
+      originalPositions.current = base.geometry.attributes.position.clone().array;
     }
     projects.forEach((project) => {
       const shape = gltf.scene.getObjectByName(project.shape);
@@ -50,7 +49,7 @@ function Blob(props) {
     });
 
     if (base) {
-      // originalPosition.current = base.geometry.attributes.position.clone().array;
+      // originalPositions.current = base.geometry.attributes.position.clone().array;
       targetPositions.current = base.geometry.attributes.position.array;
       targetNormals.current = base.geometry.attributes.normal.array;
     }
@@ -78,11 +77,11 @@ function Blob(props) {
     if (Math.abs(speedAccumulated.current) > restingSpeed) speedAccumulated.current *= 0.975;
     baseRef.current.rotation.y += speedAccumulated.current / 10000;
 
-    if (baseRef.current && targetPositions.current) {
+    if (baseRef.current && targetPositions.current && originalPositions.current) {
       const normal = baseRef.current.geometry.attributes.normal.clone().array;
 
       for (let i = 0; i < positionCount; i += 3) {
-        const noise = noiseRef.current.noise4D(originalPosition.current[i + 0], originalPosition.current[i + 1], originalPosition.current[i + 2], elapsedTime.current * 0.5);
+        const noise = noiseRef.current.noise4D(originalPositions.current[i + 0], originalPositions.current[i + 1], originalPositions.current[i + 2], elapsedTime.current * 0.5);
 
         const x1 = projects[start.current].positions[i + 0];
         const y1 = projects[start.current].positions[i + 1];
