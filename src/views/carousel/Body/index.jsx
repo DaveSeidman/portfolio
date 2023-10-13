@@ -1,14 +1,26 @@
 import React from 'react';
 
-const prefix = location.hostname === 'localhost' ? '' : 'https://daveseidmancom.s3.amazonaws.com/';
+
 function Body(props) {
   const { text } = props;
+
+  const prefix = location.hostname === 'localhost' ? '' : 'https://daveseidmancom.s3.amazonaws.com/';
+  const addLinks = (item) => {
+    const array = item.split('<a');
+    if (array.length <= 1) return (<p>{item}</p>);
+
+    return array.map(segment => (<p>{segment}</p>));
+  };
+
   return (
     <div className="carousel-slides-slide-body">
       {
         text.map((item, index) => {
           const regex = /!\[([^\]]*)\]\(([^)]*)\)/;
           const match = item.match(regex);
+
+          addLinks(item);
+
           if (!match) return (<p key={index}>{item}</p>);
 
           const filename = match[2];

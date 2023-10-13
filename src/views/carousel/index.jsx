@@ -4,13 +4,14 @@ import { useForceUpdate } from '../../utils';
 import Body from './Body';
 import './index.scss';
 
+
 function Carousel(props) {
   const {
     projects, setScrollPercent, setScrollSpeed, selected, setSelected,
     autoResize, direction, snap,
   } = props;
 
-
+  const distanceMoveThreshold = 30;
   const location = useLocation();
 
 
@@ -23,7 +24,7 @@ function Carousel(props) {
   const slidesRef = useRef();
   const carouselRef = useRef();
   const pointer = useRef({
-    x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0,
+    x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0, downX: 0, downY: 0,
   });
   const inertia = 0.95;
   let width;
@@ -41,6 +42,8 @@ function Carousel(props) {
   const handlePointerDown = (e) => {
     if (selected !== null) return;
     pointer.current.down = true;
+    pointer.current.downX = e.clientX;
+    pointer.current.downY = e.clientY;
     pointer.current.x = e.clientX;
     pointer.current.y = e.clientY;
     pointer.current.previousX = e.clientX;
@@ -48,23 +51,28 @@ function Carousel(props) {
   };
 
   const handlePointerUp = (e) => {
-    console.log(pointer.current.speedX, pointer.current.speedY);
+    // console.log(pointer.current.speedX, pointer.current.speedY);
     pointer.current.down = false;
+    const distX = pointer.current.downX - e.clientX;
+    const distY = pointer.current.downY - e.clientY;
+    const distancePointerMoved = Math.sqrt(distX ** 2 + distY ** 2);
 
     // if (Math.abs(pointer.current.speedX) < 2) {
     //   speed.current = pointer.current.speedX > 0 ? -35 : 35;
     // }
-    let velocityTemp = speed.current;
-    let finalPosition = position.current;
+    if (distancePointerMoved > distanceMoveThreshold) {
+      let velocityTemp = speed.current;
+      let finalPosition = position.current;
 
-    for (let i = 0; i < 200; i += 1) {
-      velocityTemp *= inertia;
-      finalPosition += velocityTemp;
+      for (let i = 0; i < 200; i += 1) {
+        velocityTemp *= inertia;
+        finalPosition += velocityTemp;
+      }
+
+      const snappedFinalPosition = Math.round(finalPosition / width) * width;
+      const velocityAdjustment = (snappedFinalPosition - finalPosition) / 19;
+      speed.current += velocityAdjustment;
     }
-
-    const snappedFinalPosition = Math.round(finalPosition / width) * width;
-    const velocityAdjustment = (snappedFinalPosition - finalPosition) / 19;
-    speed.current += velocityAdjustment;
   };
 
   const handlePointerMove = (e) => {
@@ -150,7 +158,7 @@ function Carousel(props) {
       }
       cancelAnimationFrame(animation);
     };
-  }, [selected]);
+  }, []);
 
   useEffect(() => {
     // console.log('selected changed', selected, current);
@@ -167,7 +175,9 @@ function Carousel(props) {
       const moves = [leftStraight, rightStraight, leftWrapped, rightWrapped];
       moves.sort((a, b) => (a.amount > b.amount ? 1 : -1));
       const shortestMove = moves.filter(item => item.amount >= 0)[0];
-      speed.current = (((width / slides.current.length) / 3.09) * 1.95) * (shortestMove.direction * shortestMove.amount); // TODO <- Figure out the reason for these numbers
+      const nextSpeed = (((width / slides.current.length) / 3.09) * 1.95) * (shortestMove.direction * shortestMove.amount); // TODO <- Figure out the reason for these numbers
+      console.log(nextSpeed);
+      speed.current = nextSpeed;
     }
   }, [selected]);
 
