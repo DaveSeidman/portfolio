@@ -90,7 +90,6 @@ function Blob(props) {
         const x2 = projects[end.current].positions[i + 0];
         const y2 = projects[end.current].positions[i + 1];
         const z2 = projects[end.current].positions[i + 2];
-        if (i === 0) console.log(projects[start.current].positions[i + 0]);
         const x = lerp(x1, x2, percent.current); // + (noise * normal[i + 0]);
         const y = lerp(y1, y2, percent.current); // + (noise * normal[i + 1]);
         const z = lerp(z1, z2, percent.current); // + (noise * normal[i + 2]);

@@ -227,11 +227,6 @@ function Carousel(props) {
           return (<span key={project.slug} className={`carousel-dots-dot ${i === current ? 'active' : ''}`} />);
         })}
       </div>
-      <div className="carousel-debug">
-        {
-          projects.map((project, index) => (<a key={project.slug} onClick={() => { setSelected(index); }}>{project.name}</a>))
-        }
-      </div>
     </div>
   );
 }
