@@ -169,17 +169,19 @@ function Carousel(props) {
     console.log('selected changed', selected, current);
     history.pushState({}, null, selected !== null ? projects[selected].slug : '/');
 
-    // calculate the shortest move from the current index to the selected index
-    // keeping in mind the shortest method
-    const { length } = slides.current;
-    const leftStraight = { direction: 1, amount: current - selected };
-    const leftWrapped = { direction: 1, amount: current - selected + length };
-    const rightStraight = { direction: -1, amount: selected - current };
-    const rightWrapped = { direction: -1, amount: selected - current + length };
-    const moves = [leftStraight, rightStraight, leftWrapped, rightWrapped];
-    moves.sort((a, b) => (a.amount > b.amount ? 1 : -1));
-    const shortestMove = moves.filter(item => item.amount >= 0)[0];
-    speed.current = (((width / slides.current.length) / 3.09) * 1.95) * (shortestMove.direction * shortestMove.amount); // TODO <- Figure out the reason for these numbers
+    if (selected !== null) {
+      // calculate the shortest move from the current index to the selected index
+      // keeping in mind the shortest method
+      const { length } = slides.current;
+      const leftStraight = { direction: 1, amount: current - selected };
+      const leftWrapped = { direction: 1, amount: current - selected + length };
+      const rightStraight = { direction: -1, amount: selected - current };
+      const rightWrapped = { direction: -1, amount: selected - current + length };
+      const moves = [leftStraight, rightStraight, leftWrapped, rightWrapped];
+      moves.sort((a, b) => (a.amount > b.amount ? 1 : -1));
+      const shortestMove = moves.filter(item => item.amount >= 0)[0];
+      speed.current = (((width / slides.current.length) / 3.09) * 1.95) * (shortestMove.direction * shortestMove.amount); // TODO <- Figure out the reason for these numbers
+    }
   }, [selected]);
 
   return (

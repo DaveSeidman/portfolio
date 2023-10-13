@@ -25,7 +25,7 @@ function Blob(props) {
   const positionCount = 1476;
   const location = useLocation();
   const originalPosition = useRef();
-  const targetProject = useRef(projects[0]);
+  // const targetProject = useRef(projects[0]);
   const targetPositions = useRef();
   const targetNormals = useRef();
   const noiseRef = useRef(new SimplexNoise());
@@ -37,21 +37,20 @@ function Blob(props) {
     // console.log(gltf);
     const base = gltf.scene.getObjectByName('Sphere');
 
-    // if (base) {
-    //   originalPosition.current = base.geometry.attributes.position.clone().array;
-    // }
+    if (base) {
+      originalPosition.current = base.geometry.attributes.position.clone().array;
+    }
     projects.forEach((project) => {
       const shape = gltf.scene.getObjectByName(project.shape);
-      // console.log(shape);
-      if (shape && project.name !== 'Sphere') {
+      if (shape) {
         shape.geometry.computeVertexNormals();
-        project.positions = shape.geometry.attributes.position.array;
-        project.normals = shape.geometry.attributes.normal.array;
+        project.positions = shape.geometry.attributes.position.clone().array;
+        project.normals = shape.geometry.attributes.normal.clone().array;
       }
     });
 
     if (base) {
-      originalPosition.current = base.geometry.attributes.position.clone().array;
+      // originalPosition.current = base.geometry.attributes.position.clone().array;
       targetPositions.current = base.geometry.attributes.position.array;
       targetNormals.current = base.geometry.attributes.normal.array;
     }
@@ -60,15 +59,13 @@ function Blob(props) {
   useEffect(() => {
     const slug = location.pathname.slice(1);
     const project = projects.find(p => p.slug === slug) || projects[0];
-    targetProject.current = project;
+    // targetProject.current = project;
     targetPositions.current = project.positions;
     targetNormals.current = project.normals;
   }, [location]);
 
 
   useFrame((state, delta) => {
-    // console.log(scrollSpeed);
-
     elapsedTime.current += delta;
     start.current = Math.floor(scrollPercent * projects.length);
     end.current = Math.ceil(scrollPercent * projects.length);
@@ -93,7 +90,7 @@ function Blob(props) {
         const x2 = projects[end.current].positions[i + 0];
         const y2 = projects[end.current].positions[i + 1];
         const z2 = projects[end.current].positions[i + 2];
-
+        if (i === 0) console.log(projects[start.current].positions[i + 0]);
         const x = lerp(x1, x2, percent.current); // + (noise * normal[i + 0]);
         const y = lerp(y1, y2, percent.current); // + (noise * normal[i + 1]);
         const z = lerp(z1, z2, percent.current); // + (noise * normal[i + 2]);
