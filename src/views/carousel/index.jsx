@@ -1,43 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-// import { processText } from '../../utils';
+import { useForceUpdate } from '../../utils';
+import Body from './Body';
 import './index.scss';
-
-// TODO: move to utils
-const useForceUpdate = () => {
-  const [, forceUpdate] = useState();
-  return () => forceUpdate(prevState => !prevState);
-};
-
-function Body(props) {
-  // contentTypes = {
-  //   'jpg': { path: 'assets/images/' },
-  //   'png' : {path: 'assets/images/'},
-  //   'gif': { path: 'assets/images/'},
-  //   'mp4': { path: 'assets/videos'}
-  // };
-
-
-  const { text } = props;
-  return (
-    <div className="carousel-slides-slide-body">
-      {
-        text.map((item, index) => {
-          const regex = /!\[([^\]]*)\]\(([^)]*)\)/;
-          const match = item.match(regex);
-          const string = match ? `alt=${match[1]}: ${match[2]}` : item;
-
-
-          return (<p key={index}>{string}</p>);
-        })
-      }
-    </div>
-  );
-}
 
 function Carousel(props) {
   const {
-    projects, setScrollPercent, setScrollSpeed,
+    projects, setScrollPercent, setScrollSpeed, selected, setSelected,
     autoResize, direction, snap,
   } = props;
 
@@ -46,7 +15,7 @@ function Carousel(props) {
 
 
   const [current, setCurrent] = useState(0); // denotes slide closes to center. must always be something between 0 and projects.length
-  const [selected, setSelected] = useState(null); // denotes selected slide / project. can be 0 - slides.length but can also be null if no project selected
+  // const [selected, setSelected] = useState(null); // denotes selected slide / project. can be 0 - slides.length but can also be null if no project selected
   // const [locked, setLocked] = useState(false);
   // const [wheeling, setWheeling] = useState(false);
   const slides = useRef([]);
@@ -141,7 +110,7 @@ function Carousel(props) {
 
 
   useEffect(() => {
-    console.log('here', selected, projects[selected]?.slug);
+    // console.log('here', selected, projects[selected]?.slug);
     slides.current = Array.from(slidesRef.current.children);
     resize();
     animate();
@@ -166,7 +135,7 @@ function Carousel(props) {
   }, [selected]);
 
   useEffect(() => {
-    console.log('selected changed', selected, current);
+    // console.log('selected changed', selected, current);
     history.pushState({}, null, selected !== null ? projects[selected].slug : '/');
 
     if (selected !== null) {
@@ -211,10 +180,6 @@ function Carousel(props) {
             <Body
               text={project.desc}
             />
-            {/* <div className="carousel-slides-slide-body">
-                {body}
-              </div> */}
-
           </div>
         ))
         }
@@ -223,8 +188,8 @@ function Carousel(props) {
         {projects.map((project, index) => {
           // offset so that the middle dot is the 0th
           let i = index + slides.current.length / 2;
-          if (i > slides.current.length) i -= slides.current.length;
-          return (<span key={project.slug} className={`carousel-dots-dot ${i === current ? 'active' : ''}`} />);
+          if (i >= slides.current.length) i -= slides.current.length;
+          return (<span data={i} key={project.slug} className={`carousel-dots-dot ${i === current ? 'active' : ''}`} />);
         })}
       </div>
     </div>

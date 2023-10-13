@@ -31,6 +31,7 @@
       justify-content: center;
       color: $white;
       font-size: 1rem;
+      user-select: none;
 
       &-header, &-body {
         width: calc(100% - 4rem);
@@ -50,6 +51,10 @@
         overflow-y: scroll;
         transition: height .5s;
         
+        img {
+          width: 100%;
+        }
+
       }
 
       &.open {

@@ -11,7 +11,7 @@ import './index.scss';
 function App() {
   const [scrollPercent, setScrollPercent] = useState(0);
   const [scrollSpeed, setScrollSpeed] = useState(0);
-
+  const [selected, setSelected] = useState(null);
   return (
     <Router>
       <Routes>
@@ -23,11 +23,14 @@ function App() {
                 projects={projects}
                 scrollPercent={scrollPercent}
                 scrollSpeed={scrollSpeed}
+                selected={selected}
               />
               <Carousel
                 projects={projects}
                 setScrollPercent={setScrollPercent}
                 setScrollSpeed={setScrollSpeed}
+                selected={selected}
+                setSelected={setSelected}
               />
             </div>
           )}

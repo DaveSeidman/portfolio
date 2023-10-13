@@ -1,7 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
-import { useGLTF, Environment, MeshTransmissionMaterial } from '@react-three/drei';
+import {
+  useGLTF, Environment, MeshTransmissionMaterial, PerspectiveCamera,
+} from '@react-three/drei';
 import {
   Bloom, DepthOfField, EffectComposer, Noise, Vignette,
 } from '@react-three/postprocessing';
@@ -10,13 +12,16 @@ import { lerp } from 'three/src/math/MathUtils';
 import { MeshStandardMaterial, Object3D } from 'three';
 import models from '../../assets/models/old-all.gltf';
 import tvStudio from '../../assets/images/tv_studio_2k.hdr';
+// import { useForceUpdate } from '../../utils';
 import './index.scss';
 
 let gltf;
 
 // TODO: this is being rerendered every frame because of state cahnges
 function Blob(props) {
-  const { projects, scrollPercent, scrollSpeed } = props;
+  const {
+    projects, scrollPercent, scrollSpeed, selected,
+  } = props;
   const start = useRef();
   const end = useRef();
   const percent = useRef();
@@ -30,7 +35,6 @@ function Blob(props) {
   const noiseRef = useRef(new SimplexNoise());
   const elapsedTime = useRef(0);
   const restingSpeed = 50;
-
   if (!gltf) {
     gltf = useGLTF(models);
     // console.log(gltf);
@@ -126,29 +130,75 @@ function Blob(props) {
   );
 }
 
-function Scene(props) {
-  const { projects, scrollPercent, scrollSpeed } = props;
+function Camera(props) {
+  // const forceUpdate = useForceUpdate();
+  const { selected } = props;
+  const cameraRef = useRef();
 
+  const wide = [0, 0, 5];
+  const close = [0, 1.5, 2];
+
+  const [cameraTarget, setCameraTarget] = useState(wide);
+
+
+  // useEffect(() => {
+  //   console.log('selected changed', cameraRef.current);
+  // }, [selected]);
+
+  useFrame(() => {
+    const nextCameraTarget = [
+      cameraTarget[0] + ((selected !== null ? close[0] : wide[0]) - cameraTarget[0]) / 10,
+      cameraTarget[1] + ((selected !== null ? close[1] : wide[1]) - cameraTarget[1]) / 10,
+      cameraTarget[2] + ((selected !== null ? close[2] : wide[2]) - cameraTarget[2]) / 10,
+    ];
+    setCameraTarget(nextCameraTarget);
+    // cameraTarget.current[0] += ((selected ? wide[0] : close[0]) - cameraTarget.current[0]) / 10;
+    // cameraTarget.current[1] += ((selected ? wide[1] : close[1]) - cameraTarget.current[1]) / 10;
+    // cameraTarget.current[2] += ((selected ? wide[2] : close[2]) - cameraTarget.current[2]) / 10;
+    // forceUpdate();
+  });
+
+  return (
+    <PerspectiveCamera
+      makeDefault
+      far={10}
+      near={0.1}
+      fov={35}
+      position={cameraTarget}
+      ref={cameraRef}
+    />
+  );
+}
+
+function Scene(props) {
+  const {
+    projects, scrollPercent, scrollSpeed, selected,
+  } = props;
 
   return (
     <div className="scene">
       <Canvas
         dpr={[0.5, 1.5]}
-        camera={{ position: [0, 0, 5], fov: 35 }}
+        // camera={{ position: cameraTarget.current, fov: 35 }}
         style={{ backgroundColor: 'black' }}
       >
+        <Camera
+          selected={selected}
+        />
         <Blob
           projects={projects}
           scrollPercent={scrollPercent}
           scrollSpeed={scrollSpeed}
+          selected={selected}
         />
         <Environment
           files={tvStudio}
           blur={0.2}
         />
-        {/* <EffectComposer>
-          <Bloom luminanceThreshold={0.15} luminanceSmoothing={0.9} height={900} />
-        </EffectComposer> */}
+        {/* <EffectComposer> */}
+        {/* <Bloom luminanceThreshold={0.15} luminanceSmoothing={0.9} height={900} /> */}
+        {/* <DepthOfField /> */}
+        {/* </EffectComposer> */}
       </Canvas>
     </div>
   );
