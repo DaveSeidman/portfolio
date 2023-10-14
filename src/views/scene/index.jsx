@@ -198,6 +198,7 @@ function Scene(props) {
         {/* <EffectComposer> */}
         {/* <Bloom luminanceThreshold={0.15} luminanceSmoothing={0.9} height={900} /> */}
         {/* <DepthOfField /> */}
+        {/* <Noise opacity={0.2} /> */}
         {/* </EffectComposer> */}
       </Canvas>
     </div>

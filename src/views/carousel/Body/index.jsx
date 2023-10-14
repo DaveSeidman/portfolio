@@ -8,7 +8,7 @@ function Body(props) {
   const addLinks = (item) => {
     const array = item.split('<a');
     if (array.length <= 1) return (<p>{item}</p>);
-
+    // console.log(array);
     return array.map(segment => (<p>{segment}</p>));
   };
 
