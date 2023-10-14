@@ -35,14 +35,18 @@ html, body {
   overscroll-behavior-x: none;
 }
 
-.projects {
-  &-project {
-    width: 100%;
-    height: 100%;
-    overflow-x: hidden;
-    overflow-y: scroll;
-  }
+p, a {
+  color: $white;
 }
+
+// .projects {
+//   &-project {
+//     width: 100%;
+//     height: 100%;
+//     overflow-x: hidden;
+//     overflow-y: scroll;
+//   }
+// }
 
 /*
 .projects {

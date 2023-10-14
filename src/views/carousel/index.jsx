@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useForceUpdate } from '../../utils';
-import Body from './Body';
 import './index.scss';
 
 function Carousel(props) {
@@ -14,7 +13,7 @@ function Carousel(props) {
   const location = useLocation();
 
 
-  const [current, setCurrent] = useState(0); // denotes slide closes to center. must always be something between 0 and projects.length
+  const [current, setCurrent] = useState(0); // denotes slide closes to center. must always be something between 0 and projects.length, Math.floor(slides.current.length / 2)
   // const [selected, setSelected] = useState(null); // denotes selected slide / project. can be 0 - slides.length but can also be null if no project selected
   // const [locked, setLocked] = useState(false);
   // const [wheeling, setWheeling] = useState(false);
@@ -109,8 +108,9 @@ function Carousel(props) {
       let nextScrollPercent = (-position.current % (width * slides.current.length)) / (width * slides.current.length);
       if (nextScrollPercent < 0) nextScrollPercent = 1 + nextScrollPercent;
       setScrollPercent(nextScrollPercent);
-      setCurrent(Math.round(nextScrollPercent * slides.current.length));
-
+      let nextCurrent = Math.round(nextScrollPercent * slides.current.length);
+      if (nextCurrent >= slides.current.length) nextCurrent = 0;
+      setCurrent(nextCurrent);
       forceUpdate();
     }
     animation = requestAnimationFrame(animate);
@@ -135,6 +135,7 @@ function Carousel(props) {
   useEffect(() => {
     // console.log('here', selected, projects[selected]?.slug);
     slides.current = Array.from(slidesRef.current.children);
+    setCurrent[Math.round(slides.current.length / 2)]
     resize();
     animate();
 
@@ -159,11 +160,10 @@ function Carousel(props) {
     };
   }, []);
 
-  useEffect(() => {
+  useEffect((prevState) => {
     // console.log('selected changed', selected, current);
     // TODO: this isn't working properly yet, should push to our state every time
     const slug = projects[selected]?.slug;
-    console.log(slug)
     history[slug ? 'replaceState' : 'pushState']({}, null, slug || '/');
     // else history.replaceState({}, null, '/');
 
@@ -185,8 +185,12 @@ function Carousel(props) {
       const move = shortestMove.amount * shortestMove.direction;
       // const nextSpeed = (((width / slides.current.length) / 3.09) * 1.95) * move; // TODO <- Figure out the reason for these numbers
       const nextSpeed = (move * width) / (1 - inertia);
-      console.log(move, width, inertia, nextSpeed);
+      // console.log(move, width, inertia, nextSpeed);
       speed.current = nextSpeed;
+    }
+    else {
+      // console.log(current, slides);
+      slides.current[current].children[1].scrollTo({ top: 0, behavior: 'smooth' })
     }
   }, [selected]);
 

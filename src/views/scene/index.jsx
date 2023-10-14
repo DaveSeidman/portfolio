@@ -11,6 +11,7 @@ import SimplexNoise from 'simplex-noise';
 import { lerp } from 'three/src/math/MathUtils';
 import { MeshStandardMaterial, Object3D } from 'three';
 import models from '../../assets/models/old-all.gltf';
+// import models from '../../assets/models/all4.gltf';
 import tvStudio from '../../assets/images/tv_studio_2k.hdr';
 // import { useForceUpdate } from '../../utils';
 import './index.scss';
@@ -35,7 +36,8 @@ function Blob(props) {
   const noiseRef = useRef(new SimplexNoise());
   const elapsedTime = useRef(0);
   const restingSpeed = 50;
-  if (!gltf) {
+
+  if (!originalPositions.current) {
     gltf = useGLTF(models);
     // console.log(gltf);
     const base = gltf.scene.getObjectByName('Sphere');
@@ -45,6 +47,7 @@ function Blob(props) {
     }
     projects.forEach((project) => {
       const shape = gltf.scene.getObjectByName(project.shape);
+      // console.log(project.shape, shape);
       if (shape) {
         shape.geometry.computeVertexNormals();
         project.positions = shape.geometry.attributes.position.clone().array;
@@ -75,12 +78,13 @@ function Blob(props) {
     if (start.current < 0) start.current = projects.length - 1;
     if (end.current === projects.length) end.current = 0;
     percent.current = (scrollPercent * projects.length) - start.current;
-    // console.log(start.current, end.current, percent.current);
+    // console.log(projects.length, start.current, end.current, percent.current);
 
     speedAccumulated.current += scrollSpeed * 1.5;
     if (Math.abs(speedAccumulated.current) > restingSpeed) speedAccumulated.current *= 0.975;
     baseRef.current.rotation.y += speedAccumulated.current / 10000;
 
+    // console.log(originalPositions.current);
     if (baseRef.current && targetPositions.current && originalPositions.current) {
       const normal = baseRef.current.geometry.attributes.normal.clone().array;
 
@@ -146,17 +150,12 @@ function Camera(props) {
   // }, [selected]);
 
   useFrame((state, delta) => {
-    // console.log(delta);
     const nextCameraTarget = [
       cameraTarget[0] + ((selected !== null ? close[0] : wide[0]) - cameraTarget[0]) / (7500 * delta),
       cameraTarget[1] + ((selected !== null ? close[1] : wide[1]) - cameraTarget[1]) / (7500 * delta),
       cameraTarget[2] + ((selected !== null ? close[2] : wide[2]) - cameraTarget[2]) / (7500 * delta),
     ];
     setCameraTarget(nextCameraTarget);
-    // cameraTarget.current[0] += ((selected ? wide[0] : close[0]) - cameraTarget.current[0]) / 10;
-    // cameraTarget.current[1] += ((selected ? wide[1] : close[1]) - cameraTarget.current[1]) / 10;
-    // cameraTarget.current[2] += ((selected ? wide[2] : close[2]) - cameraTarget.current[2]) / 10;
-    // forceUpdate();
   });
 
   return (
