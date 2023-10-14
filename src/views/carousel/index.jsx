@@ -4,7 +4,6 @@ import { useForceUpdate } from '../../utils';
 import Body from './Body';
 import './index.scss';
 
-
 function Carousel(props) {
   const {
     projects, setScrollPercent, setScrollSpeed, selected, setSelected,
@@ -19,6 +18,7 @@ function Carousel(props) {
   // const [selected, setSelected] = useState(null); // denotes selected slide / project. can be 0 - slides.length but can also be null if no project selected
   // const [locked, setLocked] = useState(false);
   // const [wheeling, setWheeling] = useState(false);
+  const projectOpen = useRef(false);
   const slides = useRef([]);
   const forceUpdate = useForceUpdate();
   const slidesRef = useRef();
@@ -34,13 +34,13 @@ function Carousel(props) {
   let animation;
 
   const wheel = (e) => {
-    if (selected !== null) return;
+    if (projectOpen.current) return;
     speed.current = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? -e.deltaY / 3 : -e.deltaX;
     setScrollSpeed(speed.current);
   };
 
   const handlePointerDown = (e) => {
-    if (selected !== null) return;
+    if (projectOpen.current) return;
     pointer.current.down = true;
     pointer.current.downX = e.clientX;
     pointer.current.downY = e.clientY;
@@ -118,7 +118,6 @@ function Carousel(props) {
 
   const resize = () => {
     width = carouselRef.current.getBoundingClientRect().width;
-
     slides.current.forEach((slide, index) => {
       slide.style.width = `${width}px`;
       slide.offset = width * index;
@@ -162,12 +161,20 @@ function Carousel(props) {
 
   useEffect(() => {
     // console.log('selected changed', selected, current);
-    history.pushState({}, null, selected !== null ? projects[selected].slug : '/');
+    // TODO: this isn't working properly yet, should push to our state every time
+    const slug = projects[selected]?.slug;
+    console.log(slug)
+    history[slug ? 'replaceState' : 'pushState']({}, null, slug || '/');
+    // else history.replaceState({}, null, '/');
+
+    // else location.replace()
+    projectOpen.current = selected !== null;
 
     if (selected !== null) {
       // calculate the shortest move from the current index to the selected index
       // keeping in mind the shortest method
       const { length } = slides.current;
+      const { width } = carouselRef.current.getBoundingClientRect();
       const leftStraight = { direction: 1, amount: current - selected };
       const leftWrapped = { direction: 1, amount: current - selected + length };
       const rightStraight = { direction: -1, amount: selected - current };
@@ -175,8 +182,10 @@ function Carousel(props) {
       const moves = [leftStraight, rightStraight, leftWrapped, rightWrapped];
       moves.sort((a, b) => (a.amount > b.amount ? 1 : -1));
       const shortestMove = moves.filter(item => item.amount >= 0)[0];
-      const nextSpeed = (((width / slides.current.length) / 3.09) * 1.95) * (shortestMove.direction * shortestMove.amount); // TODO <- Figure out the reason for these numbers
-      console.log(nextSpeed);
+      const move = shortestMove.amount * shortestMove.direction;
+      // const nextSpeed = (((width / slides.current.length) / 3.09) * 1.95) * move; // TODO <- Figure out the reason for these numbers
+      const nextSpeed = (move * width) / (1 - inertia);
+      console.log(move, width, inertia, nextSpeed);
       speed.current = nextSpeed;
     }
   }, [selected]);
@@ -205,9 +214,12 @@ function Carousel(props) {
                 {project.name}
               </h1>
             </div>
-            <Body
+            <div className="carousel-slides-slide-body" dangerouslySetInnerHTML={{ __html: project.desc }}>
+            </div>
+
+            {/* <Body
               text={project.desc}
-            />
+            /> */}
           </div>
         ))
         }

@@ -4,7 +4,7 @@ import {
 } from 'react-router-dom';
 import Scene from './views/scene';
 import Carousel from './views/carousel';
-import { projects } from './projects.json';
+import { projects } from './projects-html.json';
 import './index.scss';
 // import Carousel from 'ds-carousel';
 

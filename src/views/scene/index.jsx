@@ -145,11 +145,12 @@ function Camera(props) {
   //   console.log('selected changed', cameraRef.current);
   // }, [selected]);
 
-  useFrame(() => {
+  useFrame((state, delta) => {
+    // console.log(delta);
     const nextCameraTarget = [
-      cameraTarget[0] + ((selected !== null ? close[0] : wide[0]) - cameraTarget[0]) / 10,
-      cameraTarget[1] + ((selected !== null ? close[1] : wide[1]) - cameraTarget[1]) / 10,
-      cameraTarget[2] + ((selected !== null ? close[2] : wide[2]) - cameraTarget[2]) / 10,
+      cameraTarget[0] + ((selected !== null ? close[0] : wide[0]) - cameraTarget[0]) / (7500 * delta),
+      cameraTarget[1] + ((selected !== null ? close[1] : wide[1]) - cameraTarget[1]) / (7500 * delta),
+      cameraTarget[2] + ((selected !== null ? close[2] : wide[2]) - cameraTarget[2]) / (7500 * delta),
     ];
     setCameraTarget(nextCameraTarget);
     // cameraTarget.current[0] += ((selected ? wide[0] : close[0]) - cameraTarget.current[0]) / 10;

@@ -6,10 +6,12 @@ function Body(props) {
 
   const prefix = location.hostname === 'localhost' ? '' : 'https://daveseidmancom.s3.amazonaws.com/';
   const addLinks = (item) => {
-    const array = item.split('<a');
-    if (array.length <= 1) return (<p>{item}</p>);
+    // const array = item.split('<a');
+    // if (array.length <= 1) return (<p>{item}</p>);
     // console.log(array);
-    return array.map(segment => (<p>{segment}</p>));
+
+
+    // return array.map(segment => (<p>{segment}</p>));
   };
 
   return (
