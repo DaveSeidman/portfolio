@@ -151,9 +151,9 @@ function Camera(props) {
 
   useFrame((state, delta) => {
     const nextCameraTarget = [
-      cameraTarget[0] + ((selected !== null ? close[0] : wide[0]) - cameraTarget[0]) / (7500 * delta),
-      cameraTarget[1] + ((selected !== null ? close[1] : wide[1]) - cameraTarget[1]) / (7500 * delta),
-      cameraTarget[2] + ((selected !== null ? close[2] : wide[2]) - cameraTarget[2]) / (7500 * delta),
+      cameraTarget[0] + ((selected !== null ? close[0] : wide[0]) - cameraTarget[0]) / (3000 * delta),
+      cameraTarget[1] + ((selected !== null ? close[1] : wide[1]) - cameraTarget[1]) / (3000 * delta),
+      cameraTarget[2] + ((selected !== null ? close[2] : wide[2]) - cameraTarget[2]) / (3000 * delta),
     ];
     setCameraTarget(nextCameraTarget);
   });

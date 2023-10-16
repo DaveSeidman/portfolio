@@ -2,11 +2,12 @@
 
 .carousel {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  // top: 0;
+  // right: 0;
+  // bottom: 0;
+  // left: 0;
   overflow: hidden;
+  inset: 0;
 
   &-slides {
     position: absolute;
@@ -53,7 +54,7 @@
         outline: 1px solid pink;
         overflow-x: hidden;
         overflow-y: auto;
-        transition: height 1.5s, padding .5s;
+        transition: height .5s, padding .5s;
         
         img, video {
           width: 100%;
@@ -67,6 +68,34 @@
           height: calc(100% - 12rem);
           padding-bottom: 2rem;
         }
+      }
+    }
+  }
+
+  &-arrows {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    &-arrow {
+      position: absolute;
+      top: 50%;
+      width: 3rem;
+      height: 3rem;
+      // outline: 1px solid pink;
+      border: 0;
+      background-color: transparent;
+      background-size: contain;
+      pointer-events: all;
+      transform: translate(50%, -50%);
+      
+      &.left {
+        left: 6rem;
+        background-image: url('../../assets/images/chevron.svg');
+        transform: translate(-50%, -50%) scaleX(-100%);
+      }
+      &.right {
+        right: 6rem;
+        background-image: url('../../assets/images/chevron.svg');
       }
     }
   }
@@ -98,6 +127,10 @@
     position: absolute;
     a {
       display: block;
+      transition: letter-spacing .25s;
+      &.active {
+        letter-spacing: .25rem;
+      }
     }
   }
 }

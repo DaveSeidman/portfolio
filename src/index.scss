@@ -39,6 +39,14 @@ p, a {
   color: $white;
 }
 
+a {
+  cursor: pointer;
+}
+
+button {
+  cursor: pointer;
+}
+
 // .projects {
 //   &-project {
 //     width: 100%;

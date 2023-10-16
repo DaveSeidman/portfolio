@@ -1,45 +1,91 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useForceUpdate } from '../../utils';
 import './index.scss';
 
 function Carousel(props) {
   const {
     projects, setScrollPercent, setScrollSpeed, selected, setSelected,
-    autoResize, direction, snap,
   } = props;
 
+  // const prevSelected = useRef(selected);
   const distanceMoveThreshold = 30;
-  const location = useLocation();
-
-
-  const [current, setCurrent] = useState(0); // denotes slide closes to center. must always be something between 0 and projects.length, Math.floor(slides.current.length / 2)
-  // const [selected, setSelected] = useState(null); // denotes selected slide / project. can be 0 - slides.length but can also be null if no project selected
-  // const [locked, setLocked] = useState(false);
-  // const [wheeling, setWheeling] = useState(false);
-  const projectOpen = useRef(false);
+  const _location = useLocation();
+  const focusedSlide = useRef(0);
+  const [targetSlide, setTargetSlide] = useState(0);
+  const slideOpen = useRef(false);
   const slides = useRef([]);
   const forceUpdate = useForceUpdate();
   const slidesRef = useRef();
   const carouselRef = useRef();
-  const pointer = useRef({
-    x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0, downX: 0, downY: 0,
-  });
+  const prevTime = useRef(0);
+  const pointer = useRef({ x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0, downX: 0, downY: 0 });
   const inertia = 0.95;
-  let width;
+  const minimumSpeed = 0.001;
+  const width = useRef();
 
   const position = useRef(0);
   const speed = useRef(0);
   let animation;
 
+
+  const animate = (time) => {
+    const timeDelta = time - prevTime.current;
+    // console.log(time - prevTime.current);
+    prevTime.current = time;
+    // TODO: turn this to a const
+    if (Math.abs(speed.current) >= minimumSpeed) {
+      speed.current *= inertia;
+      setScrollSpeed(speed.current);
+      position.current += speed.current;
+      slides.current.forEach((slide, index) => {
+        if (speed.current < 0) {
+          if (parseInt(slide.getBoundingClientRect().left, 10) < -width.current) {
+            slide.offset += (width.current * slides.current.length);
+            slide.style.transform = `translateX(${slide.offset}px)`;
+          }
+        } else if (parseInt(slide.getBoundingClientRect().left, 10) > width.current) {
+          slide.offset -= (width.current * slides.current.length);
+          slide.style.transform = `translateX(${slide.offset}px)`;
+        }
+      });
+
+      let nextScrollPercent = (-position.current % (width.current * slides.current.length)) / (width.current * slides.current.length);
+      if (nextScrollPercent < 0) nextScrollPercent = 1 + nextScrollPercent;
+      setScrollPercent(nextScrollPercent);
+      let nextFocusedSlide = Math.round(nextScrollPercent * slides.current.length);
+      if (nextFocusedSlide >= slides.current.length) nextFocusedSlide = 0;
+      focusedSlide.current = nextFocusedSlide;
+      forceUpdate();
+    }
+    animation = requestAnimationFrame(animate);
+  };
+
+  const resize = () => {
+    width.current = carouselRef.current.getBoundingClientRect().width;
+    slides.current.forEach((slide, index) => {
+      slide.style.width = `${width.current}px`;
+      slide.offset = width.current * index;
+      slide.style.transform = `translateX(${slide.offset}px)`;
+    });
+  };
+
+  useEffect(() => {
+    console.log('location', _location.pathname);
+    //   const nextSelected = projects.findIndex(p => p.slug === _location.pathname.slice(1));
+    //   setSelected(nextSelected >= 0 ? nextSelected : null);
+    //   // console.log('set selected to', nextSelected);
+  }, [_location]);
+
+
   const wheel = (e) => {
-    if (projectOpen.current) return;
+    if (slideOpen.current) return;
     speed.current = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? -e.deltaY / 3 : -e.deltaX;
     setScrollSpeed(speed.current);
   };
 
   const handlePointerDown = (e) => {
-    if (projectOpen.current) return;
+    if (slideOpen.current) return;
     pointer.current.down = true;
     pointer.current.downX = e.clientX;
     pointer.current.downY = e.clientY;
@@ -49,29 +95,21 @@ function Carousel(props) {
     pointer.current.previousY = e.clientY;
   };
 
-  const handlePointerUp = (e) => {
-    // console.log(pointer.current.speedX, pointer.current.speedY);
-    pointer.current.down = false;
-    const distX = pointer.current.downX - e.clientX;
-    const distY = pointer.current.downY - e.clientY;
-    const distancePointerMoved = Math.sqrt(distX ** 2 + distY ** 2);
+  const snapSpeed = () => {
+    let tempSpeed = speed.current;
+    let finalPosition = position.current;
 
-    // if (Math.abs(pointer.current.speedX) < 2) {
-    //   speed.current = pointer.current.speedX > 0 ? -35 : 35;
-    // }
-    if (distancePointerMoved > distanceMoveThreshold) {
-      let velocityTemp = speed.current;
-      let finalPosition = position.current;
-
-      for (let i = 0; i < 200; i += 1) {
-        velocityTemp *= inertia;
-        finalPosition += velocityTemp;
-      }
-
-      const snappedFinalPosition = Math.round(finalPosition / width) * width;
-      const velocityAdjustment = (snappedFinalPosition - finalPosition) / 19;
-      speed.current += velocityAdjustment;
+    while (Math.abs(tempSpeed) >= minimumSpeed) {
+      tempSpeed *= inertia;
+      finalPosition += tempSpeed;
     }
+    const snappedFinalPosition = Math.round(finalPosition / width.current) * width.current;
+    speed.current += (snappedFinalPosition - finalPosition) / 19;
+  };
+
+  const handlePointerUp = (e) => {
+    pointer.current.down = false;
+    snapSpeed();
   };
 
   const handlePointerMove = (e) => {
@@ -87,70 +125,51 @@ function Carousel(props) {
     pointer.current.y = e.clientY;
   };
 
-  const animate = () => {
-    // TODO: turn this to a const
-    if (Math.abs(speed.current) >= 0.001) {
-      speed.current *= inertia;
-      setScrollSpeed(speed.current);
-      position.current += speed.current;
-      slides.current.forEach((slide, index) => {
-        if (speed.current < 0) {
-          if (parseInt(slide.getBoundingClientRect().left, 10) < -width) {
-            slide.offset += (width * slides.current.length);
-            slide.style.transform = `translateX(${slide.offset}px)`;
-          }
-        } else if (parseInt(slide.getBoundingClientRect().left, 10) > width) {
-          slide.offset -= (width * slides.current.length);
-          slide.style.transform = `translateX(${slide.offset}px)`;
-        }
-      });
-
-      let nextScrollPercent = (-position.current % (width * slides.current.length)) / (width * slides.current.length);
-      if (nextScrollPercent < 0) nextScrollPercent = 1 + nextScrollPercent;
-      setScrollPercent(nextScrollPercent);
-      let nextCurrent = Math.round(nextScrollPercent * slides.current.length);
-      if (nextCurrent >= slides.current.length) nextCurrent = 0;
-      setCurrent(nextCurrent);
-      forceUpdate();
-    }
-    animation = requestAnimationFrame(animate);
+  const handleKeyDown = (e) => {
+    // console.log(e.key, selected, current)
+    let nextTargetSlide;
+    if (e.key === 'ArrowRight') nextTargetSlide = focusedSlide.current + 1 > slides.current.length - 1 ? 0 : focusedSlide.current + 1;
+    if (e.key === 'ArrowLeft') nextTargetSlide = focusedSlide.current - 1 < 0 ? slides.current.length - 1 : focusedSlide.current - 1;
+    setTargetSlide(nextTargetSlide);
   };
 
-  const resize = () => {
-    width = carouselRef.current.getBoundingClientRect().width;
-    slides.current.forEach((slide, index) => {
-      slide.style.width = `${width}px`;
-      slide.offset = width * index;
-      slide.style.transform = `translateX(${slide.offset}px)`;
-    });
+  const handleArrowClick = (e) => {
+    const dir = parseInt(e.target.getAttribute('data-dir'), 10);
+    let nextTargetSlide = focusedSlide.current + dir;
+    if (nextTargetSlide > slides.current.length) nextTargetSlide = 0;
+    if (nextTargetSlide < 0) nextTargetSlide = slides.current.length - 1;
+    setTargetSlide(nextTargetSlide);
   };
 
   useEffect(() => {
-    const nextSelected = projects.findIndex(p => p.slug === location.pathname.slice(1));
-    // setSelected(nextSelected);
-    console.log('set selected to', nextSelected);
-  }, [location]);
-
+    // const currentProject = projects[selected];
+    // if(currentProject) {
+    // history.pushState({}, null, currentProject ? currentProject.slug : '/');
+    // }
+    slideOpen.current = selected !== null;
+    console.log(slideOpen);
+  }, [selected]);
 
   useEffect(() => {
-    // console.log('here', selected, projects[selected]?.slug);
     slides.current = Array.from(slidesRef.current.children);
-    setCurrent[Math.round(slides.current.length / 2)]
     resize();
     animate();
+    // focusedSlide
+    // focusedSlide.current = Math.round(projects.length / 2);
 
     addEventListener('wheel', wheel);
     addEventListener('resize', resize);
+    addEventListener('keydown', handleKeyDown);
     carouselRef.current.addEventListener('pointerdown', handlePointerDown);
     carouselRef.current.addEventListener('pointerup', handlePointerUp);
     carouselRef.current.addEventListener('pointermove', handlePointerMove);
     carouselRef.current.addEventListener('pointerleave', handlePointerUp);
 
     return () => {
-      removeEventListener('wheel', wheel);
-      removeEventListener('resize', resize);
-
       if (carouselRef.current) {
+        removeEventListener('wheel', wheel);
+        removeEventListener('resize', resize);
+        removeEventListener('keydown', handleKeyDown);
         carouselRef.current.removeEventListener('pointerdown', handlePointerDown);
         carouselRef.current.removeEventListener('pointerup', handlePointerUp);
         carouselRef.current.removeEventListener('pointermove', handlePointerMove);
@@ -160,39 +179,20 @@ function Carousel(props) {
     };
   }, []);
 
-  useEffect((prevState) => {
-    // console.log('selected changed', selected, current);
-    // TODO: this isn't working properly yet, should push to our state every time
-    const slug = projects[selected]?.slug;
-    history[slug ? 'replaceState' : 'pushState']({}, null, slug || '/');
-    // else history.replaceState({}, null, '/');
-
-    // else location.replace()
-    projectOpen.current = selected !== null;
-
-    if (selected !== null) {
-      // calculate the shortest move from the current index to the selected index
-      // keeping in mind the shortest method
-      const { length } = slides.current;
-      const { width } = carouselRef.current.getBoundingClientRect();
-      const leftStraight = { direction: 1, amount: current - selected };
-      const leftWrapped = { direction: 1, amount: current - selected + length };
-      const rightStraight = { direction: -1, amount: selected - current };
-      const rightWrapped = { direction: -1, amount: selected - current + length };
-      const moves = [leftStraight, rightStraight, leftWrapped, rightWrapped];
-      moves.sort((a, b) => (a.amount > b.amount ? 1 : -1));
-      const shortestMove = moves.filter(item => item.amount >= 0)[0];
-      const move = shortestMove.amount * shortestMove.direction;
-      // const nextSpeed = (((width / slides.current.length) / 3.09) * 1.95) * move; // TODO <- Figure out the reason for these numbers
-      const nextSpeed = (move * width) / (1 - inertia);
-      // console.log(move, width, inertia, nextSpeed);
-      speed.current = nextSpeed;
-    }
-    else {
-      // console.log(current, slides);
-      slides.current[current].children[1].scrollTo({ top: 0, behavior: 'smooth' })
-    }
-  }, [selected]);
+  useEffect(() => {
+    const { length } = slides.current;
+    const leftStraight = { direction: -1, amount: targetSlide - focusedSlide.current };
+    const leftWrapped = { direction: -1, amount: targetSlide - focusedSlide.current + length };
+    const rightStraight = { direction: 1, amount: focusedSlide.current - targetSlide };
+    const rightWrapped = { direction: 1, amount: focusedSlide.current - targetSlide + length };
+    const moves = [leftStraight, rightStraight, leftWrapped, rightWrapped];
+    moves.sort((a, b) => (a.amount > b.amount ? 1 : -1));
+    const shortestMove = moves.filter(item => item.amount >= 0)[0];
+    const move = shortestMove.amount * shortestMove.direction;
+    speed.current = (move * width.current) / 19;
+    snapSpeed();
+    setSelected(slideOpen.current ? targetSlide : null);
+  }, [targetSlide]);
 
   return (
     <div className="carousel" ref={carouselRef}>
@@ -201,9 +201,7 @@ function Carousel(props) {
         style={{ transform: `translateX(${position.current}px)` }}
         ref={slidesRef}
       >
-        {projects.map((project, index) =>
-        // const body = processText(project.body);
-        (
+        {projects.map((project, index) => (
           <div
             key={project.slug}
             className={`carousel-slides-slide ${index === selected ? 'open' : ''}`}
@@ -211,31 +209,47 @@ function Carousel(props) {
             <div className="carousel-slides-slide-header">
               <h1
                 onClick={() => {
+                  // TODO: before setting selected, lets make sure this was a click and not a drag
+                  // if (speed.current <= minimumSpeed) {
                   if (index === selected) setSelected(null);
                   else setSelected(index);
+                  // }
                 }}
               >
                 {project.name}
               </h1>
             </div>
-            <div className="carousel-slides-slide-body" dangerouslySetInnerHTML={{ __html: project.desc }}>
-            </div>
-
-            {/* <Body
-              text={project.desc}
-            /> */}
+            <div className="carousel-slides-slide-body" dangerouslySetInnerHTML={{ __html: project.desc }} />
           </div>
         ))
         }
       </div>
+      <div className="carousel-arrows">
+        <button type="button" className="carousel-arrows-arrow left" data-dir="-1" onClick={handleArrowClick} />
+        <button type="button" className="carousel-arrows-arrow right" data-dir="1" onClick={handleArrowClick} />
+      </div>
       <div className="carousel-dots">
         {projects.map((project, index) => {
           // offset so that the middle dot is the 0th
-          let i = index + slides.current.length / 2;
-          if (i >= slides.current.length) i -= slides.current.length;
-          return (<span data={i} key={project.slug} className={`carousel-dots-dot ${i === current ? 'active' : ''}`} />);
+          let i = index + Math.floor(projects.length / 2);
+          if (i >= projects.length) i -= projects.length;
+          return (<span data={i} key={project.slug} className={`carousel-dots-dot ${i === focusedSlide.current ? 'active' : ''}`} />);
         })}
       </div>
+      {/* <div className="carousel-debug">
+        {projects.map((project, index) => (
+          <a
+            className={focusedSlide.current === index ? 'active' : ''}
+            key={project.slug}
+            onClick={() => {
+              // console.log(index);
+              setTargetSlide(index);
+            }}
+          >
+            {project.name}
+          </a>
+        ))}
+      </div> */}
     </div>
   );
 }

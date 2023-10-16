@@ -16,7 +16,7 @@ function App() {
     <Router>
       <Routes>
         <Route
-          path="/*"
+          path="*"
           element={(
             <div className="app">
               <Scene
