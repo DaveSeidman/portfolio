@@ -16,6 +16,7 @@ function Carousel(props) {
   const slideOpen = useRef(false);
   const slides = useRef([]);
   const forceUpdate = useForceUpdate();
+  const historyNavigated = useRef(false);
   const slidesRef = useRef();
   const carouselRef = useRef();
   const prevTime = useRef(0);
@@ -71,10 +72,12 @@ function Carousel(props) {
   };
 
   useEffect(() => {
-    console.log('location', _location.pathname);
-    //   const nextSelected = projects.findIndex(p => p.slug === _location.pathname.slice(1));
-    //   setSelected(nextSelected >= 0 ? nextSelected : null);
-    //   // console.log('set selected to', nextSelected);
+    const nextSelected = projects.findIndex(p => p.slug === _location.pathname.slice(1));
+    if (nextSelected >= 0) {
+      setTargetSlide(nextSelected);
+      historyNavigated.current = true;
+      setTimeout(() => { historyNavigated.current = false }, 1000);
+    }
   }, [_location]);
 
 
@@ -142,12 +145,8 @@ function Carousel(props) {
   };
 
   useEffect(() => {
-    // const currentProject = projects[selected];
-    // if(currentProject) {
-    // history.pushState({}, null, currentProject ? currentProject.slug : '/');
-    // }
+    if (!historyNavigated.current) history.pushState({}, projects[selected]?.name || '', projects[selected]?.slug || '/');
     slideOpen.current = selected !== null;
-    console.log(slideOpen);
   }, [selected]);
 
   useEffect(() => {
