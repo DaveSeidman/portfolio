@@ -25,6 +25,10 @@ function Carousel(props) {
   const position = useRef(0);
   const speed = useRef(0);
   const historyNavigated = useRef(false);
+  const resizing = useRef(false);
+  const resizeTimeout = useRef(null);
+
+  const historyCopy = useRef([]);
 
   const inertia = 0.95;
   const minimumSpeed = 0.001;
@@ -37,6 +41,8 @@ function Carousel(props) {
   const animate = (time) => {
     const timeDelta = time - prevTime.current;
     prevTime.current = time;
+
+    if (resizing.current) return;
 
     if (Math.abs(speed.current) >= minimumSpeed) {
       speed.current *= inertia;
@@ -66,6 +72,17 @@ function Carousel(props) {
     animation = requestAnimationFrame(animate);
   };
 
+  const resizeStart = () => {
+    // if (resizeTimeout.current) {
+    //   clearTimeout(resizeTimeout.current);
+    //   resizeTimeout.current = null;
+    // }
+    // resizing.current = true;
+    // resizeTimeout.current = setTimeout(() => {
+    //   resizing.current = false;
+    // }, 1000)
+  }
+
   const resize = () => {
     width.current = carouselRef.current.getBoundingClientRect().width;
     slides.current.forEach((slide, index) => {
@@ -73,8 +90,8 @@ function Carousel(props) {
       slide.offset = width.current * index;
       slide.style.transform = `translateX(${slide.offset}px)`;
     });
-    console.log('resize', target);
-    // setTarget(target);
+    console.log('resize', focused, selected, target);
+    // setTarget(focused.current);
     // setTarget();
     // forceRender();
     // TODO: this might be good to keep in
@@ -174,14 +191,17 @@ function Carousel(props) {
   // selected 
   useEffect(() => {
     // the selected slide was changed by a change to the history object, do not write it to the history
-    if (!historyNavigated.current) history.pushState({}, projects[selected]?.name || '', projects[selected]?.slug || '/');
+    if (!historyNavigated.current) {
+      history.pushState({}, projects[selected]?.name || '', projects[selected]?.slug || '/');
+      historyCopy.current.push(projects[selected]?.slug || '/')
+    }
 
     slideOpen.current = selected !== null;
   }, [selected]);
 
   // target slide has changed, center it in the viewport
   useEffect(() => {
-    console.log('target is', target)
+    console.log('target set', target)
     const { length } = slides.current;
     const leftStraight = { direction: -1, amount: target - focused.current };
     const leftWrapped = { direction: -1, amount: target - focused.current + length };
@@ -201,9 +221,10 @@ function Carousel(props) {
     slides.current = Array.from(slidesRef.current.children);
     resize();
     animate();
-    const debouncedResize = debounce(resize, 1000);
+    const debouncedResize = debounce(resize, 250);
 
     addEventListener('wheel', wheel);
+    addEventListener('resize', resizeStart);
     addEventListener('resize', debouncedResize);
     addEventListener('keydown', handleKeyDown);
     carouselRef.current.addEventListener('pointerdown', handlePointerDown);
@@ -214,6 +235,7 @@ function Carousel(props) {
     return () => {
       if (carouselRef.current) {
         removeEventListener('wheel', wheel);
+        removeEventListener('resize', resizeStart);
         removeEventListener('resize', debouncedResize);
         removeEventListener('keydown', handleKeyDown);
         carouselRef.current.removeEventListener('pointerdown', handlePointerDown);
@@ -237,18 +259,17 @@ function Carousel(props) {
             key={project.slug}
             className={`carousel-slides-slide ${index === selected ? 'open' : ''} `}
           >
-            <div className="carousel-slides-slide-header">
-              <h1
-                onClick={() => {
-                  // TODO: before setting selected, lets make sure this was a click and not a drag
-                  // if (speed.current <= minimumSpeed) {
-                  if (index === selected) setSelected(null);
-                  else setSelected(index);
-                  // }
-                }}
-              >
-                {project.name}
-              </h1>
+            <div
+              className="carousel-slides-slide-header"
+              onClick={() => {
+                // TODO: before setting selected, lets make sure this was a click and not a drag
+                // if (speed.current <= minimumSpeed) {
+                if (index === selected) setSelected(null);
+                else setSelected(index);
+                // }
+              }}>
+              <h1 className="carousel-slides-slide-header-name">{project.name}</h1>
+              <h2 className="carousel-slides-slide-header-title">{project.title}</h2>
             </div>
             <div className="carousel-slides-slide-body" dangerouslySetInnerHTML={{ __html: project.desc }} />
           </div>

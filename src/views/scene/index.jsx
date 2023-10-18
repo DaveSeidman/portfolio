@@ -4,9 +4,9 @@ import { useLocation } from 'react-router-dom';
 import {
   useGLTF, Environment, MeshTransmissionMaterial, PerspectiveCamera,
 } from '@react-three/drei';
-import {
-  Bloom, DepthOfField, EffectComposer, Noise, Vignette,
-} from '@react-three/postprocessing';
+// import {
+//   Bloom, DepthOfField, EffectComposer, Noise, Vignette,
+// } from '@react-three/postprocessing';
 import SimplexNoise from 'simplex-noise';
 import { lerp } from 'three/src/math/MathUtils';
 import { MeshStandardMaterial, Object3D } from 'three';

@@ -4,7 +4,7 @@ import {
 } from 'react-router-dom';
 import Scene from './views/scene';
 import Carousel from './views/carousel';
-import { projects } from './projects-html.json';
+import { projects } from './projects.json';
 import './index.scss';
 // import Carousel from 'ds-carousel';
 
@@ -19,12 +19,12 @@ function App() {
           path="*"
           element={(
             <div className="app">
-              {/* <Scene
+              <Scene
                 projects={projects}
                 scrollPercent={scrollPercent}
                 scrollSpeed={scrollSpeed}
                 selected={selected}
-              /> */}
+              />
               <Carousel
                 projects={projects}
                 setScrollPercent={setScrollPercent}

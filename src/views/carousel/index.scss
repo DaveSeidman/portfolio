@@ -40,9 +40,23 @@
       }
 
       &-header {
-        height: 5rem;
+        margin: 1rem;
         cursor: pointer;
         text-align: center;
+
+        &-name {
+          margin: .25rem;
+          font-size: 1.75rem;
+        }
+
+        &-title {
+          margin: .1rem;
+          color: $gray;
+          font-size: .9rem;
+          font-weight: 100;
+          letter-spacing: .1rem;
+          text-transform: uppercase;
+        }
       }
 
       &-body {
@@ -76,26 +90,34 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
+    
     &-arrow {
       position: absolute;
       top: 50%;
-      width: 3rem;
-      height: 3rem;
-      // outline: 1px solid pink;
+      width: 2.5rem;
+      height: 2.5rem;
       border: 0;
       background-color: transparent;
       background-size: contain;
+      opacity: .5;
       pointer-events: all;
       transform: translate(50%, -50%);
+      transition: opacity .25s;
       
-      &.left {
-        left: 6rem;
+      &:hover {
+        opacity: 1;
+      }
+      
+      &.left, &.right {
         background-image: url('../../assets/images/chevron.svg');
+      }
+
+      &.left {
+        left: 3rem;
         transform: translate(-50%, -50%) scaleX(-100%);
       }
       &.right {
-        right: 6rem;
-        background-image: url('../../assets/images/chevron.svg');
+        right: 3rem;
       }
     }
   }
@@ -109,8 +131,8 @@
     justify-content: center;
 
     &-dot {
-      width: .625rem;
-      height: .625rem;
+      width: .5rem;
+      height: .5rem;
       border-radius: 50%;
       margin: 0.1875rem;
       background-color: $white;
