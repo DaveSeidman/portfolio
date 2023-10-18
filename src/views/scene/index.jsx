@@ -13,7 +13,6 @@ import { MeshStandardMaterial, Object3D } from 'three';
 import models from '../../assets/models/old-all.gltf';
 // import models from '../../assets/models/all4.gltf';
 import tvStudio from '../../assets/images/tv_studio_2k.hdr';
-// import { useForceUpdate } from '../../utils';
 import './index.scss';
 
 let gltf;
@@ -135,7 +134,6 @@ function Blob(props) {
 }
 
 function Camera(props) {
-  // const forceUpdate = useForceUpdate();
   const { selected } = props;
   const cameraRef = useRef();
 

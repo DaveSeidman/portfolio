@@ -1,62 +1,41 @@
+// TODO: can occasionally get a project to open as it's moved offscreen
+
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, Link } from 'react-router-dom';
-import { useForceUpdate } from '../../utils';
-import * as tf from '@tensorflow/tfjs'
+import { useLocation } from 'react-router-dom';
+import { useForceRender, debounce } from '../../utils';
 
 import './index.scss';
 
 function Carousel(props) {
-  const {
-    projects, setScrollPercent, setScrollSpeed, selected, setSelected,
-  } = props;
+  const { projects, setScrollPercent, setScrollSpeed, selected, setSelected } = props;
 
-  const distanceMoveThreshold = 30;
   const historyLocation = useLocation();
-  const focusedSlide = useRef(0);
-  const [targetSlide, setTargetSlide] = useState(0); // ONLY affects the carousel's position, not whether or not to open a slide
+  const [target, setTarget] = useState(0); // ONLY affects the carousel's position, not whether or not to open a slide
+  const focused = useRef(0);
   const slideOpen = useRef(false);
   const slides = useRef([]);
-  const forceUpdate = useForceUpdate();
-  const historyNavigated = useRef(false);
   const slidesRef = useRef();
   const carouselRef = useRef();
   const prevTime = useRef(0);
+  const stopped = useRef(true);
   const pointer = useRef({ x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0, downX: 0, downY: 0 });
-  const inertia = 0.95;
-  const minimumSpeed = 0.001;
-  const width = useRef();
-  const wheelData = useRef([])
-  const userWheel = useRef(0);
+  const width = useRef(0);
   const wheelX = useRef(0);
   const wheelY = useRef(0);
-  const modelRef = useRef(null);
-
-  const windowSize = 10;
-  const wheelValuesForPrediction = useRef(new Array(windowSize).fill([0, 0]));
-  // const wheelSequesncesForPrediction = useRef(new Array(20).fill([0, 0]));
-
-  const [training, setTraining] = useState(false)
-  const isTraining = useRef(false);
   const position = useRef(0);
   const speed = useRef(0);
+  const historyNavigated = useRef(false);
+
+  const inertia = 0.95;
+  const minimumSpeed = 0.001;
+
+  const forceRender = useForceRender();
+
+  // TODO: swap for a useREf?
   let animation;
 
-  // const wheeling = useRef(false);
-
   const animate = (time) => {
-    wheelValuesForPrediction.current.unshift([wheelX.current, wheelY.current]);
-    wheelValuesForPrediction.current.pop();
-
-    if (modelRef.current && !isTraining.current) {
-      const predictions = modelRef.current.predict(tf.tensor3d([wheelValuesForPrediction.current]))
-      const predictionsValues = predictions.dataSync();
-      console.log(predictionsValues[0]);
-    }
-    if (isTraining.current) {
-      wheelData.current.push({ x: wheelX.current, y: wheelY.current, wheelReal: userWheel.current });
-    }
     const timeDelta = time - prevTime.current;
-    // console.log(time - prevTime.current);
     prevTime.current = time;
 
     if (Math.abs(speed.current) >= minimumSpeed) {
@@ -78,11 +57,12 @@ function Carousel(props) {
       let nextScrollPercent = (-position.current % (width.current * slides.current.length)) / (width.current * slides.current.length);
       if (nextScrollPercent < 0) nextScrollPercent = 1 + nextScrollPercent;
       setScrollPercent(nextScrollPercent);
-      let nextFocusedSlide = Math.round(nextScrollPercent * slides.current.length);
-      if (nextFocusedSlide >= slides.current.length) nextFocusedSlide = 0;
-      focusedSlide.current = nextFocusedSlide;
-      forceUpdate();
+      let nextfocused = Math.round(nextScrollPercent * slides.current.length);
+      if (nextfocused >= slides.current.length) nextfocused = 0;
+      focused.current = nextfocused;
+      forceRender();
     }
+    else if (!stopped.current) stopped.current = true;
     animation = requestAnimationFrame(animate);
   };
 
@@ -93,17 +73,31 @@ function Carousel(props) {
       slide.offset = width.current * index;
       slide.style.transform = `translateX(${slide.offset}px)`;
     });
+    console.log('resize', target);
+    // setTarget(target);
+    // setTarget();
+    // forceRender();
+    // TODO: this might be good to keep in
+    // centerClosest();
   };
 
+  // navigation initiated by a change in the history object (browser back or forward buttons, or user rewrote url)
   useEffect(() => {
+    console.log("history navigation", historyLocation)
     // TODO: if this is app load we should open the project
     const nextSelected = projects.findIndex(p => p.slug === historyLocation.pathname.slice(1));
+    console.log({ nextSelected })
     if (nextSelected >= 0) {
-      setTargetSlide(nextSelected);
+      setTarget(nextSelected);
+
+      // set this to true momentarily so that the carousel doesn't
+      // try to add history states while it navigates
       historyNavigated.current = true;
-      // TODO: this doesn't open the project for some reason
-      // setSelected(nextSelected)
-      setTimeout(() => { historyNavigated.current = false }, 1000);
+      setTimeout(() => {
+        // TODO: would be better to fire this when the carousel stops instead
+        historyNavigated.current = false
+        setSelected(nextSelected);
+      }, 1000);
     }
   }, [historyLocation]);
 
@@ -131,7 +125,7 @@ function Carousel(props) {
     pointer.current.previousY = e.clientY;
   };
 
-  const snapSpeed = () => {
+  const centerClosest = () => {
     let tempSpeed = speed.current;
     let finalPosition = position.current;
 
@@ -145,7 +139,7 @@ function Carousel(props) {
 
   const handlePointerUp = (e) => {
     pointer.current.down = false;
-    snapSpeed();
+    centerClosest();
   };
 
   const handlePointerMove = (e) => {
@@ -163,126 +157,55 @@ function Carousel(props) {
 
   const handleKeyDown = (e) => {
 
-    let nextTargetSlide;
-    if (e.key === 'ArrowRight') nextTargetSlide = focusedSlide.current + 1 > slides.current.length - 1 ? 0 : focusedSlide.current + 1;
-    if (e.key === 'ArrowLeft') nextTargetSlide = focusedSlide.current - 1 < 0 ? slides.current.length - 1 : focusedSlide.current - 1;
-    if (nextTargetSlide) setTargetSlide(nextTargetSlide);
-
-    if (e.keyCode === 32) {
-      userWheel.current = 1;
-      // console.log('set wheelreal to true')
-    }
+    let nextTarget;
+    if (e.key === 'ArrowRight') nextTarget = focused.current + 1 > slides.current.length - 1 ? 0 : focused.current + 1;
+    if (e.key === 'ArrowLeft') nextTarget = focused.current - 1 < 0 ? slides.current.length - 1 : focused.current - 1;
+    if (nextTarget) setTarget(nextTarget);
   };
-
-  const handleKeyUp = (e) => {
-    if (e.keyCode === 32) {
-      userWheel.current = 0;
-      // console.log('set wheelreal to false')
-    }
-  }
 
   const handleArrowClick = (e) => {
     const dir = parseInt(e.target.getAttribute('data-dir'), 10);
-    let nextTargetSlide = focusedSlide.current + dir;
-    if (nextTargetSlide > slides.current.length) nextTargetSlide = 0;
-    if (nextTargetSlide < 0) nextTargetSlide = slides.current.length - 1;
-    setTargetSlide(nextTargetSlide);
+    let nextTarget = focused.current + dir;
+    if (nextTarget > slides.current.length) nextTarget = 0;
+    if (nextTarget < 0) nextTarget = slides.current.length - 1;
+    setTarget(nextTarget);
   };
 
+  // selected 
   useEffect(() => {
-    isTraining.current = training;
-    if (training) {
-      console.log('start collecting training here');
-      wheelData.current = [];
-    }
-
-    else {
-      console.log('stop collecting training data');
-      console.log(wheelData.current);
-      const allSequences = [];
-      const realSequences = [];
-      const fakeSequences = [];
-      // const windowSize = 20;
-      for (let i = 0; i < wheelData.current.length - windowSize; i += 1) {
-        let userWheelStart = 0
-        let userWheelEnd = 0;
-        for (let j = 0; j < windowSize; j += 1) {
-          if (j <= windowSize / 2) userWheelStart += wheelData.current[i + j].wheelReal;
-          if (j > windowSize / 2) userWheelEnd += wheelData.current[i + j].wheelReal;
-        }
-        allSequences.push({ data: wheelData.current.slice(i, i + windowSize), userStopped: userWheelStart > userWheelEnd })
-      }
-
-      if (allSequences.length) {
-        let flipCount = 0;
-        let userStopBool = allSequences[0].userStopped;
-        for (let i = windowSize; i < allSequences.length; i += 1) {
-          if (allSequences[i].userStopped != userStopBool) {
-            if (userStopBool) fakeSequences.push(allSequences[i]);
-            else realSequences.push(allSequences[i]);
-            flipCount += 1;
-          }
-          userStopBool = allSequences[i].userStopped;
-        }
-
-        console.log(`the user stopped wheeling ${Math.floor(flipCount / 2)} times`);
-        const realSequencesClean = [];
-        realSequences.forEach(sequenceWindow => {
-          let cleanData = [];
-          sequenceWindow.data.forEach(sequence => {
-            cleanData.push([sequence.x, sequence.y]);
-          })
-          realSequencesClean.push(cleanData);
-        })
-
-        const fakeSequencesClean = [];
-        fakeSequences.forEach(sequenceWindow => {
-          let cleanData = [];
-          sequenceWindow.data.forEach(sequence => {
-            cleanData.push([sequence.x, sequence.y]);
-          })
-          fakeSequencesClean.push(cleanData);
-        });
-
-        console.log('real sequences', realSequencesClean);
-        console.log('fake sequences', fakeSequencesClean);
-
-        const sequences = realSequencesClean.concat(fakeSequencesClean);
-        const labels = new Array(realSequencesClean.length).fill(1).concat(new Array(fakeSequencesClean.length).fill(0))
-
-        console.log({ sequences, labels })
-        const model = tf.sequential();
-        model.add(tf.layers.lstm({ inputShape: [windowSize, 2], units: 10, returnSequences: true }));
-        model.add(tf.layers.lstm({ units: 16 }));
-        model.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));
-        model.compile({ optimizer: 'adam', loss: 'binaryCrossentropy', metrics: ['accuracy'], });
-
-        // Assuming sequences and labels are your training data and labels
-        model.fit(tf.tensor3d(sequences), tf.tensor1d(labels), { epochs: 40, batchSize: 32 }).then(info => {
-          console.log('Training complete:', info);
-
-          // Save the model
-          model.save('localstorage://wheelevents');
-          modelRef.current = model;
-        });
-      }
-    }
-  }, [training])
-
-  useEffect(() => {
+    // the selected slide was changed by a change to the history object, do not write it to the history
     if (!historyNavigated.current) history.pushState({}, projects[selected]?.name || '', projects[selected]?.slug || '/');
+
     slideOpen.current = selected !== null;
   }, [selected]);
+
+  // target slide has changed, center it in the viewport
+  useEffect(() => {
+    console.log('target is', target)
+    const { length } = slides.current;
+    const leftStraight = { direction: -1, amount: target - focused.current };
+    const leftWrapped = { direction: -1, amount: target - focused.current + length };
+    const rightStraight = { direction: 1, amount: focused.current - target };
+    const rightWrapped = { direction: 1, amount: focused.current - target + length };
+    const moves = [leftStraight, rightStraight, leftWrapped, rightWrapped];
+    moves.sort((a, b) => (a.amount > b.amount ? 1 : -1));
+    const shortestMove = moves.filter(item => item.amount >= 0)[0];
+    const move = shortestMove.amount * shortestMove.direction;
+    speed.current = (move * width.current) / 19;
+    centerClosest();
+    setSelected(slideOpen.current ? target : null);
+  }, [target]);
+
 
   useEffect(() => {
     slides.current = Array.from(slidesRef.current.children);
     resize();
     animate();
+    const debouncedResize = debounce(resize, 1000);
 
     addEventListener('wheel', wheel);
-    addEventListener('resize', resize);
+    addEventListener('resize', debouncedResize);
     addEventListener('keydown', handleKeyDown);
-    addEventListener('keyup', handleKeyUp);
     carouselRef.current.addEventListener('pointerdown', handlePointerDown);
     carouselRef.current.addEventListener('pointerup', handlePointerUp);
     carouselRef.current.addEventListener('pointermove', handlePointerMove);
@@ -291,9 +214,8 @@ function Carousel(props) {
     return () => {
       if (carouselRef.current) {
         removeEventListener('wheel', wheel);
-        removeEventListener('resize', resize);
+        removeEventListener('resize', debouncedResize);
         removeEventListener('keydown', handleKeyDown);
-        removeEventListener('keyup', handleKeyUp);
         carouselRef.current.removeEventListener('pointerdown', handlePointerDown);
         carouselRef.current.removeEventListener('pointerup', handlePointerUp);
         carouselRef.current.removeEventListener('pointermove', handlePointerMove);
@@ -302,21 +224,6 @@ function Carousel(props) {
       cancelAnimationFrame(animation);
     };
   }, []);
-
-  useEffect(() => {
-    const { length } = slides.current;
-    const leftStraight = { direction: -1, amount: targetSlide - focusedSlide.current };
-    const leftWrapped = { direction: -1, amount: targetSlide - focusedSlide.current + length };
-    const rightStraight = { direction: 1, amount: focusedSlide.current - targetSlide };
-    const rightWrapped = { direction: 1, amount: focusedSlide.current - targetSlide + length };
-    const moves = [leftStraight, rightStraight, leftWrapped, rightWrapped];
-    moves.sort((a, b) => (a.amount > b.amount ? 1 : -1));
-    const shortestMove = moves.filter(item => item.amount >= 0)[0];
-    const move = shortestMove.amount * shortestMove.direction;
-    speed.current = (move * width.current) / 19;
-    snapSpeed();
-    setSelected(slideOpen.current ? targetSlide : null);
-  }, [targetSlide]);
 
   return (
     <div className="carousel" ref={carouselRef}>
@@ -357,20 +264,17 @@ function Carousel(props) {
           // offset so that the middle dot is the 0th
           let i = index + Math.floor(projects.length / 2);
           if (i >= projects.length) i -= projects.length;
-          return (<span data={i} key={project.slug} className={`carousel-dots-dot ${i === focusedSlide.current ? 'active' : ''} `} />);
+          return (<span data={i} key={project.slug} className={`carousel-dots-dot ${i === focused.current ? 'active' : ''} `} />);
         })}
-      </div>
-      <div className="carousel-training">
-        <button type="button" onClick={(e) => { setTraining(!training); e.target.blur() }}>{training ? 'Stop' : 'Start'} Training</button>
       </div>
       {/* <div className="carousel-debug">
         {projects.map((project, index) => (
           <a
-            className={focusedSlide.current === index ? 'active' : ''}
+            className={focused.current === index ? 'active' : ''}
             key={project.slug}
             onClick={() => {
               // console.log(index);
-              setTargetSlide(index);
+              setTarget(index);
             }}
           >
             {project.name}

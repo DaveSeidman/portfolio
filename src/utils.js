@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 
-// export const processText = (array) => {
-//   console.log(array);
-//   let string = array.join()
-//   return ('string');
-// };
+export const useForceRender = () => {
+  const [, forceRender] = useState();
+  return () => forceRender(prevState => !prevState);
+};
 
 
-export const useForceUpdate = () => {
-  const [, forceUpdate] = useState();
-  return () => forceUpdate(prevState => !prevState);
+export const debounce = (mainFunction, delay) => {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      mainFunction(...args);
+    }, delay);
+  };
 };
