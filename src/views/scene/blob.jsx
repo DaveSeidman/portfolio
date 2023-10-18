@@ -37,6 +37,7 @@ function Blob(props) {
       const shape = gltf.scene.getObjectByName(project.shape);
       // console.log(project.shape, shape);
       if (shape) {
+        console.log(shape);
         shape.geometry.computeVertexNormals();
         project.positions = shape.geometry.attributes.position.clone().array;
         project.normals = shape.geometry.attributes.normal.clone().array;
@@ -115,7 +116,9 @@ function Blob(props) {
         flatShading
         envMapIntensity={1}
       />
-      {/* <meshStandardMaterial /> */}
+      {/* <meshStandardMaterial
+        flatShading
+      /> */}
 
     </primitive>
   );
