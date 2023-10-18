@@ -84,9 +84,9 @@ function Blob(props) {
         const x2 = projects[end.current].positions[i + 0];
         const y2 = projects[end.current].positions[i + 1];
         const z2 = projects[end.current].positions[i + 2];
-        const x = lerp(x1, x2, percent.current); // + (noise * normal[i + 0]);
-        const y = lerp(y1, y2, percent.current); // + (noise * normal[i + 1]);
-        const z = lerp(z1, z2, percent.current); // + (noise * normal[i + 2]);
+        const x = lerp(x1, x2, percent.current) + (noise * normal[i + 0]);
+        const y = lerp(y1, y2, percent.current) + (noise * normal[i + 1]);
+        const z = lerp(z1, z2, percent.current) + (noise * normal[i + 2]);
 
         baseRef.current.geometry.attributes.position.array[i + 0] = x;
         baseRef.current.geometry.attributes.position.array[i + 1] = y;
@@ -103,14 +103,14 @@ function Blob(props) {
       ref={baseRef}
     >
       <MeshTransmissionMaterial
-        transmission={0.95}
+        transmission={0.97}
         roughness={0.3}
         thickness={10}
         ior={1.5}
-        reflectivity={0.1}
-        color={0xCCCCCC}
+        reflectivity={0.01}
+        color={0x777777}
         chromaticAberration={1}
-        backsideThickness={0.5}
+        backsideThickness={2}
         backside
         flatShading
         envMapIntensity={1}

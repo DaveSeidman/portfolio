@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useForceRender, debounce } from '../../utils';
+import { useForceRender, debounce, setAssetPaths } from '../../utils';
 
 import './index.scss';
 
@@ -20,8 +20,8 @@ function Carousel(props) {
   const stopped = useRef(true);
   const pointer = useRef({ x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0, downX: 0, downY: 0 });
   const width = useRef(0);
-  const wheelX = useRef(0);
-  const wheelY = useRef(0);
+  // const wheelX = useRef(0);
+  // const wheelY = useRef(0);
   const position = useRef(0);
   const speed = useRef(0);
   const historyNavigated = useRef(false);
@@ -122,8 +122,8 @@ function Carousel(props) {
   const wheel = (e) => {
     // wheelDelta.wheelX = e.deltaX;
     // wheelDelta.wheelY = e.deltaY;
-    wheelX.current = e.deltaX;
-    wheelY.current = e.deltaY;
+    // wheelX.current = e.deltaX;
+    // wheelY.current = e.deltaY;
 
     // wheeling.current = true;
     if (slideOpen.current) return;
@@ -275,7 +275,7 @@ function Carousel(props) {
               <h1 className="carousel-slides-slide-header-name">{project.name}</h1>
               <h2 className="carousel-slides-slide-header-title">{project.title}</h2>
             </div>
-            <div className="carousel-slides-slide-body" dangerouslySetInnerHTML={{ __html: project.desc }} />
+            <div className="carousel-slides-slide-body" dangerouslySetInnerHTML={{ __html: setAssetPaths(project.desc) }} />
           </div>
         ))
         }
@@ -292,20 +292,6 @@ function Carousel(props) {
           return (<span data={i} key={project.slug} className={`carousel-dots-dot ${i === focused.current ? 'active' : ''} `} />);
         })}
       </div>
-      {/* <div className="carousel-debug">
-        {projects.map((project, index) => (
-          <a
-            className={focused.current === index ? 'active' : ''}
-            key={project.slug}
-            onClick={() => {
-              // console.log(index);
-              setTarget(index);
-            }}
-          >
-            {project.name}
-          </a>
-        ))}
-      </div> */}
     </div>
   );
 }
