@@ -4,7 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
 import SimplexNoise from 'simplex-noise';
 import { lerp } from 'three/src/math/MathUtils';
-import models from '../../assets/models/old-all.gltf';
+import models from '../../assets/models/new.gltf';
 
 let gltf;
 
@@ -37,7 +37,7 @@ function Blob(props) {
       const shape = gltf.scene.getObjectByName(project.shape);
       // console.log(project.shape, shape);
       if (shape) {
-        console.log(shape);
+        console.log(shape.geometry.attributes.position.count);// , shape.geometry.attributes.normal);
         shape.geometry.computeVertexNormals();
         project.positions = shape.geometry.attributes.position.clone().array;
         project.normals = shape.geometry.attributes.normal.clone().array;

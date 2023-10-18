@@ -23,6 +23,7 @@ function Light(props) {
   // const origin = new Vector3(0, 0, 0);
   // console.log(pointLightRef.current);
   const targetZ = 0;
+
   const handlePointerMove = (e) => {
     pointer.current.set(
       (e.clientX / width) * 2 - 1,
@@ -95,7 +96,7 @@ function Scene(props) {
     >
       <Canvas
         dpr={[0.5, 1.5]}
-        style={{ backgroundColor: 'black' }}
+      // style={{ backgroundColor: 'black' }}
       >
         <Camera
           selected={selected}
@@ -110,8 +111,8 @@ function Scene(props) {
           files={tvStudio}
           blur={0.2}
         />
-        <Light />
-        <PostProcessing />
+        {/* <Light /> */}
+        {/* <PostProcessing /> */}
       </Canvas>
     </div>
   );
