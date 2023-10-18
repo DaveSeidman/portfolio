@@ -185,7 +185,7 @@ function Carousel(props) {
     let nextTarget = focused.current + dir;
     if (nextTarget > slides.current.length) nextTarget = 0;
     if (nextTarget < 0) nextTarget = slides.current.length - 1;
-    setTarget(nextTarget);
+    setTarget(nextTarget)
   };
 
   // selected 
@@ -194,6 +194,10 @@ function Carousel(props) {
     if (!historyNavigated.current) {
       history.pushState({}, projects[selected]?.name || '', projects[selected]?.slug || '/');
       historyCopy.current.push(projects[selected]?.slug || '/')
+    }
+
+    if (selected === null) {
+      console.log("closed a project")
     }
 
     slideOpen.current = selected !== null;
@@ -216,7 +220,7 @@ function Carousel(props) {
     setSelected(slideOpen.current ? target : null);
   }, [target]);
 
-
+  // on load
   useEffect(() => {
     slides.current = Array.from(slidesRef.current.children);
     resize();

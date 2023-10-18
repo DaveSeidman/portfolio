@@ -2,20 +2,13 @@
 
 .carousel {
   position: absolute;
-  // top: 0;
-  // right: 0;
-  // bottom: 0;
-  // left: 0;
   overflow: hidden;
   inset: 0;
 
   &-slides {
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
     font-size: 0;
+    inset: 0;
     touch-action: none;
 
     &-slide {
@@ -63,12 +56,10 @@
         height: 0;
         box-shadow:inset;
         line-height: 1.5rem;
-
-        mask-image: linear-gradient(black, black 90%, transparent);
-        outline: 1px solid pink;
+        mask-image: linear-gradient(black, black calc(100% - 2rem), transparent);
         overflow-x: hidden;
         overflow-y: auto;
-        transition: height .5s, padding .5s;
+        transition: height $moves, padding $moves;
         
         img, video {
           width: 100%;
@@ -102,7 +93,7 @@
       opacity: .5;
       pointer-events: all;
       transform: translate(50%, -50%);
-      transition: opacity .25s;
+      transition: opacity $fades, left $moves, right $moves;
       
       &:hover {
         opacity: 1;
@@ -129,6 +120,7 @@
     display: flex;
     width: 100%;
     justify-content: center;
+    transition: bottom $moves;
 
     &-dot {
       width: .5rem;
@@ -137,7 +129,7 @@
       margin: 0.1875rem;
       background-color: $white;
       opacity: .25;
-      transition: opacity .5s;
+      transition: opacity $fades;
 
       &.active {
         opacity: 1;
@@ -145,19 +137,20 @@
     }
   }
 
-  &-debug {
-    position: absolute;
-    a {
-      display: block;
-      transition: letter-spacing .25s;
-      &.active {
-        letter-spacing: .25rem;
+  &:has(.open) {
+    .carousel {
+      &-arrows-arrow {
+        &.left {
+          left: -3rem;
+        }
+        &.right {
+          right: -3rem;
+        }
+      }
+
+      &-dots {
+        bottom: -1rem;
       }
     }
-  }
-
-  &-training {
-    position: absolute;
-    color: white;
   }
 }
