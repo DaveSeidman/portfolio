@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useForceRender, debounce, setAssetPaths } from '../../utils';
-
-import './index.scss';
+import { useForceRender, debounce, setAssetPaths } from '../utils';
 
 function Carousel(props) {
   const { projects, setScrollPercent, setScrollSpeed, selected, setSelected } = props;

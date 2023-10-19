@@ -10,7 +10,7 @@
       "theme": { "color": "0x222222", "background": "0xBBBBBB", "roughness": 0.5, "metalness": 0.5, "envIntensity": 1.25 }
     },
     {
-      "name": "Corn Maze",
+      "name": "Maiz.uno",
       "title": "The best corn maze on the internet",
       "slug": "Maiz",
       "shape": "Corn",

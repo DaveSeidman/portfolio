@@ -2,11 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   BrowserRouter as Router, Routes, Route, Link,
 } from 'react-router-dom';
-import Scene from './views/scene';
-import Carousel from './views/carousel';
+import Scene from './components/scene';
+import Carousel from './components/carousel';
 import { projects } from './projects.json';
 import './index.scss';
-// import Carousel from 'ds-carousel';
 
 function App() {
   const [scrollPercent, setScrollPercent] = useState(0);

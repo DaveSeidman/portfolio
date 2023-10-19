@@ -4,7 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
 import SimplexNoise from 'simplex-noise';
 import { lerp } from 'three/src/math/MathUtils';
-import models from '../../assets/models/new.gltf';
+import models from '../assets/models/new.gltf';
 
 let gltf;
 
