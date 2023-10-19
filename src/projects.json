@@ -6,7 +6,7 @@
       "slug": "Dave",
       "shape": "Sphere",
       "tags" : [ "GIT", "PRO", "RES", "TWI" ],
-      "desc": "<p>Dave Seidman is a Full Stack Developer that specializes in experiential projects. He grew up with the commodore 64, apple 2e, TI-89 graphing calculator, Nintendo Virtual Boy, dot-matrix printers, and other technology that he programmed, dissected, and occasionally, put back together.</p><p>His 20+ year career has led him to work for startups, marketing agencies, and major brands like Uber, LG, Spotify, Verizon, Amex. He’s also worked on research projects for Meta Reality Labs and MIT’s New Lab. They’ve trusted him to find and execute solutions when none seem to exist (at least from google, chatGPT or stackoverflow’s perspective). His work has been featured at CES, CTIA, and even aboard a Blue Origins rocket.</p><img src='images/about_dave.jpg' />",
+      "desc": "<p>I'm a Full Stack Developer that specializes in experiential and experimental projects. I grew up with the Commodore 64, Apple 2e, TI-89, Nintendo Virtual Boy, dot-matrix printers, and other technology that I programmed, dissected, and occasionally, put back together.</p><p>My 20+ year career has led me to work for startups, marketing agencies, and major brands like Uber, LG, Spotify, Verizon, Amex. I've also worked on research projects for Meta Reality Labs and MIT’s New Lab. They’ve trusted me to find and execute solutions when none seem to exist (at least from google, chatGPT or stackoverflow’s perspective). His work has been featured at CES, CTIA, and even aboard a Blue Origins rocket.</p><img src='images/about_dave.jpg' />",
       "theme": { "color": "0x222222", "background": "0xBBBBBB", "roughness": 0.5, "metalness": 0.5, "envIntensity": 1.25 }
     },
     {
@@ -14,7 +14,28 @@
       "title": "The best corn maze on the internet",
       "slug": "Maiz",
       "shape": "Corn",
-      "desc": "<p>Corn Maze</p>"
+      "desc": "<p>For no reason other than to perpetuate a bunch of Corn puns on the internet, I used </p>"
+    },
+    {
+      "name": "BorderlessVR",
+      "title": "Virtual Reality, Delivered",
+      "slug": "Borderless",
+      "shape": "Headset",
+      "desc": "<p>Borderless is... </p>"
+    },
+    {
+      "name": "GyroCode",
+      "title": "Fun with a Phone's Gyroscope",
+      "slug": "Gyrocode",
+      "shape": "Gyro",
+      "desc": "<p>Gyrocode is... </p>"
+    },
+    {
+      "name": "Save Tab",
+      "title": "Save Tab Soda!",
+      "slug": "SaveTab",
+      "shape": "Can",
+      "desc": "<p>SaveTab is... </p>"
     },
     {
       "name": "NFL AR by Verizon",
@@ -83,7 +104,7 @@
       "name": "Living Distance",
       "title": "Zero-G Robotic Guidance System",
       "slug": "LivingDistance",
-      "shape": "Head",
+      "shape": "Rocket",
       "tags": [ "CV", "PC" ],
       "desc": "<p>The inspirational <a href='https://www.xxxxxxxxxinliu.com/' target='_blank'>Xin Liu</a> partnered up with the <a href='https://newlab.com/' target='_blank'>New Lab</a> to design and build a small robot that was sent into space aboard one of the first Blue Origin rockets. The robot was mounted to the floor of a small locker during liftoff. Once in space, the rocket's main computer sent a signal to the locker triggering the mounting clips to release. The robot was then free to float around the locker.</p><img src='images/living-distance.gif'><p>Xin's team was looking for a software engineer to design a guidance system to help the bot determine its relative position and orientation. For propulsion, the bot was designed to have several high-speed gyroscopic motors that would turn relatively heavy discs, creating torque in the weightless conditions of space.</p><video src='videos/living-distance.mp4' poster='images/BackOnEarth.jpg' controls='true' playsinline='true'></video><p>Because the locker was outfitted with bright LEDs, we decided to create a visual system. I started with a virtual camera inside 3D software and placed it inside a cube with the AR tracking images as textures on its inner panels. I used OpenCV's homography library to calculate the position based on Aruco markers attached to the inside of the locker. Read more <a href='https://www.xxxxxxxxxinliu.com/#/living-distance/' target='_blank'>here</a></p><img src='images/living-distance-1.png' />",
       "theme": { "color": "0x2e6def", "background": "0x09030d", "roughness": 0.5, "metalness": 0.5, "envIntensity": 1.0 }

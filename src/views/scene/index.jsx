@@ -111,7 +111,7 @@ function Scene(props) {
           files={tvStudio}
           blur={0.2}
         />
-        {/* <Light /> */}
+        <Light />
         {/* <PostProcessing /> */}
       </Canvas>
     </div>
