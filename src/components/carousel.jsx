@@ -16,7 +16,7 @@ function Carousel(props) {
   const carouselRef = useRef();
   const prevTime = useRef(0);
   const stopped = useRef(true);
-  const pointer = useRef({ x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0, downX: 0, downY: 0 });
+  const pointer = useRef({ x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0, downX: 0, downY: 0, count: 0 });
   const width = useRef(0);
   // const wheelX = useRef(0);
   // const wheelY = useRef(0);
@@ -25,6 +25,7 @@ function Carousel(props) {
   const historyNavigated = useRef(false);
   const resizing = useRef(false);
   const resizeTimeout = useRef(null);
+
 
   const historyCopy = useRef([]);
 
@@ -130,6 +131,7 @@ function Carousel(props) {
   };
 
   const handlePointerDown = (e) => {
+    pointer.current.count += 1;
     if (slideOpen.current) return;
     pointer.current.down = true;
     pointer.current.downX = e.clientX;
@@ -153,11 +155,15 @@ function Carousel(props) {
   };
 
   const handlePointerUp = (e) => {
+    pointer.current.count -= .5;
     pointer.current.down = false;
     centerClosest();
   };
 
   const handlePointerMove = (e) => {
+    // TODO: this works up until you start clicking on projects
+    if (pointer.current.count > 1) return;
+    console.log(pointer.current.count);
     pointer.current.previousX = pointer.current.x;
     pointer.current.previousY = pointer.current.y;
     if (pointer.current.down) {
@@ -169,6 +175,13 @@ function Carousel(props) {
     pointer.current.x = e.clientX;
     pointer.current.y = e.clientY;
   };
+
+  const handleTouchStart = (e) => {
+    // if (e.changedTouches.length >= 2) {
+    e.preventDefault();
+    // e.stopPropogation();
+    // }
+  }
 
   const handleKeyDown = (e) => {
     // TODO: cancel this is the command key is down to allow user to navigate back / forth 
@@ -196,6 +209,7 @@ function Carousel(props) {
 
     if (selected === null) {
       console.log("closed a project")
+      pointer.current.count = 0;
     }
 
     slideOpen.current = selected !== null;
@@ -230,9 +244,11 @@ function Carousel(props) {
     addEventListener('resize', debouncedResize);
     addEventListener('keydown', handleKeyDown);
     carouselRef.current.addEventListener('pointerdown', handlePointerDown);
-    carouselRef.current.addEventListener('pointerup', handlePointerUp);
     carouselRef.current.addEventListener('pointermove', handlePointerMove);
+    carouselRef.current.addEventListener('pointerup', handlePointerUp);
     carouselRef.current.addEventListener('pointerleave', handlePointerUp);
+
+    // carouselRef.current.addEventListener('touchstart', handleTouchStart);
 
     return () => {
       if (carouselRef.current) {
@@ -240,10 +256,13 @@ function Carousel(props) {
         removeEventListener('resize', resizeStart);
         removeEventListener('resize', debouncedResize);
         removeEventListener('keydown', handleKeyDown);
+
+
         carouselRef.current.removeEventListener('pointerdown', handlePointerDown);
-        carouselRef.current.removeEventListener('pointerup', handlePointerUp);
         carouselRef.current.removeEventListener('pointermove', handlePointerMove);
+        carouselRef.current.removeEventListener('pointerup', handlePointerUp);
         carouselRef.current.removeEventListener('pointerleave', handlePointerUp);
+        // carouselRef.current.removeEventListener('touchstart', handleTouchStart);
       }
       cancelAnimationFrame(animation);
     };

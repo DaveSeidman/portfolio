@@ -4,10 +4,12 @@ WebGL background with carousel of recent work.
 
 ### TODO:
 
+- add preloader
 - make entire scene darker and boost contrast (maybe with post processing)
 - move Camera and Blob into separate files
 - add chimes interaction sounds
 - add tags
+- Prevent second touch events
 - browser back / forward buttons create incorrect history states
 - resize issues
 - webkit tap highlight (look on google pixel)
