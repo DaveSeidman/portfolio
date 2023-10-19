@@ -35,9 +35,7 @@ function Blob(props) {
     }
     projects.forEach((project) => {
       const shape = gltf.scene.getObjectByName(project.shape);
-      // console.log(project.shape, shape);
       if (shape) {
-        console.log(shape.geometry.attributes.position.count);// , shape.geometry.attributes.normal);
         shape.geometry.computeVertexNormals();
         project.positions = shape.geometry.attributes.position.clone().array;
         project.normals = shape.geometry.attributes.normal.clone().array;

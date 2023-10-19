@@ -171,7 +171,7 @@ function Carousel(props) {
   };
 
   const handleKeyDown = (e) => {
-
+    // TODO: cancel this is the command key is down to allow user to navigate back / forth 
     let nextTarget;
     if (e.key === 'ArrowRight') nextTarget = focused.current + 1 > slides.current.length - 1 ? 0 : focused.current + 1;
     if (e.key === 'ArrowLeft') nextTarget = focused.current - 1 < 0 ? slides.current.length - 1 : focused.current - 1;
