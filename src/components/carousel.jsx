@@ -163,7 +163,6 @@ function Carousel(props) {
   const handlePointerMove = (e) => {
     // TODO: this works up until you start clicking on projects
     if (pointer.current.count > 1) return;
-    console.log(pointer.current.count);
     pointer.current.previousX = pointer.current.x;
     pointer.current.previousY = pointer.current.y;
     if (pointer.current.down) {
@@ -185,10 +184,10 @@ function Carousel(props) {
 
   const handleKeyDown = (e) => {
     // TODO: cancel this is the command key is down to allow user to navigate back / forth 
-    let nextTarget;
+    let nextTarget = null;
     if (e.key === 'ArrowRight') nextTarget = focused.current + 1 > slides.current.length - 1 ? 0 : focused.current + 1;
     if (e.key === 'ArrowLeft') nextTarget = focused.current - 1 < 0 ? slides.current.length - 1 : focused.current - 1;
-    if (nextTarget) setTarget(nextTarget);
+    if (nextTarget !== null) setTarget(nextTarget);
   };
 
   const handleArrowClick = (e) => {

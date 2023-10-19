@@ -16,6 +16,7 @@ WebGL background with carousel of recent work.
 - Reset videos on open project
 - www subdomain not redirecting to https
 - Add contact info?
+- Lazy Load images / videos, currently they begin downloading on app load
 - Try Camera Jerk
 - update linkedin & twitter
 - add motion blur
