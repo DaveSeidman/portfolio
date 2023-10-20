@@ -129,11 +129,12 @@ button {
         &-tags {
           &-tag {
             display: inline-block;
-            padding: .5rem 1rem .5rem 2rem;
+            padding: .25rem 1rem .25rem 1rem;
             border: 1px solid $white;
             border-radius: 2rem;
             margin: .5rem;
             cursor: pointer;
+            font-size: .75rem;
             transition: background $fades;
             &:hover {
               background: transparentize($white, .5);

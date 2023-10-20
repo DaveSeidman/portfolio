@@ -13,8 +13,8 @@ function Cursor(props) {
   // const pointer = useRef(new Vector2());
   const target = useRef(new Vector3());
   const { camera } = useThree();
-  const width = useRef(window.innerWidth);
-  const height = useRef(window.innerHeight);
+  // const width = useRef(window.innerWidth);
+  // const height = useRef(window.innerHeight);
   const gltf = useGLTF(cursor);
   const raycaster = useRef(new Raycaster());
   const forceRender = useForceRender();
@@ -35,10 +35,10 @@ function Cursor(props) {
   });
 
   // TODO: pass width and height in as props
-  const resize = () => {
-    width.current = window.innerWidth;
-    height.current = window.innerHeight;
-  };
+  // const resize = () => {
+  //   width.current = window.innerWidth;
+  //   height.current = window.innerHeight;
+  // };
 
   return (
     <group ref={cursorRef}>

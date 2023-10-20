@@ -21,7 +21,7 @@
       "title": "Collection of Prints",
       "slug": "3DPrints",
       "shape": "Sphere",
-      "desc": "<p>Sarah & Steph Wedding Present.</p><p>Hue Light switches</p><p>Printing around GoPro</p><p>Pax Beds</p><p>Trophies</p><p>Beer Tap</p>",
+      "desc": "<p>Sarah & Steph Wedding Present.</p><p>Hue Light switches</p><p>Printing around GoPro</p><p>Pax backends</p><p>Trophies</p><p>Beer Tap</p>",
       "tags": []
     },
     {
@@ -36,7 +36,7 @@
       "name": "GyroCode",
       "title": "Fun with a Phone's Gyroscope",
       "slug": "Gyrocode",
-      "shape": "Gyro",
+      "shape": "Compass",
       "desc": "<p>To demonstrate the responsiveness of a phone's accelerometer, I wrote a simple web app that asks the user for motion permissions and then applies the inverse rotation of the phone's z-axis to the entire canvas.</p><p>Try it out here: <a href='gyroco.de' target='_blank'>gyroco.de</a><video src='videos/gyrocode.mp4' poster='videos/gyrocode.jpg' controls='true' playsinline='true'></video></p>",
       "tags": []
     },
@@ -62,7 +62,7 @@
       "slug": "SocketPilot",
       "shape": "Yoke",
       "desc": "<p>Coming Soon</p>",
-      "tags" : [ "augmented reality", "computer vision", "live events" ]
+      "tags" : [ "augmented reality", "computer vision", "events" ]
     },
     {
       "name": "NFL AR by Verizon",
@@ -70,14 +70,14 @@
       "slug": "NFL-AR",
       "shape": "Football",
       "desc": "<p>I partnered with <a href=”https://buck.co/work/verizon-nfl-ar-experience” target=”_blank”>Buck</a> to help Verizon show off the speed of their first generation of 5G phones via an innovative AR experience tied to the NFL's 100th season. Our team set up up 10 life-size thrones at football stadiums across the country. The thrones themselves were completely blank, but came to life when viewed through our mixed reality app. Fans were invited to sit down while their friends recorded short videos of them. Our custom app tracked every surface of the thrones and allowed the viewer to add textures, animations and particle effects in realtime.</p><video src='videos/nfl-thrones.mp4' poster='videos/nfl-thrones.png' controls='true' playsinline='true'></video><p>Once finished, users could send themselves their video or directly share it on social media. Thousands of people sat down and even more shared their fandom by recording videos of the experience.</p><img src='images/nfl1.png' /><img src='images/nfl2.png' /><p>Our first technical challenge was tracking a solid white throne in 3D space without relying on tracking markers or QR codes. We used Vuforia's 3D model target system and trained it on 3D models of the thrones. Once that started working, we could render 3D graphics that were perfectly aligned to the throne, but also on top of the people sitting in the throne. We overcame this by adopting body-segmentation AI to differentiate between the throne and the person so that the graphics were no longer rendering on top of them. The end result was an exciting opportunity that attracted thousands of people to sit down and even more to share their fandom online.</p>",
-      "tags" : [ "augmented reality", "computer vision", "live events" ]
+      "tags" : [ "augmented reality", "computer vision", "events" ]
     },
     {
       "name": "ReFurbished",
       "title": "Remote Controlled Furby",
       "slug": "Furby",
       "shape": "Furby",
-      "tags" : [ "PC" ],
+      "tags" : [ "physical computing" ],
       "desc": "<p>AfterPay reached out to B-Reel to help drive up their Winter holiday shoppables. They dug deep into the archives of perfect gifts over the years and came up with a 1998 original Furby™. Our mission: turn the doll into a mystical fortune teller to help shoppers find the perfect holiday gift for the tough ones on their list.</p><video src='videos/furby.mp4' poster='videos/furby.png' controls='true' playsinline='true'></video><p>Interestingly, this wasn’t the first, or even the tenth time a Furby had been re-engineered, so I was able to find plenty of circuit diagrams and teardown videos online. I started by dissecting a few of them and measuring voltage in various places.  I chose a Teensy 3.6 as the main microcontroller and added things like an audio amplifier, motor driver, IR receiver and a USB rechargeable battery. All of the doll's \"animations\" are driven by a single motor, so it was really just a matter of driving it forward and backwards while measuring how many revolutions the main cam was making. The original mechanism is quite an interesting piece of technology involving switches and light sensors to measure motor movement. This allowed the original engineers of the doll to run the motor at high speed without losing track of things like how far open the eyes and mouth are. The teensy comes with an SD card reader, so I used that to store the custom MP3 files. I also swapped out the tiny remote control that comes with the IR receiver for a generic TV remote, which gave us 10 times the range.</p><img src='images/furby.gif'><p>The final dolls were “reskinned” with handsome turquoise AfterPay suits and performed beautifully. To see some videos of the campaign just go on <a href='https://www.tiktok.com/@afterpayusa/video/7038967684603727110?lang=en&is_copy_url=1&is_from_webapp=v1' target='_blank'>AfterPay’s TikTok account</a>.</p>"
     },
     {
@@ -86,7 +86,7 @@
       "slug": "Wedding",
       "shape": "Bell",
       "desc": "<p>For our wedding, I wanted to create a simple, informational site that everyone from our younger cousins to our older relatives could easily access on desktop or mobile. We had a couple of events leading up to the wedding, a guestbook, a photo gallery, directions and hotel information, a blog and a few other pages. I had been inspired by Blaise Arcas' <a href='https://www.ted.com/talks/blaise_aguera_y_arcas_how_photosynth_can_connect_the_world_s_images' target='_blank'>Ted Talk</a> about an exciting new technology called PhotoSynth. So I turned each of those into a \"vignette\" that became part of a larger canvas. I used Photoshop's Large Document Format to stitch it all into a single image that tipped the scales at over 4GBs. There was a large background plate, but each of the \"vignettes\" were linked as smart objects so I could work on them individually without overloading my graphics card.</p><video src='videos/wedding.mp4' poster='videos/wedding.png' controls='true' playsinline='true'></video><p>I used Seadragon's (now Microsoft's) DeepZoom JavaScript library to implement the navigation. It was pretty free-form, allowing the user to zoom in / out and pan in any direction. I also included links that performed the zoom and pan automatically. The code was intelligent enough to keep the live content onscreen no matter the user's aspect ratio.</p><p>The end result was fun but informative, and I'm proud to say that even the octogenarians on our list were able to use it. <a href='https://chrystelleand.daveseidman.com/' target='_blank'>ChrystelleAnd.DaveSeidman.com</a></p>",
-      "tags": [ "FED" ]
+      "tags": [ "frontend" ]
     },
     {
       "name": "CatDive",
@@ -94,7 +94,7 @@
       "slug": "CatDive",
       "shape": "Cat",
       "desc": "<p>During a late night insomnia-fueled scrolling session, I discovered <a href='https://infinitecat.com' target='_blank'>infinitecat.com</a>, the internet's longest running website dedicated to cats. The original site started in 1995 and ran until 2020. Its main feature was a gallery of user-uploaded photos of their cat (or cats) looking at the latest cat on the site, creating an 'infinite' sequence of cats looking at cats looking at cats.</p><img src='images/catdive-original.gif' /><p>Recently I'd been using OpenCV for marker detection and tracking, and decided to try out the tech on cat photos. I wrote a NodeJS script to scrape and sort the 15+ years of photos from the original webserver and used OpenCV to discover each cat image in the monitor of the image that preceeded it. A few times the detector needed some supervision, but for the most part it was able to identify the entire chain of almost 1900 cats! I then ran another OpenCV script to <a href='https://docs.opencv.org/4.x/d9/dab/tutorial_homography.html' target='_blank'>compute the homography matrixes</a> of each image.</p><p>At that point, I moved into the browser and used the data to distort each image until it matched it's 3d position in the preceeding image. Finally, I used CSS Matrix4 transformations to perform a \"corner pin\" effect and then animated it in JavaScript.</p><video src='videos/catdive.mp4' poster='images/catdive1.png' controls='true' playsinline='true'></video><p>The end result was sort of mesmerizing and performed extremely well on desktop and mobile. The original site was eventually purchased by a pet company and used to generate traffic to their site, but my prototype lives on at <a href='https://catdive.com' target='_blank'>CatDive.com</a>. Go check it out and enjoy an \"endless\" stroll through an infinite sequence of cats.</p>",
-      "tags": [ "FED", "CV" ]
+      "tags": [ "frontend", "CV" ]
     },
     {
       "name": "VR Coding",
@@ -110,7 +110,7 @@
       "slug": "The-Claw",
       "shape": "Claw",
       "desc": "<p>NYC-based creative agency B-Reel likes to take long-standing, tried-and-true business practices and completely blow them apart. Case in point: instead of using a placement agency or headhunters to recruit new talent, we took a 6' tall arcade claw machine apart, rewired it, and put it on the internet. The concept was for job seekers to “line up” and play the machine remotely via their desktop or mobile browsers. Every user had a chance to grab one of 200+ homemade prizes, each of which correlated to a different interview type such as interviews on segways or tandem bike rides, during massages, or on a dog-walk.</p><video src='videos/the-claw.mp4' poster='images/claw1.png' controls='true' playsinline='true'></video><p>I started by carefully taking the original machine apart, finding circuit diagrams from similar machines on the deep web to slowly figure out the machine's inner workings. Fun Fact: these games ARE rigged! The claw is programmed to weaken its grip when it's on the way to the prize chute, making the user feel like they were \"so close\" when in actuality the claw intentionally dropped the prize too early. Then we began tying into the machine via jumper wires hooked up to a Raspberry Pi (microcomputer). Once we finalized our logic, we printed custom circuit boards and soldered them into “pi hats” to make our connections more sturdy and also modular. When the Pis were able to control the machines, we began forwarding traffic through our router so that we could start activating and listening to the machine's various motors and sensors over the internet.</p><img src='images/claw2.png' /><p>For the prizes, we used 3D printers to produce unique models for each interview type. Prize detection was eventually handled by RFID scanners and small stickers attached to each prize, but we explored a lot of other options, including AI image classification. Another boon for this method: all the models already existed in 3D, so instead of taking lots of pictures to train our AI model with, we simply rendered thousands of each in parallel.</p><img src='images/claw3.png' /><p>The final product was a great success, won an FWA, and stayed online for over a month with very little downtime (except for a few times I had to crawl inside the machine to free a stuck motor or prize). More than 5,000 unique visitors played and over 200 won interviews, leading to three new hires that will always have a great story to tell when asked how they started working with the agency.</p><p><a href=' https://thefwa.com/cases/claw-your-way-to-the-top' target='_blank'>Read more here</a></p>",
-      "tags" : [ "PC", "LIV", "FED", "BED" ]
+      "tags" : [ "physical computing", "events", "frontend", "backend" ]
     },
     {
       "name": "HoloChat",
@@ -126,12 +126,12 @@
       "slug": "LivingDistance",
       "shape": "Rocket",
       "desc": "<p>The inspirational <a href='https://www.xxxxxxxxxinliu.com/' target='_blank'>Xin Liu</a> partnered up with the <a href='https://newlab.com/' target='_blank'>New Lab</a> to design and build a small robot that was sent into space aboard one of the first Blue Origin rockets. The robot was mounted to the floor of a small locker during liftoff. Once in space, the rocket's main computer sent a signal to the locker triggering the mounting clips to release. The robot was then free to float around the locker.</p><img src='images/living-distance.gif'><p>Xin's team was looking for a software engineer to design a guidance system to help the bot determine its relative position and orientation. For propulsion, the bot was designed to have several high-speed gyroscopic motors that would turn relatively heavy discs, creating torque in the weightless conditions of space.</p><video src='videos/living-distance.mp4' poster='images/BackOnEarth.jpg' controls='true' playsinline='true'></video><p>Because the locker was outfitted with bright LEDs, we decided to create a visual system. I started with a virtual camera inside 3D software and placed it inside a cube with the AR tracking images as textures on its inner panels. I used OpenCV's homography library to calculate the position based on Aruco markers attached to the inside of the locker. Read more <a href='https://www.xxxxxxxxxinliu.com/#/living-distance/' target='_blank'>here</a></p><img src='images/living-distance-1.png' />",
-      "tags": [ "Computer Vision", "Physical Computing" ]
+      "tags": [ "computer vision", "physical computing" ]
     },
     {
       "name": "Pride Parade",
       "title": "Interactive Face Tracking App",
-      "tags": ["CV", "FED"],
+      "tags": ["CV", "frontend"],
       "slug": "Pride-Parade",
       "shape": "Rainbow",
       "desc": "<p>To kick off Pride Month, <a href='https://b-reel.com/' target='_blank'>B-Reel</a> wanted to do something big, but personal at the same time. “To create a personal, empathetic experience while still showcasing the users' place in a massive community, we decided to create a 'parade' of faces. We built a mobile / desktop website that streamed the user's face into a 3D float that they could customize, record, and then add to the larger \"virtual parade.\"</p><video src='videos/pride-parade.mp4' poster='images/pride-parade1.png' controls='true' playsinline='true'></video><p>We used Beyond Reality's latest JavaScript framework to detect a user's face in their webcam or mobile camera, then place it on a Pride float.  We did the compositing by moving an invisible 3D head in  sync with the user's head in real time. Everything from eyebrow raises to mouth positions were tracked, even unlocking easter eggs with secret facial gestures. Users could record their float and add it to the 'parade' of other floats.</p><p>The site received great traffic and averge engagement times of over 5 minutes. We found that users were making lots of videos and sharing them on social media which helped further promote the experience.</p>"
@@ -158,7 +158,7 @@
       "slug": "StrangerTees",
       "shape": "TeeShirt",
       "desc": "<p>A scene from the cult classic show <span class='italic'>Stranger Things</span> featured a wall of Christmas lights that lit up in succession to spell out messages from another dimension. With Halloween approaching, I got to work on a quick build-out to replicate the iconic scene as an interactive tee shirt.</p><img src='images/stranger-tee.gif' /><p>The Raspberry Pi Zero has just enough pins that can be set to output for each letter of the alphabet, so instead of charlieplexing or using an LED driver, I connected each LED directly to the board using a thin-guage wire wrap.</p><img src='images/stranger-tee1.jpg' /><p>Once the hardware was built and tested, I wrote a small server that listened for messages over WiFi. I finished it off with a front-end that allowed me to either tap directly on the screen to light up the LEDs or type out messages and play the sequence on the shirt. A small backup battery kept the system running long enough to fill a pillow case full of candy.</p>",
-      "tags" : [ "EXP", "PC", "BED" ]
+      "tags" : [ "EXP", "physical computing", "backend" ]
     },
     {
       "name": "Amex DLS",
@@ -166,7 +166,7 @@
       "slug": "Amex-DLS",
       "shape": "Periscope",
       "desc": "<p>American Express has a great deal of websites, microsites, apps and other digital media and wanted to harmonize the look and feel for all of them. Not an easy task when they had over 1,000 developers across the world constantly building and updating all of them using their own individual JavaScript and Stylesheets. They approached B-Reel to help find a solution and that was the genesis of their \"Design Language System\" which we built and they continue to evolve.</p><p>It consists of American Express wanted a  \"Design Language System\" for all of its digital properties including websites, apps and . They asked B-Reel's development team to create the library to be used by thousands of their front-end developers and UI designers. It included the usual fonts, styles, and colors, but also extended into widgets, animations, and any other digital aspects of their brand.</p><p>A gigantic repository created for American Express consisting of...</p><video src='videos/amex-dls.mp4' poster='images/amex-dls.png' controls='true' playsinline='true'></video>",
-      "tags" : [ "FED" ]
+      "tags" : [ "frontend" ]
     }
   ]
 }

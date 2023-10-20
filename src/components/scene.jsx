@@ -15,16 +15,23 @@ function Scene(props) {
   const width = useRef(window.innerWidth);
   const height = useRef(window.innerHeight);
   const pointer = useRef(new Vector2());
+
   const handlePointerMove = (e) => {
     pointer.current.x = (e.clientX / width.current) * 2 - 1;
     pointer.current.y = (e.clientY / height.current) * -2 + 1;
   };
 
+  const handleResize = () => {
+    width.current = window.innerWidth;
+    height.current = window.innerHeight;
+  };
+
   useEffect(() => {
     addEventListener('pointermove', handlePointerMove);
-
+    addEventListener('resize', handleResize);
     return () => {
       removeEventListener('pointermove', handlePointerMove);
+      removeEventListener('resize', handleResize);
     };
   });
 
