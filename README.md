@@ -9,6 +9,7 @@ WebGL background with carousel of recent work.
 - move Camera and Blob into separate files
 - add chimes interaction sounds
 - add tags
+- fix cursor movement, maybe have it interact with shape more
 - Prevent second touch events
 - browser back / forward buttons create incorrect history states
 - resize issues

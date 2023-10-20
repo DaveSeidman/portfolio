@@ -29,15 +29,15 @@
       "title": "Virtual Reality, Delivered",
       "slug": "Borderless",
       "shape": "Headset",
-      "desc": "<p>Virtual Reality, or Spatial Computing continues to advance in market penetration and complexity, however there's very few resources out there for non-technical people to create and view their content in Virtual Reality. That's where Borderless comes in. They provide the hardware if you don't have your own headset, along with a suite of publishing tools that make it as easy as uploading your content, whether it be the 360 video you just shot on your last skiing trip, or a 3D scene you just rendered in Cinema 4D.</p><p>Check it out for yourself: <a href='borderlessvr.com' target='_blank'>BorderlessVR.com</a>.</p>",
-      "tags": []
+      "desc": "<p>Virtual Reality continues to become more commonplace, however there's very few resources available for non-technical users that want to create and view their own content in Virtual Reality. That's where Borderless comes in. They provide the hardware if you don't have your own along with a suite of publishing tools that make it easy. uploading your content, whether it be the 360 video you just shot on your last skiing trip, or a 3D scene you just rendered in Cinema 4D.</p><p>As the principal developer, I engineered a version of the frontend, backend, database, and authentication system that allows users to upload and consume their content. Surprisingly, modern versions of Chrome ship with the ability to communicate with connected devices. </p><p>Check it out for yourself: <a href='https://borderlessvr.com' target='_blank'>BorderlessVR.com</a>.</p>",
+      "tags": ["Front End Dev", "Back end dev", "Database", "AWS"]
     },
     {
       "name": "GyroCode",
       "title": "Fun with a Phone's Gyroscope",
       "slug": "Gyrocode",
       "shape": "Gyro",
-      "desc": "<p>To demonstrate the responsiveness of a phone's accelerometer, I wrote a simple web app that asks the user for motion permissions and then applies the inverse rotation of the phone's z-axis to the entire canvas.</p><p>Try it out here: <a href='gyroco.de' target='_blank'>gyroco.de</a></p>",
+      "desc": "<p>To demonstrate the responsiveness of a phone's accelerometer, I wrote a simple web app that asks the user for motion permissions and then applies the inverse rotation of the phone's z-axis to the entire canvas.</p><p>Try it out here: <a href='gyroco.de' target='_blank'>gyroco.de</a><video src='videos/gyrocode.mp4' poster='videos/gyrocode.jpg' controls='true' playsinline='true'></video></p>",
       "tags": []
     },
     {
@@ -45,8 +45,8 @@
       "title": "Save Tab Soda!",
       "slug": "SaveTab",
       "shape": "Can",
-      "desc": "<p>SaveTab is... </p>",
-      "tags": []
+      "desc": "<p>Tab™ is a beloved brand of soda made by the Coca Cola Corporation. Considered the original diet soda, it's had a very large and loyal following for decades. That's why when Coke announced it's intention to discontinue the brand, Tab lovers across the world banded together to save it. They're plight even made it to the <a href='https://www.nytimes.com/2020/10/16/business/coca-cola-tab.html' target='_blank'>New York Times</a>.</p><p>I personally don't drink the soda, but I thought I might be able to help their cause. I created a website where visitors could see how many people support the cause to save Tab soda, as well as sign their own can which not only gets added to the pile on their screen, but also to anyone else connected to the app at the same time. This involved setting up an express server and adding socket support. As visitors sign cans and hit \"submit\" their signatures are converted to images and stored on the server, along with a database of their name and why they want to save Tab soda.</p><video src='videos/save-tab.mp4' poster='videos/save-tab.jpg' controls='true' playsinline='true'></video>",
+      "tags": ["WebGL", "Websockets", "Front-End", "Back-end", "database"]
     },
     {
       "name": "Parker",
