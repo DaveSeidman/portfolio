@@ -64,6 +64,7 @@ function Blob(props) {
 
   useFrame((state, delta) => {
     elapsedTime.current += delta;
+    // if (!projects[0].positions) return;
     start.current = Math.floor(scrollPercent * projects.length);
     end.current = Math.ceil(scrollPercent * projects.length);
     if (start.current < 0) start.current = projects.length - 1;

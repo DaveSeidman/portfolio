@@ -1,0 +1,34 @@
+[
+  {
+    "name": "3D Printing",
+    "title": "Collection of Prints",
+    "slug": "3DPrints",
+    "shape": "Sphere",
+    "desc": "<p>Sarah & Steph Wedding Present.</p><p>Hue Light switches</p><p>Printing around GoPro</p><p>Pax backends</p><p>Trophies</p><p>Beer Tap</p>",
+    "tags": []
+  },
+  {
+    "name": "BorderlessVR",
+    "title": "Virtual Reality, Delivered",
+    "slug": "Borderless",
+    "shape": "Headset",
+    "desc": "<p>Virtual Reality is steadily advancing in capabilities and market penetration, however there are very few resources available for non-technical people ot create and view Virtual Reality content. That's where Borderless comes in. They provide the hardware if you don't have your own headset, along with a suite of publishing and conversion tools that make it to create in VR. Think Squarespace but for Virtual Experiences.</p><img src='images/borderless-temp.jpg'/><p>With a functional prototype of the working system, I lead a team of engineers to create the platform that allows users to upload flat, panoramic, and stereoscopic images and video and immediately view it in their headsets, all from their browser. We used ReactJS to build the frontend which extended the normal capabilities of a webapp by utilizing libraries like WebUSB, WebADB, the caches api, and _____</p><p>Check it out for yourself: <a href='https://borderlessvr.com' target='_blank'>BorderlessVR.com</a>.</p>",
+    "tags": ["frontend", "backend", "database", "AWS"]
+  },
+  {
+    "name": "GyroCode",
+    "title": "Fun with a Phone's Gyroscope",
+    "slug": "Gyrocode",
+    "shape": "Compass",
+    "desc": "<p>To demonstrate the responsiveness of a phone's accelerometer, I wrote a simple web app that asks the user for motion permissions and then applies the inverse rotation of the phone's z-axis to the entire canvas.</p><p>Try it out here: <a href='gyroco.de' target='_blank'>gyroco.de</a><video src='videos/gyrocode.mp4' poster='videos/gyrocode.jpg' controls='true' playsinline='true'></video></p>",
+    "tags": []
+  },
+  {
+    "name": "Socket Pilot",
+    "title": "Websocket Powered Flight Simulator",
+    "slug": "SocketPilot",
+    "shape": "Yoke",
+    "desc": "<p>Coming Soon</p>",
+    "tags" : [ "augmented reality", "computer vision", "events" ]
+  }
+]

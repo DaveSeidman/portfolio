@@ -5,8 +5,8 @@
       "title": "Fullstack XR Developer",
       "slug": "Dave",
       "shape": "Sphere",
-      "tags" : [ "GIT", "PRO", "RES", "TWI" ],
-      "desc": "<p>I'm a Full Stack Developer that specializes in experiential and experimental projects. I grew up with the Commodore 64, Apple 2e, TI-89, Nintendo Virtual Boy, dot-matrix printers, and other technology that I programmed, dissected, and occasionally, put back together.</p><p>My 20+ year career has led me to work for startups, marketing agencies, and major brands like Uber, LG, Spotify, Verizon, Amex. I've also worked on research projects for Meta Reality Labs and MIT’s New Lab. They’ve trusted me to find and execute solutions when none seem to exist (at least from google, chatGPT or stackoverflow’s perspective). His work has been featured at CES, CTIA, and even aboard a Blue Origins rocket.</p><img src='images/dave1.png' />"
+      "desc": "<p>I'm a Full Stack Developer that specializes in experiential and experimental projects. I grew up with the Commodore 64, Apple 2e, TI-89, Nintendo Virtual Boy, dot-matrix printers, and other technology that I programmed, dissected, and occasionally, put back together.</p><p>My 20+ year career has led me to work for startups, marketing agencies, and major brands like Uber, LG, Spotify, Verizon, Amex. I've also worked on research projects for Meta Reality Labs and MIT’s New Lab. They’ve trusted me to find and execute solutions for novel problems and use cases. My work has been featured at CES, CTIA, and aboard a Blue Origins <a href='/LivingDistance'>rocket</a> flown to space.</p><img src='images/dave1.png' /><p>Feel free to <a href=''>reach out</a> with project ideas and check out my <a href=''>resume,</a> <a href=''>gitlab</a>, and <a href=''>twitter</a> profiles as well. Or select from these tags to filter my work:</p>",
+      "tags" : []
     },
     {
       "name": "Maíz.Uno",
@@ -15,30 +15,6 @@
       "shape": "Corn",
       "desc": "<p>After researching several <a href='https://en.wikipedia.org/wiki/Maze_generation_algorithm' target='_blank'>maze generation algorithms</a> I created an interactive maze game as a ReactJS App. I used the Aldous-Broder algorithm to create a matrix of 1's and 0's which I mapped to \"pathways\" and \"walls\" and displayed as light or dark kernals. I then modified the algorithm to cut random pathways between the top and bottom edges of the board which allowed me to plot the matrix around a cylindar (the cob) resulting in a very interesting type of maze. One where you can travel left, right, up, down <strong>and around</strong>.</p><video src='videos/maiz1.mp4' poster='videos/maiz1.jpg' controls='true' playsinline='true'></video><p>This worked well, but required a way for the user to see where the cursor is when it travels to the backside of the cylindar. To handle this, I wrote a new type of controller, maybe you'd call it CameraLatheControls that allows the user to spin an object on its z-axis while also sliding it back and forth along the x-axis.t</p><video src='videos/maiz2.mp4' poster='videos/maiz2.jpg' controls='true' playsinline='true'></video><p>I built the game with React-Three-Fiber and some utilies from React-Three-Drei. I leveraged instanced geometry for the kernals to save on draw calls. The resulting game is very performant on all devices, including older mobile devices. Give it a play here: <a href='https://maiz.uno' target='_blank'>Maiz.Uno</a></p>",
       "tags": ["WebGL", "ReactJS", "Algorithms"]
-    },
-    {
-      "name": "3D Printing",
-      "title": "Collection of Prints",
-      "slug": "3DPrints",
-      "shape": "Sphere",
-      "desc": "<p>Sarah & Steph Wedding Present.</p><p>Hue Light switches</p><p>Printing around GoPro</p><p>Pax backends</p><p>Trophies</p><p>Beer Tap</p>",
-      "tags": []
-    },
-    {
-      "name": "BorderlessVR",
-      "title": "Virtual Reality, Delivered",
-      "slug": "Borderless",
-      "shape": "Headset",
-      "desc": "<p>Virtual Reality is steadily advancing in capabilities and market penetration, however there are very few resources available for non-technical people ot create and view Virtual Reality content. That's where Borderless comes in. They provide the hardware if you don't have your own headset, along with a suite of publishing and conversion tools that make it to create in VR. Think Squarespace but for Virtual Experiences.</p><img src='images/borderless-temp.jpg'/><p>With a functional prototype of the working system, I lead a team of engineers to create the platform that allows users to upload flat, panoramic, and stereoscopic images and video and immediately view it in their headsets, all from their browser. We used ReactJS to build the frontend which extended the normal capabilities of a webapp by utilizing libraries like WebUSB, WebADB, the caches api, and _____</p><p>Check it out for yourself: <a href='https://borderlessvr.com' target='_blank'>BorderlessVR.com</a>.</p>",
-      "tags": ["frontend", "backend", "database", "AWS"]
-    },
-    {
-      "name": "GyroCode",
-      "title": "Fun with a Phone's Gyroscope",
-      "slug": "Gyrocode",
-      "shape": "Compass",
-      "desc": "<p>To demonstrate the responsiveness of a phone's accelerometer, I wrote a simple web app that asks the user for motion permissions and then applies the inverse rotation of the phone's z-axis to the entire canvas.</p><p>Try it out here: <a href='gyroco.de' target='_blank'>gyroco.de</a><video src='videos/gyrocode.mp4' poster='videos/gyrocode.jpg' controls='true' playsinline='true'></video></p>",
-      "tags": []
     },
     {
       "name": "Save Tab",
@@ -55,14 +31,6 @@
       "shape": "Car",
       "desc": "<p>I live in New York City where parking spots come at a premium. I became curious about whether there were ways to increase the amount of parking spaces without making any structural changes. In this WebGL interactive website, you can pick a borough, or section of the city, and play with different parameters like car spacing, parking direction, and cars can park on both sides of the street or not.</p><video src='videos/parker.mp4' poster='videos/parker.jpg' controls='true' playsinline='true'></video><p>Even though the streets weren't 100% accurate nor the car dimensions, nor does it take into account unusable spaces, fire hydrants, construction, or any of the other 20 reasons that \"No you can't park here!\" this tool did allow me to quickly try out different parking scenarios and quickly see the results</p><p>This visualization required some interesting logic as well as a good rendering pipeline to handle all the geometry that may be on screen at once. Three.js's instanced geometry helped a lot, though the amount of instances needed to be flexible.</p>",
       "tags": ["WebGL", "Algorithm Design"]
-    },
-    {
-      "name": "Socket Pilot",
-      "title": "Websocket Powered Flight Simulator",
-      "slug": "SocketPilot",
-      "shape": "Yoke",
-      "desc": "<p>Coming Soon</p>",
-      "tags" : [ "augmented reality", "computer vision", "events" ]
     },
     {
       "name": "NFL AR by Verizon",
