@@ -48,15 +48,6 @@ function Blob(props) {
 
     setBuffers();
 
-    // projects.forEach((project) => {
-    //   const shape = gltf.scene.getObjectByName(project.shape);
-    //   if (shape) {
-    //     shape.geometry.computeVertexNormals();
-    //     project.positions = shape.geometry.attributes.position.clone().array;
-    //     project.normals = shape.geometry.attributes.normal.clone().array;
-    //   }
-    // });
-
     if (base) {
       // originalPositions.current = base.geometry.attributes.position.clone().array;
       targetPositions.current = base.geometry.attributes.position.array;
@@ -67,28 +58,22 @@ function Blob(props) {
   useEffect(() => {
     const slug = location.pathname.slice(1);
     const project = projects.find((p) => p.slug === slug) || projects[0];
-    // targetProject.current = project;
     targetPositions.current = project.positions;
     targetNormals.current = project.normals;
   }, [location]);
 
   useFrame((state, delta) => {
-    // console.log(projects, start.current);
-
     elapsedTime.current += delta;
-    // if (projects[start.current] && !projects[start.current].positions) return;
     start.current = Math.floor(scrollPercent * projects.length);
     end.current = Math.ceil(scrollPercent * projects.length);
     if (start.current < 0) start.current = projects.length - 1;
     if (end.current === projects.length) end.current = 0;
     percent.current = (scrollPercent * projects.length) - start.current;
-    // console.log(projects.length, start.current, end.current, percent.current);
 
     speedAccumulated.current += scrollSpeed * 1.5;
     if (Math.abs(speedAccumulated.current) > restingSpeed) speedAccumulated.current *= 0.975;
     baseRef.current.rotation.y += speedAccumulated.current / 10000;
 
-    // console.log(originalPositions.current);
     if (baseRef.current && targetPositions.current && originalPositions.current) {
       const normal = baseRef.current.geometry.attributes.normal.clone().array;
 

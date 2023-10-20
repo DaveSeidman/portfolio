@@ -2,7 +2,7 @@
 import React, { useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
-import { Vector3, Raycaster } from 'three';
+import { Vector3, Raycaster, Color } from 'three';
 import { useForceRender } from '../utils';
 
 import cursor from '../assets/models/cursor.gltf';
@@ -10,11 +10,8 @@ import cursor from '../assets/models/cursor.gltf';
 function Cursor(props) {
   const { planeRef, blobRef, pointer } = props;
   const cursorRef = useRef(new Vector3());
-  // const pointer = useRef(new Vector2());
   const target = useRef(new Vector3());
   const { camera } = useThree();
-  // const width = useRef(window.innerWidth);
-  // const height = useRef(window.innerHeight);
   const gltf = useGLTF(cursor);
   const raycaster = useRef(new Raycaster());
   const forceRender = useForceRender();
@@ -34,18 +31,9 @@ function Cursor(props) {
     forceRender();
   });
 
-  // TODO: pass width and height in as props
-  // const resize = () => {
-  //   width.current = window.innerWidth;
-  //   height.current = window.innerHeight;
-  // };
-
   return (
     <group ref={cursorRef}>
-      <pointLight
-        intensity={100}
-        scale={10}
-      />
+      <pointLight intensity={100} />
       <primitive object={gltf.scene}>
         <meshStandardMaterial />
       </primitive>

@@ -5,6 +5,7 @@ The interactive portolfio of Dave Seidman, Fullstack XR Developer.
 ### TODO:
 
 - Update Profile Pic
+- Keep next / prev arrows on screen if over media query
 - fix hover states for mobile (toggle .active instead)
 - add preloader
 - add chimes interaction sounds

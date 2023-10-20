@@ -9,6 +9,7 @@ function Carousel(props) {
 
   const historyLocation = useLocation();
   const [target, setTarget] = useState(0); // ONLY affects the carousel's position, not whether or not to open a slide
+  const prevSelected = useRef(selected);
   const focused = useRef(0);
   const slideOpen = useRef(false);
   const slides = useRef([]);
@@ -18,8 +19,6 @@ function Carousel(props) {
   const stopped = useRef(true);
   const pointer = useRef({ x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0, downX: 0, downY: 0, count: 0 });
   const width = useRef(0);
-  // const wheelX = useRef(0);
-  // const wheelY = useRef(0);
   const position = useRef(0);
   const speed = useRef(0);
   const historyNavigated = useRef(false);
@@ -167,13 +166,6 @@ function Carousel(props) {
     pointer.current.y = e.clientY;
   };
 
-  const handleTouchStart = (e) => {
-    // if (e.changedTouches.length >= 2) {
-    e.preventDefault();
-    // e.stopPropogation();
-    // }
-  }
-
   const handleKeyDown = (e) => {
     // TODO: cancel this is the command key is down to allow user to navigate back / forth 
     let nextTarget = null;
@@ -200,9 +192,20 @@ function Carousel(props) {
 
     if (selected === null) {
       pointer.current.count = 0;
+      const prevSlide = slides.current[prevSelected.current];
+      if (prevSlide) {
+        const videos = Array.from(prevSlide.querySelectorAll('video'));
+        const body = prevSlide.querySelector('.carousel-slides-slide-body'); // TODO: id this better
+        body.scrollTo({ top: 0, behavior: 'smooth' });
+        videos.forEach(video => {
+          video.pause();
+          video.currentTime = 0;
+        })
+      }
     }
 
     slideOpen.current = selected !== null;
+    prevSelected.current = selected;
   }, [selected]);
 
   // target slide has changed, center it in the viewport
@@ -246,7 +249,6 @@ function Carousel(props) {
     addEventListener('pointerup', handlePointerUp, false);
     addEventListener('pointerleave', handlePointerUp, false);
 
-    // carouselRef.current.addEventListener('touchstart', handleTouchStart);
 
     return () => {
       // if (carouselRef.current) {
@@ -260,7 +262,6 @@ function Carousel(props) {
       // removeEventListener('pointermove', handlePointerMove);
       // removeEventListener('pointerup', handlePointerUp);
       // removeEventListener('pointerleave', handlePointerUp);
-      // carouselRef.current.removeEventListener('touchstart', handleTouchStart);
       // }
       cancelAnimationFrame(animation);
     };

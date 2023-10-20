@@ -47,7 +47,7 @@ function Scene(props) {
         />
         <mesh
           ref={planeRef}
-          geometry={new PlaneGeometry(4, 4)}
+          geometry={new PlaneGeometry(10, 10)}
           visible={false}
         />
         <Environment
