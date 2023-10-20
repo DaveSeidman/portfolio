@@ -6,8 +6,6 @@ import SimplexNoise from 'simplex-noise';
 import { lerp } from 'three/src/math/MathUtils';
 import models from '../assets/models/new.gltf';
 
-let gltf;
-
 // TODO: this is being called every frame because of state cahnges
 // maybe use an if(model loaded) return condition at the top
 function Blob(props) {
@@ -25,22 +23,39 @@ function Blob(props) {
   const noiseRef = useRef(new SimplexNoise());
   const elapsedTime = useRef(0);
   const restingSpeed = 50;
+  const gltf = useRef();
+
+  const setBuffers = () => {
+    if (gltf.current) {
+      projects.forEach((project) => {
+        const shape = gltf.current.scene.getObjectByName(project.shape);
+        if (shape) {
+          shape.geometry.computeVertexNormals();
+          project.positions = shape.geometry.attributes.position.clone().array;
+          project.normals = shape.geometry.attributes.normal.clone().array;
+        }
+      });
+    }
+  };
 
   if (!originalPositions.current) {
-    gltf = useGLTF(models);
-    const base = gltf.scene.getObjectByName('Sphere');
+    gltf.current = useGLTF(models);
+    const base = gltf.current.scene.getObjectByName('Sphere');
 
     if (base) {
       originalPositions.current = base.geometry.attributes.position.clone().array;
     }
-    projects.forEach((project) => {
-      const shape = gltf.scene.getObjectByName(project.shape);
-      if (shape) {
-        shape.geometry.computeVertexNormals();
-        project.positions = shape.geometry.attributes.position.clone().array;
-        project.normals = shape.geometry.attributes.normal.clone().array;
-      }
-    });
+
+    setBuffers();
+
+    // projects.forEach((project) => {
+    //   const shape = gltf.scene.getObjectByName(project.shape);
+    //   if (shape) {
+    //     shape.geometry.computeVertexNormals();
+    //     project.positions = shape.geometry.attributes.position.clone().array;
+    //     project.normals = shape.geometry.attributes.normal.clone().array;
+    //   }
+    // });
 
     if (base) {
       // originalPositions.current = base.geometry.attributes.position.clone().array;
@@ -58,7 +73,10 @@ function Blob(props) {
   }, [location]);
 
   useFrame((state, delta) => {
+    // console.log(projects, start.current);
+
     elapsedTime.current += delta;
+    // if (projects[start.current] && !projects[start.current].positions) return;
     start.current = Math.floor(scrollPercent * projects.length);
     end.current = Math.ceil(scrollPercent * projects.length);
     if (start.current < 0) start.current = projects.length - 1;
@@ -76,7 +94,6 @@ function Blob(props) {
 
       for (let i = 0; i < positionCount; i += 3) {
         const noise = noiseRef.current.noise4D(originalPositions.current[i + 0], originalPositions.current[i + 1], originalPositions.current[i + 2], elapsedTime.current * 0.5);
-
         const x1 = projects[start.current].positions[i + 0];
         const y1 = projects[start.current].positions[i + 1];
         const z1 = projects[start.current].positions[i + 2];
@@ -96,9 +113,13 @@ function Blob(props) {
     }
   });
 
+  useEffect(() => {
+    setBuffers();
+  }, [projects]);
+
   return (
     <primitive
-      object={gltf && gltf.scene.getObjectByName('Sphere')}
+      object={gltf.current && gltf.current.scene.getObjectByName('Sphere')}
       ref={baseRef}
     >
       <MeshTransmissionMaterial

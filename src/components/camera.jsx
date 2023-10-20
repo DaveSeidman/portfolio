@@ -1,24 +1,53 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { PerspectiveCamera } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
+import { Vector2, Vector3 } from 'three';
 
 function Camera(props) {
   const { selected } = props;
   const cameraRef = useRef();
+  const pointer = useRef(new Vector2());
+  const width = useRef(window.innerWidth);
+  const height = useRef(window.innerHeight);
 
-  const wide = [0, 0, 5];
-  const close = [0, 1.5, 2];
+  const wide = new Vector3(0, 0, 5);
+  const close = new Vector3(0, 1.5, 2);
+  const focus = new Vector3(0, 0, 0);
 
-  const [cameraTarget, setCameraTarget] = useState(wide);
+  const [cameraPosition, setCameraPosition] = useState(wide);
+
+  const handlePointerMove = (e) => {
+    // pointer.current.x = (e.clientX / width.current) * 2 - 1;
+    // pointer.current.y = (e.clientY / height.current) * -2 + 1;
+  };
 
   useFrame((state, delta) => {
-    const nextCameraTarget = [
-      cameraTarget[0] + ((selected !== null ? close[0] : wide[0]) - cameraTarget[0]) / (2500 * delta),
-      cameraTarget[1] + ((selected !== null ? close[1] : wide[1]) - cameraTarget[1]) / (2500 * delta),
-      cameraTarget[2] + ((selected !== null ? close[2] : wide[2]) - cameraTarget[2]) / (2500 * delta),
-    ];
-    setCameraTarget(nextCameraTarget);
+    const nextcameraPosition = new Vector3(
+      cameraPosition.x + ((selected !== null ? close.x : wide.x) + (pointer.current.x / 5) - cameraPosition.x) / (2500 * delta),
+      cameraPosition.y + ((selected !== null ? close.y : wide.y) + (pointer.current.y / 5) - cameraPosition.y) / (2500 * delta),
+      cameraPosition.z + ((selected !== null ? close.z : wide.z) - cameraPosition.z) / (2500 * delta),
+    );
+
+    setCameraPosition(nextcameraPosition);
+
+    // cameraRef.current.position.x = pointer.current.x * 0.25;
+    // cameraRef.current.position.y = pointer.current.y * 0.25;
+    // cameraRef.current.lookAt(focus);
   });
+
+  const resize = () => {
+    width.current = window.innerWidth;
+    height.current = window.innerHeight;
+  };
+
+  useEffect(() => {
+    addEventListener('pointermove', handlePointerMove);
+    addEventListener('resize', resize);
+    return () => {
+      removeEventListener('pointermove', handlePointerMove);
+      removeEventListener('resize', resize);
+    };
+  }, []);
 
   return (
     <PerspectiveCamera
@@ -26,7 +55,7 @@ function Camera(props) {
       far={10}
       near={0.1}
       fov={35}
-      position={cameraTarget}
+      position={[cameraPosition.x, cameraPosition.y, cameraPosition.z]}
       ref={cameraRef}
     />
   );

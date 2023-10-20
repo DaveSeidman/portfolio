@@ -6,7 +6,7 @@
       "slug": "Dave",
       "shape": "Sphere",
       "tags" : [ "GIT", "PRO", "RES", "TWI" ],
-      "desc": "<p>I'm a Full Stack Developer that specializes in experiential and experimental projects. I grew up with the Commodore 64, Apple 2e, TI-89, Nintendo Virtual Boy, dot-matrix printers, and other technology that I programmed, dissected, and occasionally, put back together.</p><p>My 20+ year career has led me to work for startups, marketing agencies, and major brands like Uber, LG, Spotify, Verizon, Amex. I've also worked on research projects for Meta Reality Labs and MIT’s New Lab. They’ve trusted me to find and execute solutions when none seem to exist (at least from google, chatGPT or stackoverflow’s perspective). His work has been featured at CES, CTIA, and even aboard a Blue Origins rocket.</p><img src='images/about_dave.jpg' />"
+      "desc": "<p>I'm a Full Stack Developer that specializes in experiential and experimental projects. I grew up with the Commodore 64, Apple 2e, TI-89, Nintendo Virtual Boy, dot-matrix printers, and other technology that I programmed, dissected, and occasionally, put back together.</p><p>My 20+ year career has led me to work for startups, marketing agencies, and major brands like Uber, LG, Spotify, Verizon, Amex. I've also worked on research projects for Meta Reality Labs and MIT’s New Lab. They’ve trusted me to find and execute solutions when none seem to exist (at least from google, chatGPT or stackoverflow’s perspective). His work has been featured at CES, CTIA, and even aboard a Blue Origins rocket.</p><img src='images/dave1.png' />"
     },
     {
       "name": "Maíz.Uno",
@@ -21,7 +21,7 @@
       "title": "Collection of Prints",
       "slug": "3DPrints",
       "shape": "Sphere",
-      "desc": "<p>Sarah & Steph Wedding Present.</p><p>Hue Light switches</p><p>Printing around GoPro</p><p>Pax Beds</p>",
+      "desc": "<p>Sarah & Steph Wedding Present.</p><p>Hue Light switches</p><p>Printing around GoPro</p><p>Pax Beds</p><p>Trophies</p><p>Beer Tap</p>",
       "tags": []
     },
     {
@@ -29,8 +29,8 @@
       "title": "Virtual Reality, Delivered",
       "slug": "Borderless",
       "shape": "Headset",
-      "desc": "<p>Virtual Reality continues to become more commonplace, however there's very few resources available for non-technical users that want to create and view their own content in Virtual Reality. That's where Borderless comes in. They provide the hardware if you don't have your own along with a suite of publishing tools that make it easy. uploading your content, whether it be the 360 video you just shot on your last skiing trip, or a 3D scene you just rendered in Cinema 4D.</p><p>As the principal developer, I engineered a version of the frontend, backend, database, and authentication system that allows users to upload and consume their content. Surprisingly, modern versions of Chrome ship with the ability to communicate with connected devices. </p><p>Check it out for yourself: <a href='https://borderlessvr.com' target='_blank'>BorderlessVR.com</a>.</p>",
-      "tags": ["Front End Dev", "Back end dev", "Database", "AWS"]
+      "desc": "<p>Virtual Reality is steadily advancing in capabilities and market penetration, however there are very few resources available for non-technical people ot create and view Virtual Reality content. That's where Borderless comes in. They provide the hardware if you don't have your own headset, along with a suite of publishing and conversion tools that make it to create in VR. Think Squarespace but for Virtual Experiences.</p><img src='images/borderless-temp.jpg'/><p>With a functional prototype of the working system, I lead a team of engineers to create the platform that allows users to upload flat, panoramic, and stereoscopic images and video and immediately view it in their headsets, all from their browser. We used ReactJS to build the frontend which extended the normal capabilities of a webapp by utilizing libraries like WebUSB, WebADB, the caches api, and _____</p><p>Check it out for yourself: <a href='https://borderlessvr.com' target='_blank'>BorderlessVR.com</a>.</p>",
+      "tags": ["frontend", "backend", "database", "AWS"]
     },
     {
       "name": "GyroCode",

@@ -89,20 +89,12 @@ function Carousel(props) {
       slide.offset = width.current * index;
       slide.style.transform = `translateX(${slide.offset}px)`;
     });
-    console.log('resize', focused, selected, target);
-    // setTarget(focused.current);
-    // setTarget();
-    // forceRender();
-    // TODO: this might be good to keep in
-    // centerClosest();
   };
 
   // navigation initiated by a change in the history object (browser back or forward buttons, or user rewrote url)
   useEffect(() => {
-    console.log("history navigation", historyLocation)
     // TODO: if this is app load we should open the project
     const nextSelected = projects.findIndex(p => p.slug === historyLocation.pathname.slice(1));
-    console.log({ nextSelected })
     if (nextSelected >= 0) {
       setTarget(nextSelected);
 
@@ -207,7 +199,6 @@ function Carousel(props) {
     }
 
     if (selected === null) {
-      console.log("closed a project")
       pointer.current.count = 0;
     }
 
@@ -216,7 +207,6 @@ function Carousel(props) {
 
   // target slide has changed, center it in the viewport
   useEffect(() => {
-    console.log('target set', target)
     const { length } = slides.current;
     const leftStraight = { direction: -1, amount: target - focused.current };
     const leftWrapped = { direction: -1, amount: target - focused.current + length };
