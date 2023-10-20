@@ -1,16 +1,14 @@
 # Portfolio Website
 
-WebGL background with carousel of recent work.
+The interactive portolfio of Dave Seidman, Fullstack XR Developer.
 
 ### TODO:
 
 - Update Profile Pic
 - fix hover states for mobile (toggle .active instead)
 - add preloader
-- make entire scene darker and boost contrast (maybe with post processing)
 - add chimes interaction sounds
 - fix cursor movement, maybe have it interact with shape more
-- Prevent second touch events
 - browser back / forward buttons create incorrect history states
 - resize issues
 - webkit tap highlight (look on google pixel)
