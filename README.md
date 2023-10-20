@@ -4,6 +4,7 @@ WebGL background with carousel of recent work.
 
 ### TODO:
 
+- fix hover states for mobile (toggle .active instead)
 - add preloader
 - make entire scene darker and boost contrast (maybe with post processing)
 - move Camera and Blob into separate files

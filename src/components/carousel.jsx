@@ -291,7 +291,20 @@ function Carousel(props) {
               <h1 className="carousel-slides-slide-header-name">{project.name}</h1>
               <h2 className="carousel-slides-slide-header-title">{project.title}</h2>
             </div>
-            <div className="carousel-slides-slide-body" dangerouslySetInnerHTML={{ __html: setAssetPaths(project.desc) }} />
+            <div className="carousel-slides-slide-body">
+              <div className='carousel-slides-slide-body-content' dangerouslySetInnerHTML={{ __html: setAssetPaths(project.desc) }} />
+              <div className='carousel-slides-slide-body-tags'>
+                {
+                  project.tags.map((tag) => {
+
+                    return (
+                      <p className='carousel-slides-slide-body-tags-tag'>{tag}</p>
+                    )
+                  }
+                  )
+                }
+              </div>
+            </div>
           </div>
         ))
         }

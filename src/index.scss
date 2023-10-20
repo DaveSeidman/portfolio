@@ -123,6 +123,24 @@ button {
           // max-height: 100%;
         }
 
+        &-content {
+
+        }
+        &-tags {
+          &-tag {
+            display: inline-block;
+            padding: .5rem 1rem .5rem 2rem;
+            border: 1px solid $white;
+            border-radius: 2rem;
+            margin: .5rem;
+            cursor: pointer;
+            transition: background $fades;
+            &:hover {
+              background: transparentize($white, .5);
+            }
+          }
+        }
+
       }
 
       &.open {
