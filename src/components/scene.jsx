@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react';
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Environment, Plane, useGLTF } from '@react-three/drei';
-import { PointLight, SphereGeometry, Vector3, PlaneGeometry } from 'three';
+import React, { useEffect, useRef } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { Environment } from '@react-three/drei';
+import { PlaneGeometry, Vector2 } from 'three';
 import tvStudio from '../assets/images/tv_studio_2k.hdr';
 // import './index.scss';
 import Blob from './blob';
@@ -12,15 +12,26 @@ import Cursor from './cursor';
 function Scene(props) {
   const { projects, scrollPercent, scrollSpeed, selected } = props;
   const planeRef = useRef();
+  const width = useRef(window.innerWidth);
+  const height = useRef(window.innerHeight);
+  const pointer = useRef(new Vector2());
+  const handlePointerMove = (e) => {
+    pointer.current.x = (e.clientX / width.current) * 2 - 1;
+    pointer.current.y = (e.clientY / height.current) * -2 + 1;
+  };
+
+  useEffect(() => {
+    addEventListener('pointermove', handlePointerMove);
+
+    return () => {
+      removeEventListener('pointermove', handlePointerMove);
+    };
+  });
 
   return (
-    <div
-      className="scene"
-    >
+    <div className="scene">
       <Canvas dpr={[0.5, 1.5]}>
-        <Camera
-          selected={selected}
-        />
+        <Camera selected={selected} />
         <Blob
           projects={projects}
           scrollPercent={scrollPercent}
@@ -38,6 +49,7 @@ function Scene(props) {
         />
         <Cursor
           planeRef={planeRef}
+          pointer={pointer.current}
         // blobRef={blobRef}
         />
         {/* <PostProcessing /> */}

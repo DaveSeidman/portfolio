@@ -11,7 +11,7 @@ function Camera(props) {
   const height = useRef(window.innerHeight);
 
   const wide = new Vector3(0, 0, 5);
-  const close = new Vector3(0, 1.5, 2);
+  const close = new Vector3(0, 1.5, 2); // TODO: evaluate model bounding box here to set better offset
   const focus = new Vector3(0, 0, 0);
 
   const [cameraPosition, setCameraPosition] = useState(wide);
@@ -39,15 +39,6 @@ function Camera(props) {
     width.current = window.innerWidth;
     height.current = window.innerHeight;
   };
-
-  useEffect(() => {
-    addEventListener('pointermove', handlePointerMove);
-    addEventListener('resize', resize);
-    return () => {
-      removeEventListener('pointermove', handlePointerMove);
-      removeEventListener('resize', resize);
-    };
-  }, []);
 
   return (
     <PerspectiveCamera

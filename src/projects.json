@@ -52,17 +52,25 @@
       "name": "Parker",
       "title": "Interactive Parking Configurator",
       "slug": "Parker",
-      "shape": "Can",
+      "shape": "Car",
       "desc": "<p>I live in New York City where parking spots come at a premium. I became curious about whether there were ways to increase the amount of parking spaces without making any structural changes. In this WebGL interactive website, you can pick a borough, or section of the city, and play with different parameters like car spacing, parking direction, and cars can park on both sides of the street or not.</p><video src='videos/parker.mp4' poster='videos/parker.jpg' controls='true' playsinline='true'></video><p>Even though the streets weren't 100% accurate nor the car dimensions, nor does it take into account unusable spaces, fire hydrants, construction, or any of the other 20 reasons that \"No you can't park here!\" this tool did allow me to quickly try out different parking scenarios and quickly see the results</p><p>This visualization required some interesting logic as well as a good rendering pipeline to handle all the geometry that may be on screen at once. Three.js's instanced geometry helped a lot, though the amount of instances needed to be flexible.</p>",
       "tags": ["WebGL", "Algorithm Design"]
+    },
+    {
+      "name": "Socket Pilot",
+      "title": "Websocket Powered Flight Simulator",
+      "slug": "SocketPilot",
+      "shape": "Yoke",
+      "desc": "<p>Coming Soon</p>",
+      "tags" : [ "augmented reality", "computer vision", "live events" ]
     },
     {
       "name": "NFL AR by Verizon",
       "title": "NFL AR Experience by Verizon",
       "slug": "NFL-AR",
       "shape": "Football",
-      "tags" : [ "AR", "CV", "LIV" ],
-      "desc": "<p>I partnered with <a href=”https://buck.co/work/verizon-nfl-ar-experience” target=”_blank”>Buck</a> to help Verizon show off the speed of their first generation of 5G phones via an innovative AR experience tied to the NFL's 100th season. Our team set up up 10 life-size thrones at football stadiums across the country. The thrones themselves were completely blank, but came to life when viewed through our mixed reality app. Fans were invited to sit down while their friends recorded short videos of them. Our custom app tracked every surface of the thrones and allowed the viewer to add textures, animations and particle effects in realtime.</p><video src='videos/nfl-thrones.mp4' poster='videos/nfl-thrones.png' controls='true' playsinline='true'></video><p>Once finished, users could send themselves their video or directly share it on social media. Thousands of people sat down and even more shared their fandom by recording videos of the experience.</p><img src='images/nfl1.png' /><img src='images/nfl2.png' /><p>Our first technical challenge was tracking a solid white throne in 3D space without relying on tracking markers or QR codes. We used Vuforia's 3D model target system and trained it on 3D models of the thrones. Once that started working, we could render 3D graphics that were perfectly aligned to the throne, but also on top of the people sitting in the throne. We overcame this by adopting body-segmentation AI to differentiate between the throne and the person so that the graphics were no longer rendering on top of them. The end result was an exciting opportunity that attracted thousands of people to sit down and even more to share their fandom online."
+      "desc": "<p>I partnered with <a href=”https://buck.co/work/verizon-nfl-ar-experience” target=”_blank”>Buck</a> to help Verizon show off the speed of their first generation of 5G phones via an innovative AR experience tied to the NFL's 100th season. Our team set up up 10 life-size thrones at football stadiums across the country. The thrones themselves were completely blank, but came to life when viewed through our mixed reality app. Fans were invited to sit down while their friends recorded short videos of them. Our custom app tracked every surface of the thrones and allowed the viewer to add textures, animations and particle effects in realtime.</p><video src='videos/nfl-thrones.mp4' poster='videos/nfl-thrones.png' controls='true' playsinline='true'></video><p>Once finished, users could send themselves their video or directly share it on social media. Thousands of people sat down and even more shared their fandom by recording videos of the experience.</p><img src='images/nfl1.png' /><img src='images/nfl2.png' /><p>Our first technical challenge was tracking a solid white throne in 3D space without relying on tracking markers or QR codes. We used Vuforia's 3D model target system and trained it on 3D models of the thrones. Once that started working, we could render 3D graphics that were perfectly aligned to the throne, but also on top of the people sitting in the throne. We overcame this by adopting body-segmentation AI to differentiate between the throne and the person so that the graphics were no longer rendering on top of them. The end result was an exciting opportunity that attracted thousands of people to sit down and even more to share their fandom online.</p>",
+      "tags" : [ "augmented reality", "computer vision", "live events" ]
     },
     {
       "name": "ReFurbished",

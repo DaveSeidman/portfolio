@@ -154,7 +154,7 @@ function Carousel(props) {
 
   const handlePointerMove = (e) => {
     // TODO: this works up until you start clicking on projects
-    if (pointer.current.count > 1) return;
+    // if (pointer.current.count > 1) return;
     pointer.current.previousX = pointer.current.x;
     pointer.current.previousY = pointer.current.y;
     if (pointer.current.down) {
@@ -228,31 +228,40 @@ function Carousel(props) {
     animate();
     const debouncedResize = debounce(resize, 250);
 
-    addEventListener('wheel', wheel);
-    addEventListener('resize', resizeStart);
-    addEventListener('resize', debouncedResize);
-    addEventListener('keydown', handleKeyDown);
-    carouselRef.current.addEventListener('pointerdown', handlePointerDown);
-    carouselRef.current.addEventListener('pointermove', handlePointerMove);
-    carouselRef.current.addEventListener('pointerup', handlePointerUp);
-    carouselRef.current.addEventListener('pointerleave', handlePointerUp);
+    removeEventListener('wheel', wheel);
+    removeEventListener('resize', resizeStart);
+    removeEventListener('resize', debouncedResize);
+    removeEventListener('keydown', handleKeyDown);
+    removeEventListener('pointerdown', handlePointerDown);
+    removeEventListener('pointermove', handlePointerMove);
+    removeEventListener('pointerup', handlePointerUp);
+    removeEventListener('pointerleave', handlePointerUp);
+
+    addEventListener('wheel', wheel, false);
+    addEventListener('resize', resizeStart, false);
+    addEventListener('resize', debouncedResize, false);
+    addEventListener('keydown', handleKeyDown, false);
+    addEventListener('pointerdown', handlePointerDown, false);
+    addEventListener('pointermove', handlePointerMove, false);
+    addEventListener('pointerup', handlePointerUp, false);
+    addEventListener('pointerleave', handlePointerUp, false);
 
     // carouselRef.current.addEventListener('touchstart', handleTouchStart);
 
     return () => {
-      if (carouselRef.current) {
-        removeEventListener('wheel', wheel);
-        removeEventListener('resize', resizeStart);
-        removeEventListener('resize', debouncedResize);
-        removeEventListener('keydown', handleKeyDown);
+      // if (carouselRef.current) {
+      // removeEventListener('wheel', wheel);
+      // removeEventListener('resize', resizeStart);
+      // removeEventListener('resize', debouncedResize);
+      // removeEventListener('keydown', handleKeyDown);
 
 
-        carouselRef.current.removeEventListener('pointerdown', handlePointerDown);
-        carouselRef.current.removeEventListener('pointermove', handlePointerMove);
-        carouselRef.current.removeEventListener('pointerup', handlePointerUp);
-        carouselRef.current.removeEventListener('pointerleave', handlePointerUp);
-        // carouselRef.current.removeEventListener('touchstart', handleTouchStart);
-      }
+      // removeEventListener('pointerdown', handlePointerDown);
+      // removeEventListener('pointermove', handlePointerMove);
+      // removeEventListener('pointerup', handlePointerUp);
+      // removeEventListener('pointerleave', handlePointerUp);
+      // carouselRef.current.removeEventListener('touchstart', handleTouchStart);
+      // }
       cancelAnimationFrame(animation);
     };
   }, []);
