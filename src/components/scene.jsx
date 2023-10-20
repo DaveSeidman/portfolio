@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Environment, useGLTF } from '@react-three/drei';
+import { Environment, Plane, useGLTF } from '@react-three/drei';
 import { PointLight, SphereGeometry, Vector3 } from 'three';
 import tvStudio from '../assets/images/tv_studio_2k.hdr';
 // import './index.scss';
@@ -11,6 +11,8 @@ import Cursor from './cursor';
 
 function Scene(props) {
   const { projects, scrollPercent, scrollSpeed, selected } = props;
+  const planeRef = useRef();
+  // const blobRef = useRef();
 
   return (
     <div
@@ -21,16 +23,25 @@ function Scene(props) {
           selected={selected}
         />
         <Blob
+          // ref={blobRef}
           projects={projects}
           scrollPercent={scrollPercent}
           scrollSpeed={scrollSpeed}
           selected={selected}
         />
+        <Plane
+          ref={planeRef}
+          scale={[5, 5, 5]}
+          visible={false}
+        />
         <Environment
           files={tvStudio}
           blur={0.2}
         />
-        <Cursor />
+        <Cursor
+          planeRef={planeRef}
+        // blobRef={blobRef}
+        />
         {/* <PostProcessing /> */}
       </Canvas>
     </div>

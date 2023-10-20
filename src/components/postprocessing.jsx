@@ -4,7 +4,6 @@ import { SSAOPass, BokehPass, UnrealBloomPass } from 'three-stdlib';
 import { Effects } from '@react-three/drei';
 import { MeshBasicMaterial, Vector2 } from 'three';
 
-console.log(BokehPass);
 extend({ SSAOPass, BokehPass, UnrealBloomPass });
 
 function PostProcessing() {
@@ -21,9 +20,9 @@ function PostProcessing() {
         kernelRadius={1.2}
         kernelSize={1}
       /> */}
-      {/* <bokehPass
+      <bokehPass
         args={[scene, camera, 10, 0.0001, 1]}
-      /> */}
+      />
       {/* <unrealBloomPass args={[new Vector2(window.innerWidth / 1, window.innerHeight / 1), 1, 0.8, 0.5]} /> */}
     </Effects>
   );

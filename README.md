@@ -4,6 +4,7 @@ WebGL background with carousel of recent work.
 
 ### TODO:
 
+- Update Profile Pic
 - fix hover states for mobile (toggle .active instead)
 - add preloader
 - make entire scene darker and boost contrast (maybe with post processing)
