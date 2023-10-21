@@ -168,10 +168,11 @@ function Carousel(props) {
 
   const handleKeyDown = (e) => {
     // TODO: cancel this is the command key is down to allow user to navigate back / forth 
-    let nextTarget = null;
-    if (e.key === 'ArrowRight') nextTarget = focused.current + 1 > slides.current.length - 1 ? 0 : focused.current + 1;
-    if (e.key === 'ArrowLeft') nextTarget = focused.current - 1 < 0 ? slides.current.length - 1 : focused.current - 1;
-    if (nextTarget !== null) setTarget(nextTarget);
+    if (e.key === 'ArrowRight') setTarget(focused.current + 1 > slides.current.length - 1 ? 0 : focused.current + 1);
+    if (e.key === 'ArrowLeft') setTarget(focused.current - 1 < 0 ? slides.current.length - 1 : focused.current - 1);
+    if (e.key === 'ArrowUp' && selected === null) setSelected(focused.current);
+    if (e.key === 'ArrowDown') setSelected(null);
+    forceRender();
   };
 
   const handleArrowClick = (e) => {
@@ -231,14 +232,7 @@ function Carousel(props) {
     animate();
     const debouncedResize = debounce(resize, 250);
 
-    removeEventListener('wheel', wheel);
-    removeEventListener('resize', resizeStart);
-    removeEventListener('resize', debouncedResize);
-    removeEventListener('keydown', handleKeyDown);
-    removeEventListener('pointerdown', handlePointerDown);
-    removeEventListener('pointermove', handlePointerMove);
-    removeEventListener('pointerup', handlePointerUp);
-    removeEventListener('pointerleave', handlePointerUp);
+
 
     addEventListener('wheel', wheel, false);
     addEventListener('resize', resizeStart, false);
@@ -249,20 +243,17 @@ function Carousel(props) {
     addEventListener('pointerup', handlePointerUp, false);
     addEventListener('pointerleave', handlePointerUp, false);
 
-
     return () => {
       // if (carouselRef.current) {
-      // removeEventListener('wheel', wheel);
-      // removeEventListener('resize', resizeStart);
-      // removeEventListener('resize', debouncedResize);
-      // removeEventListener('keydown', handleKeyDown);
+      removeEventListener('wheel', wheel);
+      removeEventListener('resize', resizeStart);
+      removeEventListener('resize', debouncedResize);
+      removeEventListener('keydown', handleKeyDown);
+      removeEventListener('pointerdown', handlePointerDown);
+      removeEventListener('pointermove', handlePointerMove);
+      removeEventListener('pointerup', handlePointerUp);
+      removeEventListener('pointerleave', handlePointerUp);
 
-
-      // removeEventListener('pointerdown', handlePointerDown);
-      // removeEventListener('pointermove', handlePointerMove);
-      // removeEventListener('pointerup', handlePointerUp);
-      // removeEventListener('pointerleave', handlePointerUp);
-      // }
       cancelAnimationFrame(animation);
     };
   }, []);

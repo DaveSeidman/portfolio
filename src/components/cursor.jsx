@@ -9,7 +9,6 @@ import cursor from '../assets/models/cursor.gltf';
 
 function Cursor(props) {
   const { planeRef, blobRef, pointer, selected } = props;
-  console.log(selected);
   const cursorRef = useRef(new Vector3());
   const target = useRef(new Vector3());
   const { camera } = useThree();

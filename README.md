@@ -17,9 +17,7 @@ The interactive portolfio of Dave Seidman, Fullstack XR Developer.
 - Add contact info?
 - Make public folder accessible, like resume.pdf
 - Lazy Load images / videos, currently they begin downloading on app load
-- Try Camera Jerk
 - update linkedin & twitter
-- add motion blur
 - Add ASCO, CES, DLS, Spotify Codes, Motion Graphics
 - still able to open projects while scrolling away from them (mostly touch)
 - test video playback on slower devices, consider turning down pixel ratio while projects are open
