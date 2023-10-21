@@ -10,22 +10,21 @@ import { projects } from './projects.json';
 
 import './index.scss';
 
+const analytics = Analytics({
+  app: 'daveseidman.com',
+  plugins: [
+    googleAnalytics({
+      measurementIds: ['G-NYRX0Y24Z0'],
+    }),
+  ],
+});
+
 function App() {
   const [scrollPercent, setScrollPercent] = useState(0);
   const [scrollSpeed, setScrollSpeed] = useState(1);
   const [selected, setSelected] = useState(null);
 
-  const analytics = Analytics({
-    app: 'daveseidman.com',
-    plugins: [
-      googleAnalytics({
-        measurementIds: ['G-NYRX0Y24Z0'],
-      }),
-    ],
-  });
-
   useEffect(() => {
-    console.log('trigger analytics here', selected);
     analytics.page();
   }, [selected]);
 
