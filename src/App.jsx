@@ -2,15 +2,33 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   BrowserRouter as Router, Routes, Route, Link,
 } from 'react-router-dom';
+import Analytics from 'analytics';
+import googleAnalytics from '@analytics/google-analytics';
 import Scene from './components/scene';
 import Carousel from './components/carousel';
 import { projects } from './projects.json';
+
 import './index.scss';
 
 function App() {
   const [scrollPercent, setScrollPercent] = useState(0);
   const [scrollSpeed, setScrollSpeed] = useState(1);
   const [selected, setSelected] = useState(null);
+
+  const analytics = Analytics({
+    app: 'daveseidman.com',
+    plugins: [
+      googleAnalytics({
+        measurementIds: ['G-NYRX0Y24Z0'],
+      }),
+    ],
+  });
+
+  useEffect(() => {
+    console.log('trigger analytics here', selected);
+    analytics.page();
+  }, [selected]);
+
   return (
     <Router>
       <Routes>

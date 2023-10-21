@@ -4,6 +4,7 @@ The interactive portolfio of Dave Seidman, Fullstack XR Developer.
 
 ### TODO:
 
+- Add Analytics
 - resize issues
 - make tags links
 - turn holochat back on?

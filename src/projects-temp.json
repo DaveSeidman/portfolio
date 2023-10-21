@@ -31,12 +31,12 @@
     "desc": "<p>Coming Soon</p>",
     "tags" : [ "augmented reality", "computer vision", "events" ]
   },
-    {
-      "name": "3D Printing",
-      "title": "Collection of Prints",
-      "slug": "3DPrints",
-      "shape": "Sphere",
-      "desc": "<p>Sarah & Steph Wedding Present.</p><p>Hue Light switches</p><p>Printing around GoPro</p><p>Pax backends</p><p>Trophies</p><p>Beer Tap</p>",
-      "tags": []
-    }
+  {
+    "name": "3D Printing",
+    "title": "Collection of Prints",
+    "slug": "3DPrints",
+    "shape": "Sphere",
+    "desc": "<p>Sarah & Steph Wedding Present.</p><p>Hue Light switches</p><p>Printing around GoPro</p><p>Pax backends</p><p>Trophies</p><p>Beer Tap</p>",
+    "tags": []
+  }
 ]
