@@ -23,8 +23,8 @@ function Camera(props) {
 
   useFrame((state, delta) => {
     const nextcameraPosition = new Vector3(
-      cameraPosition.x + ((selected !== null ? close.x : wide.x) + (pointer.current.x / 5) - cameraPosition.x) / (2500 * delta),
-      cameraPosition.y + ((selected !== null ? close.y : wide.y) + (pointer.current.y / 5) - cameraPosition.y) / (2500 * delta),
+      cameraPosition.x + ((selected !== null ? close.x : wide.x) + (pointer.current.x / 5) - cameraPosition.x) / (1000 * delta),
+      cameraPosition.y + ((selected !== null ? close.y : wide.y) + (pointer.current.y / 5) - cameraPosition.y) / (1000 * delta),
       cameraPosition.z + ((selected !== null ? close.z : wide.z) - cameraPosition.z) / (2500 * delta),
     );
 

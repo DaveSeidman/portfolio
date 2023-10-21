@@ -187,13 +187,12 @@ function Carousel(props) {
 
   // selected 
   useEffect(() => {
-    // the selected slide was changed by a change to the history object, do not write it to the history
+    // the selected slide was NOT changed by a change to the history object, write it to the history
     if (!historyNavigated.current) {
       history.pushState({}, projects[selected]?.name || '', projects[selected]?.slug || '/');
       historyCopy.current.push(projects[selected]?.slug || '/')
     }
 
-    // if (selected === null) {
     pointer.current.count = 0;
     const prevSlide = slides.current[prevSelected.current];
     if (prevSlide) {
@@ -205,13 +204,14 @@ function Carousel(props) {
         video.currentTime = 0;
       })
     }
-    // } else {
+
     if (selected !== null) {
       const currentSlide = slides.current[selected];
       const firstVideo = currentSlide.querySelector('video');
       if (firstVideo) {
         firstVideo.currentTime = 0;
-        firstVideo.play();
+        // TODO: store this in an array and shut them down on selected changed
+        setTimeout(() => { firstVideo.play(); }, 1000);
       }
     }
 
