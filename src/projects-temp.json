@@ -16,6 +16,14 @@
     "tags": ["frontend", "backend", "database", "AWS"]
   },
   {
+    "name": "Spotify Codes",
+    "title": "",
+    "slug": "SpotifyCodes",
+    "shape": "Headset",
+    "desc": "<p>coming soon...</p>",
+    "tags": ["frontend", "open cv"]
+  },
+  {
     "name": "GyroCode",
     "title": "Fun with a Phone's Gyroscope",
     "slug": "Gyrocode",
