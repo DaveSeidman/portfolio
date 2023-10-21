@@ -2,8 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useForceRender, debounce, setAssetPaths } from '../utils';
-import first from 'eslint-plugin-import/lib/rules/first';
+import { useForceRender, debounce, setAssetPaths, bioLinks } from '../utils';
 
 function Carousel(props) {
   const { projects, setScrollPercent, setScrollSpeed, selected, setSelected } = props;
@@ -111,12 +110,6 @@ function Carousel(props) {
 
 
   const wheel = (e) => {
-    // wheelDelta.wheelX = e.deltaX;
-    // wheelDelta.wheelY = e.deltaY;
-    // wheelX.current = e.deltaX;
-    // wheelY.current = e.deltaY;
-
-    // wheeling.current = true;
     if (slideOpen.current) return;
     speed.current = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? -e.deltaY / 3 : -e.deltaX;
     setScrollSpeed(speed.current);
@@ -185,7 +178,7 @@ function Carousel(props) {
     setTarget(nextTarget)
   };
 
-  // selected 
+  // selected slide changed
   useEffect(() => {
     // the selected slide was NOT changed by a change to the history object, write it to the history
     if (!historyNavigated.current) {
@@ -252,7 +245,6 @@ function Carousel(props) {
     addEventListener('pointerleave', handlePointerUp, false);
 
     return () => {
-      // if (carouselRef.current) {
       removeEventListener('resize', resizeStart);
       removeEventListener('resize', debouncedResize);
       removeEventListener('keydown', handleKeyDown);
@@ -293,7 +285,13 @@ function Carousel(props) {
               <div className='carousel-slides-slide-body-tags'>
                 {
                   // TODO: allow links for tags from home page
-                  project.tags.map((tag, index) => (<p key={`${tag}-${index}`} className='carousel-slides-slide-body-tags-tag'>{tag}</p>))
+                  project.tags.map((tag, index) => (<a
+                    key={`${tag}-${index}`}
+                    className='carousel-slides-slide-body-tags-tag'
+                    target='_blank'
+                    href={bioLinks[tag]}
+                  >{tag}</a>
+                  ))
                 }
               </div>
             </div>

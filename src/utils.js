@@ -21,3 +21,10 @@ export const setAssetPaths = (html) => {
   html = html.replaceAll('poster=\'', `poster='${base}`);
   return html;
 };
+
+export const bioLinks = {
+  resume: 'https://daveseidman.com/resume.pdf',
+  gitlab: 'https://gitlab.com/daveseidman',
+  twitter: 'https://twitter.com/daveseidman',
+  linkedin: 'https://www.linkedin.com/in/daveseidman1',
+};

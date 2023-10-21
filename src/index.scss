@@ -130,6 +130,7 @@ button {
         }
         &-tags {
           display: flex;
+          flex-wrap: wrap;
           justify-content: center;
 
           &-tag {
@@ -140,6 +141,7 @@ button {
             background: transparentize($color: $black, $amount: 0.5);
             cursor: pointer;
             font-size: .75rem;
+            text-decoration: none;
             transition: background $fades;
             white-space: nowrap;
             &:hover {

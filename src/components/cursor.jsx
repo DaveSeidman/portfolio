@@ -32,7 +32,7 @@ function Cursor(props) {
 
   return (
     <group ref={cursorRef} position={[0, -2, 0]}>
-      <pointLight intensity={100} />
+      <pointLight intensity={100} color={0x976966} />
       <primitive object={gltf.scene} visible={selected === null}>
         <meshStandardMaterial />
       </primitive>
