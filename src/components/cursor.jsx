@@ -9,8 +9,8 @@ import cursor from '../assets/models/cursor.gltf';
 
 function Cursor(props) {
   const { planeRef, blobRef, pointer, selected } = props;
-  const cursorRef = useRef(new Vector3());
-  const target = useRef(new Vector3());
+  const cursorRef = useRef();
+  const target = useRef(new Vector3(0, -2, 0));
   const { camera } = useThree();
   const gltf = useGLTF(cursor);
   const raycaster = useRef(new Raycaster());
@@ -19,7 +19,6 @@ function Cursor(props) {
   raycaster.current.setFromCamera(pointer, camera);
   if (planeRef.current) {
     const intersects = raycaster.current.intersectObjects([planeRef.current], false);
-
     if (intersects[0]) { // technically this should always catch at least one point
       target.current.copy(intersects[0].point);
     }
@@ -32,7 +31,7 @@ function Cursor(props) {
   });
 
   return (
-    <group ref={cursorRef}>
+    <group ref={cursorRef} position={[0, -2, 0]}>
       <pointLight intensity={100} />
       <primitive object={gltf.scene} visible={selected === null}>
         <meshStandardMaterial />

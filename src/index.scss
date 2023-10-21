@@ -49,6 +49,7 @@ a {
 
 button {
   cursor: pointer;
+  outline: none;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -148,7 +149,7 @@ button {
 
       &.open {
         .carousel-slides-slide-body {
-          height: calc(100% - 12rem);
+          height: calc(100% - 10rem); // TODO: use a var instead of 10rem
           padding-bottom: 2rem;
         }
       }
@@ -214,20 +215,24 @@ button {
       }
     }
   }
+}
 
-  &:has(.open) {
-    .carousel {
-      &-arrows-arrow {
-        &.left {
-          left: -3rem;
+@media (max-width: $maxWidth) {
+  .carousel {
+    &:has(.open) {
+      .carousel {
+        &-arrows-arrow {
+          &.left {
+            left: -3rem;
+          }
+          &.right {
+            right: -3rem;
+          }
         }
-        &.right {
-          right: -3rem;
-        }
-      }
 
-      &-dots {
-        bottom: -1rem;
+        &-dots {
+          bottom: -1rem;
+        }
       }
     }
   }

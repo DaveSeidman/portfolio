@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useForceRender, debounce, setAssetPaths } from '../utils';
+import first from 'eslint-plugin-import/lib/rules/first';
 
 function Carousel(props) {
   const { projects, setScrollPercent, setScrollSpeed, selected, setSelected } = props;
@@ -166,12 +167,13 @@ function Carousel(props) {
     pointer.current.y = e.clientY;
   };
 
-  const handleKeyDown = (e) => {
+  const handleKeyDown = ({ code }) => {
     // TODO: cancel this is the command key is down to allow user to navigate back / forth 
-    if (e.key === 'ArrowRight') setTarget(focused.current + 1 > slides.current.length - 1 ? 0 : focused.current + 1);
-    if (e.key === 'ArrowLeft') setTarget(focused.current - 1 < 0 ? slides.current.length - 1 : focused.current - 1);
-    if (e.key === 'ArrowUp' && selected === null) setSelected(focused.current);
-    if (e.key === 'ArrowDown') setSelected(null);
+    if (code === 'ArrowRight') setTarget(focused.current + 1 > slides.current.length - 1 ? 0 : focused.current + 1);
+    if (code === 'ArrowLeft') setTarget(focused.current - 1 < 0 ? slides.current.length - 1 : focused.current - 1);
+    if (code === 'ArrowUp' && selected === null) setSelected(focused.current);
+    if (code === 'ArrowDown') setSelected(null);
+    // if (code === "Enter" || code === 'Space') setSelected(selected === null ? focused.current : null)
     forceRender();
   };
 
@@ -191,17 +193,25 @@ function Carousel(props) {
       historyCopy.current.push(projects[selected]?.slug || '/')
     }
 
-    if (selected === null) {
-      pointer.current.count = 0;
-      const prevSlide = slides.current[prevSelected.current];
-      if (prevSlide) {
-        const videos = Array.from(prevSlide.querySelectorAll('video'));
-        const body = prevSlide.querySelector('.carousel-slides-slide-body'); // TODO: id this better
-        body.scrollTo({ top: 0, behavior: 'smooth' });
-        videos.forEach(video => {
-          video.pause();
-          video.currentTime = 0;
-        })
+    // if (selected === null) {
+    pointer.current.count = 0;
+    const prevSlide = slides.current[prevSelected.current];
+    if (prevSlide) {
+      const videos = Array.from(prevSlide.querySelectorAll('video'));
+      const body = prevSlide.querySelector('.carousel-slides-slide-body'); // TODO: id this better
+      body.scrollTo({ top: 0, behavior: 'smooth' });
+      videos.forEach(video => {
+        video.pause();
+        video.currentTime = 0;
+      })
+    }
+    // } else {
+    if (selected !== null) {
+      const currentSlide = slides.current[selected];
+      const firstVideo = currentSlide.querySelector('video');
+      if (firstVideo) {
+        firstVideo.currentTime = 0;
+        firstVideo.play();
       }
     }
 
@@ -232,8 +242,6 @@ function Carousel(props) {
     animate();
     const debouncedResize = debounce(resize, 250);
 
-
-
     addEventListener('wheel', wheel, false);
     addEventListener('resize', resizeStart, false);
     addEventListener('resize', debouncedResize, false);
@@ -245,7 +253,6 @@ function Carousel(props) {
 
     return () => {
       // if (carouselRef.current) {
-      removeEventListener('wheel', wheel);
       removeEventListener('resize', resizeStart);
       removeEventListener('resize', debouncedResize);
       removeEventListener('keydown', handleKeyDown);
@@ -253,7 +260,6 @@ function Carousel(props) {
       removeEventListener('pointermove', handlePointerMove);
       removeEventListener('pointerup', handlePointerUp);
       removeEventListener('pointerleave', handlePointerUp);
-
       cancelAnimationFrame(animation);
     };
   }, []);
