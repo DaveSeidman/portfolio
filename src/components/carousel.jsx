@@ -292,6 +292,7 @@ function Carousel(props) {
               <div className='carousel-slides-slide-body-content' dangerouslySetInnerHTML={{ __html: setAssetPaths(project.desc) }} />
               <div className='carousel-slides-slide-body-tags'>
                 {
+                  // TODO: allow links for tags from home page
                   project.tags.map((tag, index) => (<p key={`${tag}-${index}`} className='carousel-slides-slide-body-tags-tag'>{tag}</p>))
                 }
               </div>
