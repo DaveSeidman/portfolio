@@ -49,6 +49,7 @@ a {
 
 button {
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 
 // TODO: maybe not needed
@@ -92,6 +93,7 @@ button {
       &-header {
         margin: 1rem;
         cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
         text-align: center;
 
         &-name {

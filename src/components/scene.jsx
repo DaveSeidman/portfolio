@@ -57,6 +57,7 @@ function Scene(props) {
         <Cursor
           planeRef={planeRef}
           pointer={pointer.current}
+          selected={selected}
         // blobRef={blobRef}
         />
         {/* <PostProcessing /> */}

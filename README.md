@@ -9,12 +9,13 @@ The interactive portolfio of Dave Seidman, Fullstack XR Developer.
 - fix hover states for mobile (toggle .active instead)
 - add preloader
 - add chimes interaction sounds
-- fix cursor movement, maybe have it interact with shape more
+- cursor movement, interact with shape more?
 - browser back / forward buttons create incorrect history states
 - resize issues
 - webkit tap highlight (look on google pixel)
 - Reset videos on open project
 - Add contact info?
+- Make public folder accessible, like resume.pdf
 - Lazy Load images / videos, currently they begin downloading on app load
 - Try Camera Jerk
 - update linkedin & twitter
