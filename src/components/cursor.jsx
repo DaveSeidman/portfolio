@@ -25,8 +25,13 @@ function Cursor(props) {
   }
 
   useFrame(() => {
-    cursorRef.current.position.x += (target.current.x - cursorRef.current.position.x) / 20;
-    cursorRef.current.position.y += (target.current.y - cursorRef.current.position.y) / 20;
+    const xDiff = (target.current.x - cursorRef.current.position.x);
+    const yDiff = (target.current.y - cursorRef.current.position.y);
+    const angle = Math.atan2(yDiff, xDiff) - (Math.PI / 2);
+    cursorRef.current.rotation.z = angle;
+    cursorRef.current.position.x += xDiff / 20;
+    cursorRef.current.position.y += yDiff / 20;
+
     forceRender();
   });
 

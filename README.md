@@ -4,14 +4,11 @@ The interactive portolfio of Dave Seidman, Fullstack XR Developer.
 
 ### TODO:
 
-- Add Analytics
 - resize issues
-- make tags links
 - turn holochat back on?
 - device size, landscape, make font smaller
 - Match slug case insensitive
 - Update Profile Pic
-- Keep next / prev arrows on screen if over media query
 - fix hover states for mobile (toggle .active instead)
 - add preloader
 - add chimes interaction sounds
