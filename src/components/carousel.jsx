@@ -29,11 +29,11 @@ function Carousel(props) {
 
   const swipeHandlers = useSwipeable({
     onSwiped: (e) => {
-      const currentSlide = slides.current[selected].querySelector('.carousel-slides-slide-body');
+      const currentSlide = selected ? slides.current[selected].querySelector('.carousel-slides-slide-body') : null;
       // swiping up on a slide that's not open should open it.
       if (e.dir === 'Up' && selected === null) setSelected(focused.current)
       // swiping down on a slide that's open should close it.
-      if (e.dir === 'Down' && selected !== null && currentSlide.scrollTop === 0) setSelected(null);
+      if (e.dir === 'Down' && selected !== null && currentSlide && currentSlide.scrollTop === 0) setSelected(null);
     }
   })
 
@@ -157,14 +157,14 @@ function Carousel(props) {
   };
 
   const handlePointerUp = (e) => {
-    pointer.current.count -= .5;
+    pointer.current.count -= .5; // TODO: this probably doesn't need to fire twice
     pointer.current.down = false;
     centerClosest();
   };
 
   const handlePointerMove = (e) => {
     // TODO: this works up until you start clicking on projects
-    // if (pointer.current.count > 1) return;
+    if (pointer.current.count > 1) return;
     pointer.current.previousX = pointer.current.x;
     pointer.current.previousY = pointer.current.y;
     if (pointer.current.down) {
