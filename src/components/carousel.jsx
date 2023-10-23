@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useForceRender, debounce, setAssetPaths, bioLinks } from '../utils';
+import { useSwipeable } from 'react-swipeable';
 
 function Carousel(props) {
   const { projects, setScrollPercent, setScrollSpeed, selected, setSelected } = props;
@@ -15,6 +16,7 @@ function Carousel(props) {
   const slides = useRef([]);
   const slidesRef = useRef();
   const carouselRef = useRef();
+
   const prevTime = useRef(0);
   const stopped = useRef(true);
   const pointer = useRef({ x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0, downX: 0, downY: 0, count: 0 });
@@ -25,6 +27,21 @@ function Carousel(props) {
   const resizing = useRef(false);
   const resizeTimeout = useRef(null);
 
+  const swipeHandlers = useSwipeable({
+    onSwiped: (e) => {
+      const currentSlide = slides.current[selected].querySelector('.carousel-slides-slide-body');
+      // swiping up on a slide that's not open should open it.
+      if (e.dir === 'Up' && selected === null) setSelected(focused.current)
+      // swiping down on a slide that's open should close it.
+      if (e.dir === 'Down' && selected !== null && currentSlide.scrollTop === 0) setSelected(null);
+    }
+  })
+
+
+  const carouselRefPassthrough = (el) => {
+    swipeHandlers.ref(el);
+    carouselRef.current = el;
+  }
 
   const historyCopy = useRef([]);
 
@@ -257,7 +274,10 @@ function Carousel(props) {
   }, []);
 
   return (
-    <div className="carousel" ref={carouselRef}>
+    <div className="carousel"
+      {...swipeHandlers}
+      ref={carouselRefPassthrough}
+    >
       <div
         className="carousel-slides"
         style={{ transform: `translateX(${position.current}px)` }}
@@ -311,7 +331,7 @@ function Carousel(props) {
           return (<span data={i} key={project.slug} className={`carousel-dots-dot ${i === focused.current ? 'active' : ''} `} />);
         })}
       </div>
-    </div>
+    </div >
   );
 }
 

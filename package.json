@@ -31,6 +31,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.16.0",
+    "react-swipeable": "^7.0.1",
     "sass": "^1.69.3",
     "simplex-noise": "^2.4.0",
     "three": "^0.157.0",

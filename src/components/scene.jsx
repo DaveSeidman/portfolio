@@ -3,7 +3,6 @@ import { Canvas } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import { PlaneGeometry, Vector2 } from 'three';
 import tvStudio from '../assets/images/tv_studio_2k.hdr';
-// import './index.scss';
 import Blob from './blob';
 import Camera from './camera';
 import PostProcessing from './postprocessing';
