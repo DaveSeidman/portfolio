@@ -1,14 +1,13 @@
 # Portfolio
 
-The interactive portolfio of Dave Seidman, Fullstack XR Developer.
+Fullstack XR Developer.
 
 ### TODO:
 
-- resize issues
+- diagnose horizontal resize issue with carousel (bouncing);
 - turn holochat back on?
 - device size, landscape, make font smaller
 - Match slug case insensitive
-- Update Profile Pic
 - fix hover states for mobile (toggle .active instead)
 - add preloader
 - add chimes interaction sounds
@@ -20,6 +19,5 @@ The interactive portolfio of Dave Seidman, Fullstack XR Developer.
 - still able to open projects while scrolling away from them (mostly touch)
 - test video playback on slower devices, consider turning down pixel ratio while projects are open
 - investigate performance
-- diagnose horizontal resize issue with carousel (bouncing);
 
 - move savetab somewhere else and turn off ec2?
