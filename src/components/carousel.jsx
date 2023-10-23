@@ -164,7 +164,7 @@ function Carousel(props) {
 
   const handlePointerMove = (e) => {
     // TODO: this works up until you start clicking on projects
-    if (pointer.current.count > 1) return;
+    // if (pointer.current.count > 1) return;
     pointer.current.previousX = pointer.current.x;
     pointer.current.previousY = pointer.current.y;
     if (pointer.current.down) {
