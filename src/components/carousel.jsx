@@ -306,7 +306,7 @@ function Carousel(props) {
       <div className="carousel-dots">
         {projects.map((project, index) => {
           // offset so that the middle dot is the 0th
-          let i = index + Math.floor(projects.length / 2);
+          let i = index + Math.round(projects.length / 2);
           if (i >= projects.length) i -= projects.length;
           return (<span data={i} key={project.slug} className={`carousel-dots-dot ${i === focused.current ? 'active' : ''} `} />);
         })}
