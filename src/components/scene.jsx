@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import { PlaneGeometry, Vector2 } from 'three';
-import tvStudio from '../assets/images/tv_studio_2k.hdr';
+import tvStudio from '../assets/images/tv_studio_small.hdr';
 import Blob from './blob';
 import Camera from './camera';
 import PostProcessing from './postprocessing';

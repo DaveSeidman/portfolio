@@ -38,5 +38,21 @@
     "shape": "Sphere",
     "desc": "<p>Sarah & Steph Wedding Present.</p><p>Hue Light switches</p><p>Printing around GoPro</p><p>Pax backends</p><p>Trophies</p><p>Beer Tap</p>",
     "tags": []
+  },
+  {
+    "name": "Maria Tash",
+    "title": "WebGL Earring Customizer",
+    "slug": "MariaTash",
+    "shape": "Ear",
+    "desc": "<p>Coming Soon</p>",
+    "tags": ["webgl", "algorithm design"]
+  },
+  {
+    "name": "iDive",
+    "title": "Data Visualization Suite",
+    "slug": "idive",
+    "shape": "Ear",
+    "desc": "<p>Coming Soon</p>",
+    "tags": []
   }
 ]

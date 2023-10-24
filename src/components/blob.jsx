@@ -4,7 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
 import SimplexNoise from 'simplex-noise';
 import { lerp } from 'three/src/math/MathUtils';
-import models from '../assets/models/new.gltf';
+import models from '../assets/models/models.gltf';
 
 // TODO: this is being called every frame because of state cahnges
 // maybe use an if(model loaded) return condition at the top
@@ -123,6 +123,8 @@ function Blob(props) {
       />
       {/* <meshStandardMaterial
         flatShading
+        color={0xffffff}
+        wireframe
       /> */}
 
     </primitive>
