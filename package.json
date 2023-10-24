@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@analytics/google-analytics": "^1.0.7",
+    "@pmndrs/vanilla": "^1.13.3",
     "@react-three/drei": "^9.87.1",
     "@react-three/fiber": "^8.14.5",
     "@vitejs/plugin-react": "^4.1.0",

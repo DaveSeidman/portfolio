@@ -1,13 +1,32 @@
 import React, { useEffect, useRef } from 'react';
 import { useGLTF, MeshTransmissionMaterial } from '@react-three/drei';
+// import { MeshTransmissionMaterial } from '@pmndrs/vanilla';
 import { useFrame } from '@react-three/fiber';
 import { useLocation } from 'react-router-dom';
 import SimplexNoise from 'simplex-noise';
 import { lerp } from 'three/src/math/MathUtils';
 import models from '../assets/models/models.gltf';
 
+// TODO: defining this outside of the component would increase performance but currently the vanilla version of the shader doens't match the R3F version
+// const material = new MeshTransmissionMaterial({
+//   transmission: 0.97,
+//   roughness: 0.3,
+//   thickness: 10,
+//   ior: 1.5,
+//   reflectivity: 0.01,
+//   color: 0x777777,
+//   chromaticAberration: 1,
+//   backsideThickness: 2,
+//   backside: true,
+//   // flatShading: true,
+//   flat: true,
+//   envMapIntensity: 1,
+// });
+// material.flatShading = true;
+
 // TODO: this is being called every frame because of state cahnges
 // maybe use an if(model loaded) return condition at the top
+
 function Blob(props) {
   const { projects, scrollPercent, scrollSpeed, selected } = props;
   const start = useRef();
@@ -105,6 +124,7 @@ function Blob(props) {
 
   return (
     <primitive
+      // material={material}
       object={gltf.current && gltf.current.scene.getObjectByName('Sphere')}
       ref={baseRef}
     >
@@ -121,12 +141,6 @@ function Blob(props) {
         flatShading
         envMapIntensity={1}
       />
-      {/* <meshStandardMaterial
-        flatShading
-        color={0xffffff}
-        wireframe
-      /> */}
-
     </primitive>
   );
 }
