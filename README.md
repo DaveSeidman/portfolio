@@ -19,5 +19,4 @@ Fullstack XR Developer.
 - still able to open projects while scrolling away from them (mostly touch)
 - test video playback on slower devices, consider turning down pixel ratio while projects are open
 - investigate performance
-
 - move savetab somewhere else and turn off ec2?
