@@ -7,6 +7,7 @@ Fullstack XR Developer.
 - diagnose horizontal resize issue with carousel (bouncing);
 - turn holochat back on?
 - device size, landscape, make font smaller
+- remove unused glyphs to shrink font filesize
 - Match slug case insensitive
 - fix hover states for mobile (toggle .active instead)
 - add preloader

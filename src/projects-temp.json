@@ -1,13 +1,5 @@
 [
   {
-    "name": "Spotify Codes",
-    "title": "",
-    "slug": "SpotifyCodes",
-    "shape": "Headset",
-    "desc": "<p>coming soon...</p>",
-    "tags": ["frontend", "open cv"]
-  },
-  {
     "name": "GyroCode",
     "title": "Fun with a Phone's Gyroscope",
     "slug": "Gyrocode",
@@ -28,7 +20,7 @@
     "title": "Collection of Prints",
     "slug": "3DPrints",
     "shape": "Sphere",
-    "desc": "<p>Sarah & Steph Wedding Present.</p><p>Hue Light switches</p><p>Printing around GoPro</p><p>Pax backends</p><p>Trophies</p><p>Beer Tap</p>",
+    "desc": "<p>Emergency Pizza</p><p>Sarah & Steph Wedding Present.</p><p>Hue Light switches</p><p>Printing around GoPro</p><p>Pax backends</p><p>Trophies</p><p>Beer Tap</p>",
     "tags": []
   },
   {
@@ -46,5 +38,29 @@
     "shape": "Ear",
     "desc": "<p>Coming Soon</p>",
     "tags": []
+  },
+  {
+    "name": "Big Natural Toes",
+    "title": "Gag website for Uber",
+    "slug": "toes",
+    "shape": "toe",
+    "desc": "<p></p>",
+    "tags": ["frontend"]
+  },
+  {
+    "name": "Ugly Sweater Generator",
+    "title": "Tis the season to be ugly",
+    "slug": "uglysweaters",
+    "shape": "shirt",
+    "desc": "<p></p>",
+    "tags": ["frontend", "webgl", "generative ai"]
+  },
+  {
+    "name": "Harry Potter",
+    "title": "Wizarding World AR App",
+    "slug": "HarryPotter",
+    "shape": "broom",
+    "desc": "<p>Coming Soon</p>",
+    "tags": ["augmented reality", "frontend", "physical computing"]
   }
 ]

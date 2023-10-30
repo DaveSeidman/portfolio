@@ -30,7 +30,7 @@
       "slug": "HoloChat",
       "shape": "Head",
       "desc": "<p>Holochat is a browser-based holographic chat application. It extrudes user's face in 3D allowing them to pan, zoom and rotate around their features. Users can also drag and drop the window into a <a href='https://lookingglassfactory.com/product/overview' target='_blank'>Looking Glass</a> to view themselves as a live hologram. Users can also connect to others for two-way holographic calls:</p><video muted src='videos/holochat.mp4' poster='images/holochat1.png' controls='true' playsinline='true'></video><p>I used <a href='https://developers.google.com/mediapipe' target='_blank'>MediaPipe's</a> facial tracking and body segmentation to create an approximate mesh with the webcam image. WebRTC allows the video and mesh data to be streamed to the other user's screen.</p><p>Check it out for yourself: <a href='https://holochat.app' target='_blank'>holochat.app</a></p>",
-      "tags" : [ "Holography", "Front End Development", "Backend Development", "Experiment" ]
+      "tags" : [ "holography", "frontend", "backend", "experiment" ]
     },
     {
       "name": "Living Distance",
@@ -39,6 +39,14 @@
       "shape": "Rocket",
       "desc": "<p>The inspirational <a href='https://www.xxxxxxxxxinliu.com/' target='_blank'>Xin Liu</a> partnered up with the <a href='https://newlab.com/' target='_blank'>New Lab</a> to design and build a small robot that was sent into space aboard one of the first Blue Origin rockets. The robot was mounted to the floor of a small locker during liftoff. Once in space, the rocket's main computer sent a signal to the locker triggering the mounting clips to release. The robot was then free to float around the locker.</p><img src='images/living-distance.gif'><p>Xin's team was looking for a software engineer to design a guidance system to help the bot determine its relative position and orientation. For propulsion, the bot was designed to have several high-speed gyroscopic motors that would turn relatively heavy discs, creating torque in the weightless conditions of space.</p><video muted src='videos/living-distance.mp4' poster='images/BackOnEarth.jpg' controls='true' playsinline='true'></video><p>Because the locker was outfitted with bright LEDs, we decided to create a visual system. I started with a virtual camera inside 3D software and placed it inside a cube with the AR tracking images as textures on its inner panels. I used OpenCV's homography library to calculate the position based on Aruco markers attached to the inside of the locker. Read more <a href='https://www.xxxxxxxxxinliu.com/#/living-distance/' target='_blank'>here</a></p><img src='images/living-distance-1.png' />",
       "tags": [ "computer vision", "physical computing" ]
+    },
+    {
+      "name": "Spotify Codes",
+      "title": "AR Code Customizer",
+      "slug": "SpotifyCodes",
+      "shape": "Speaker",
+      "desc": "<p>Spotify had just released <a href='https://www.spotifycodes.com/' target='_blank'>Spotify Codes</a>, a new way to quickly share a track, an album, or an entire playlists with people near you. Just click the camera icon in the Spotify App, point it at your friend's phone to start listening!</p><video muted src='videos/spotify-codes.mp4' poster='videos/spotify-codes.jpg' controls='true' playsinline='true'></video><p>They came to me to help create the explainer website and also a way for users to generated custom codes by selecting some music, then picking the size, color, and format of the code. It also offered a direct sharing mechanism even though most users would export and print the codes for stickers, banners and billboards. You've probably seen them in the wild withough knowing what they are. Next time, open the Spotify App and check it out!</p>",
+      "tags": ["frontend", "opencv", "api integration"]
     },
     {
       "name": "Pride Parade",
