@@ -4,6 +4,7 @@ Fullstack XR Developer.
 
 ### TODO:
 
+- Draco not available offline
 - diagnose horizontal resize issue with carousel (bouncing);
 - turn holochat back on?
 - device size, landscape, make font smaller
