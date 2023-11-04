@@ -4,6 +4,7 @@ $black: rgb(0, 0, 0);
 
 $minWidth: 360px;
 $maxWidth: 720px;
+$minHeight: 400px;
 $margin: 1rem;
 
 $moves: .5s;
@@ -240,5 +241,17 @@ button {
         }
       }
     }
+  }
+}
+
+@media (max-height: $minHeight) {
+  html, body {
+    font-size: 10px;
+  }
+}
+// TODO: Shouldn't need this but it isn't always resetting on ios safari
+@media (min-height: $minHeight) {
+  html, body {
+    font-size: 16px;
   }
 }

@@ -29,14 +29,28 @@ function Carousel(props) {
 
   const swipeHandlers = useSwipeable({
     onSwiped: (e) => {
-      const currentSlide = selected ? slides.current[selected].querySelector('.carousel-slides-slide-body') : null;
+      // alert(e.dir);
+      const currentSlide = selected !== null ? slides.current[selected].querySelector('.carousel-slides-slide-body') : null;
       // swiping up on a slide that's not open should open it.
       if (e.dir === 'Up' && selected === null) setSelected(focused.current)
       // swiping down on a slide that's open should close it.
-      if (e.dir === 'Down' && selected !== null && currentSlide && currentSlide.scrollTop === 0) setSelected(null);
+      if (e.dir === 'Down' && selected !== null && currentSlide !== null && currentSlide.scrollTop <= 20) {
+        setSelected(null);
+      }
+      // swiping right while a slide is open should go to the next slide
+      if (e.dir === 'Right' && selected !== null) {
+        const nextSelected = selected === 0 ? slides.current.length - 1 : selected - 1;
+        setSelected(nextSelected);
+        setTarget(nextSelected);
+      }
+      // swiping left while a slide is open should go to the prev slide
+      if (e.dir === 'Left' && selected !== null) {
+        const nextSelected = selected === slides.current.length - 1 ? 0 : selected + 1;
+        setSelected(nextSelected);
+        setTarget(nextSelected);
+      }
     }
   })
-
 
   const carouselRefPassthrough = (el) => {
     swipeHandlers.ref(el);
@@ -50,7 +64,7 @@ function Carousel(props) {
 
   const forceRender = useForceRender();
 
-  // TODO: swap for a useREf?
+  // TODO: swap for a useRef?
   let animation;
 
   const animate = (time) => {
@@ -205,10 +219,11 @@ function Carousel(props) {
 
     pointer.current.count = 0;
     const prevSlide = slides.current[prevSelected.current];
+    // TODO: move these to "openSlide" and "closeSlide" functions
     if (prevSlide) {
       const videos = Array.from(prevSlide.querySelectorAll('video'));
-      const body = prevSlide.querySelector('.carousel-slides-slide-body'); // TODO: id this better
-      body.scrollTo({ top: 0, behavior: 'smooth' });
+      // const body = prevSlide.querySelector('.carousel-slides-slide-body'); // TODO: id this better
+      // body.scrollTo({ top: 0, behavior: 'smooth' });
       videos.forEach(video => {
         video.pause();
         video.currentTime = 0;
@@ -217,6 +232,8 @@ function Carousel(props) {
 
     if (selected !== null) {
       const currentSlide = slides.current[selected];
+      const body = currentSlide.querySelector('.carousel-slides-slide-body'); // TODO: id this better
+      body.scrollTo({ top: 0, behavior: 'smooth' });
       const firstVideo = currentSlide.querySelector('video');
       if (firstVideo) {
         firstVideo.currentTime = 0;
