@@ -294,7 +294,7 @@ function Carousel(props) {
     addEventListener('pointerup', handlePointerUp, false);
     addEventListener('pointerleave', handlePointerUp, false);
 
-    setInterval(checkIfSlideOpened, 4000);
+    setInterval(checkIfSlideOpened, 10000);
 
     return () => {
       removeEventListener('resize', resizeStart);

@@ -119,6 +119,7 @@ function Blob(props) {
   });
 
   useEffect(() => {
+    // TODO: this might not be working on HMR when changing projects
     setBuffers();
   }, [projects]);
 

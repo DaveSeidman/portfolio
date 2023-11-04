@@ -224,18 +224,28 @@ button {
 
   &-hint {
     position: absolute;
-    top: calc(50% + 2.5rem);
+    top: calc(50% + 3.5rem);
     left: 50%;
     font-size: .75rem;
     opacity: 0;
     pointer-events: none;
-    transform: translate(-50%, -50%);
-    transition: opacity .5s, visibility .5s;
+    transform: translate(-50%, -40%);
+    transition: opacity .5s, visibility .5s, transform .5s;
     visibility: hidden;
 
     &.active {
-      opacity: 1;
+      opacity: .6;
+      transform: translate(-50%, -50%);
       visibility: visible;
+    }
+
+    &:after {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      content: '▲';
+      font-size: .5rem;
+      transform: translateX(-50%) scaleY(70%);
     }
   }
 }
