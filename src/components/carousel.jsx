@@ -27,6 +27,11 @@ function Carousel(props) {
   const resizing = useRef(false);
   const resizeTimeout = useRef(null);
 
+  // const [slideOpened, setSlideOpened] = useState(false);
+  const [showHint, setShowHint] = useState(false); // TODO: implement a hint after a long enough delay without a project being opened
+  const slideOpened = useRef(false);
+  // const showHint = useRef(false);
+
   const swipeHandlers = useSwipeable({
     onSwiped: (e) => {
       // alert(e.dir);
@@ -211,6 +216,10 @@ function Carousel(props) {
 
   // selected slide changed
   useEffect(() => {
+    if (selected !== null) {
+      slideOpened.current = true;
+      setShowHint(false);
+    }
     // the selected slide was NOT changed by a change to the history object, write it to the history
     if (!historyNavigated.current) {
       history.pushState({}, projects[selected]?.name || '', projects[selected]?.slug || '/');
@@ -262,6 +271,13 @@ function Carousel(props) {
     setSelected(slideOpen.current ? target : null);
   }, [target]);
 
+  const checkIfSlideOpened = () => {
+    if (!slideOpened.current) {
+      setShowHint(true);
+      setTimeout(() => { setShowHint(false); }, 2000)
+    }
+  }
+
   // on load
   useEffect(() => {
     slides.current = Array.from(slidesRef.current.children);
@@ -277,6 +293,8 @@ function Carousel(props) {
     addEventListener('pointermove', handlePointerMove, false);
     addEventListener('pointerup', handlePointerUp, false);
     addEventListener('pointerleave', handlePointerUp, false);
+
+    setInterval(checkIfSlideOpened, 4000);
 
     return () => {
       removeEventListener('resize', resizeStart);
@@ -347,6 +365,9 @@ function Carousel(props) {
           if (i >= projects.length) i -= projects.length;
           return (<span data={i} key={project.slug} className={`carousel-dots-dot ${i === focused.current ? 'active' : ''} `} />);
         })}
+      </div>
+      <div className={`carousel-hint ${showHint ? 'active' : ''}`}>
+        <p>tap to open</p>
       </div>
     </div >
   );

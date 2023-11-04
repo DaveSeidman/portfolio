@@ -221,6 +221,23 @@ button {
       }
     }
   }
+
+  &-hint {
+    position: absolute;
+    top: calc(50% + 2.5rem);
+    left: 50%;
+    font-size: .75rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: opacity .5s, visibility .5s;
+    visibility: hidden;
+
+    &.active {
+      opacity: 1;
+      visibility: visible;
+    }
+  }
 }
 
 @media (max-width: $maxWidth) {
