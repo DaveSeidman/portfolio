@@ -39,7 +39,7 @@ export const setAssetPaths = (html) => {
 
 export const bioLinks = {
   resume: 'https://daveseidman.com/resume.pdf',
-  gitlab: 'https://gitlab.com/daveseidman',
+  github: 'https://github.com/DaveSeidman',
   twitter: 'https://twitter.com/daveseidman',
   linkedin: 'https://www.linkedin.com/in/daveseidman1',
 };

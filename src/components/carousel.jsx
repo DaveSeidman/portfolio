@@ -10,7 +10,7 @@ const MINIMUM_SPEED = 0.001;
 const TAP_MOVE_THRESHOLD = 12;
 const ARTICLE_EDGE_THRESHOLD = 20;
 const WHEEL_ACTION_THRESHOLD = 8;
-const WHEEL_GESTURE_IDLE_MS = 180;
+const WHEEL_GESTURE_IDLE_MS = 120;
 const WHEEL_EVENT_OPTIONS = { passive: false };
 
 function Carousel(props) {
@@ -332,6 +332,7 @@ function Carousel(props) {
     if (code === 'ArrowLeft') setTarget(focused.current - 1 < 0 ? slides.current.length - 1 : focused.current - 1);
     if (code === 'ArrowUp' && !slideOpen.current) setSelected(focused.current);
     if (code === 'ArrowDown') setSelected(null);
+    if (code === 'Escape') setSelected(null);
     // if (code === "Enter" || code === 'Space') setSelected(selected === null ? focused.current : null)
     forceRender();
   };
