@@ -1,6 +1,16 @@
 node_modules/
 dist
 etc/
-public/
+
+public/*
+!public/favicon.ico
+!public/resume.pdf
+!public/videos/
+public/videos/*
+!public/videos/*.png
+!public/videos/*.jpg
+!public/videos/*.jpeg
+!public/videos/*.gif
+!public/videos/*.webp
 
 .DS_Store
