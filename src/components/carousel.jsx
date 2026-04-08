@@ -10,7 +10,7 @@ const MINIMUM_SPEED = 0.001;
 const TAP_MOVE_THRESHOLD = 12;
 const ARTICLE_EDGE_THRESHOLD = 20;
 const WHEEL_ACTION_THRESHOLD = 8;
-const WHEEL_ACTION_COOLDOWN = 400;
+const WHEEL_GESTURE_IDLE_MS = 180;
 const WHEEL_EVENT_OPTIONS = { passive: false };
 
 function Carousel(props) {
@@ -49,7 +49,9 @@ function Carousel(props) {
   const hintTimeout = useRef(null);
   const videoPlayTimeout = useRef(null);
   const historySelectionTimeout = useRef(null);
-  const lastWheelActionAt = useRef(0);
+  const wheelGestureTimeout = useRef(null);
+  const wheelGestureAxis = useRef(null);
+  const wheelGestureActionTaken = useRef(false);
 
   // const [slideOpened, setSlideOpened] = useState(false);
   const [showHint, setShowHint] = useState(false); // TODO: implement a hint after a long enough delay without a project being opened
@@ -98,18 +100,45 @@ function Carousel(props) {
     return slides.current[prevSelected.current]?.querySelector('.carousel-slides-slide-body') || null;
   };
 
-  const canRunWheelAction = () => {
-    const now = Date.now();
-    if (now - lastWheelActionAt.current < WHEEL_ACTION_COOLDOWN) return false;
-    lastWheelActionAt.current = now;
+  const resetWheelGesture = () => {
+    wheelGestureAxis.current = null;
+    wheelGestureActionTaken.current = false;
+    wheelGestureTimeout.current = null;
+  };
+
+  const touchWheelGesture = (axis) => {
+    if (wheelGestureTimeout.current) {
+      clearTimeout(wheelGestureTimeout.current);
+    }
+
+    if (wheelGestureAxis.current === null) {
+      wheelGestureAxis.current = axis;
+    }
+
+    if (wheelGestureAxis.current !== axis) {
+      wheelGestureAxis.current = axis;
+      wheelGestureActionTaken.current = false;
+    }
+
+    wheelGestureTimeout.current = setTimeout(resetWheelGesture, WHEEL_GESTURE_IDLE_MS);
+  };
+
+  const canRunWheelAction = (axis) => {
+    touchWheelGesture(axis);
+    if (wheelGestureActionTaken.current) return false;
+    wheelGestureActionTaken.current = true;
     return true;
   };
 
-  const setSelectedByDirection = (direction) => {
-    if (prevSelected.current === null) return;
-    const nextSelected = (prevSelected.current + direction + slides.current.length) % slides.current.length;
-    setSelected(nextSelected);
+  const moveTargetByDirection = (direction) => {
+    const baseIndex = slideOpen.current && prevSelected.current !== null
+      ? prevSelected.current
+      : focused.current;
+    const nextSelected = (baseIndex + direction + slides.current.length) % slides.current.length;
     setTarget(nextSelected);
+    if (slideOpen.current) {
+      setSelected(nextSelected);
+    }
   };
 
   const animate = () => {
@@ -203,9 +232,9 @@ function Carousel(props) {
     const isHorizontalGesture = absX > absY;
 
     if (slideOpen.current) {
-      if (isHorizontalGesture && absX >= WHEEL_ACTION_THRESHOLD && canRunWheelAction()) {
+      if (isHorizontalGesture && absX >= WHEEL_ACTION_THRESHOLD && canRunWheelAction('x')) {
         e.preventDefault();
-        setSelectedByDirection(e.deltaX > 0 ? 1 : -1);
+        moveTargetByDirection(e.deltaX > 0 ? 1 : -1);
         return;
       }
 
@@ -213,29 +242,22 @@ function Carousel(props) {
       if (!selectedSlideBody || absY < WHEEL_ACTION_THRESHOLD) return;
 
       const isAtTop = selectedSlideBody.scrollTop <= ARTICLE_EDGE_THRESHOLD;
-      const isAtBottom = selectedSlideBody.scrollTop + selectedSlideBody.clientHeight >= (
-        selectedSlideBody.scrollHeight - ARTICLE_EDGE_THRESHOLD
-      );
-
-      if (
-        ((e.deltaY < 0 && isAtTop) || (e.deltaY > 0 && isAtBottom))
-        && canRunWheelAction()
-      ) {
+      if (e.deltaY < 0 && isAtTop && canRunWheelAction('y')) {
         e.preventDefault();
         setSelected(null);
       }
       return;
     }
 
-    if (isHorizontalGesture && absX >= WHEEL_ACTION_THRESHOLD) {
+    if (isHorizontalGesture && absX >= WHEEL_ACTION_THRESHOLD && canRunWheelAction('x')) {
       e.preventDefault();
-      speed.current = -e.deltaX;
-      scrollSpeed.current = speed.current;
-      stopped.current = false;
+      speed.current = 0;
+      scrollSpeed.current = 0;
+      moveTargetByDirection(e.deltaX > 0 ? 1 : -1);
       return;
     }
 
-    if (e.deltaY > WHEEL_ACTION_THRESHOLD && canRunWheelAction()) {
+    if (e.deltaY > WHEEL_ACTION_THRESHOLD && canRunWheelAction('y')) {
       e.preventDefault();
       speed.current = 0;
       scrollSpeed.current = 0;
@@ -447,6 +469,7 @@ function Carousel(props) {
       clearTimeout(hintTimeout.current);
       clearTimeout(videoPlayTimeout.current);
       clearTimeout(historySelectionTimeout.current);
+      clearTimeout(wheelGestureTimeout.current);
       cancelAnimationFrame(animationFrame.current);
     };
   }, []);

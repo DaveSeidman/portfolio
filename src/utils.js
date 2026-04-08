@@ -17,13 +17,23 @@ export const debounce = (mainFunction, delay) => {
 
 export const setAssetPaths = (html) => {
   const videoBase = location.hostname === 'localhost' ? '' : 'https://daveseidmancom.s3.amazonaws.com/';
+  const publicBase = import.meta.env.BASE_URL || '/';
+  const normalizedPublicBase = publicBase.endsWith('/') ? publicBase : `${publicBase}/`;
   html = html.replace(/ poster='[^']*'/g, '');
   return html.replace(/src='([^']+)'/g, (_, src) => {
     const isLocalVideo = src.startsWith('videos/') && src.endsWith('.mp4');
-    if (!videoBase || !isLocalVideo) {
-      return `src='${src}'`;
+    const isLocalPublicAsset = src.startsWith('videos/');
+
+    if (isLocalVideo) {
+      const resolvedSrc = videoBase ? `${videoBase}${src}` : `${normalizedPublicBase}${src}`;
+      return `src='${resolvedSrc}'`;
     }
-    return `src='${videoBase}${src}'`;
+
+    if (isLocalPublicAsset) {
+      return `src='${normalizedPublicBase}${src}'`;
+    }
+
+    return `src='${src}'`;
   });
 };
 
