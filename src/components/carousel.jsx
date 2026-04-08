@@ -2,11 +2,19 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useForceRender, debounce, setAssetPaths, bioLinks } from '../utils';
 import { useSwipeable } from 'react-swipeable';
+import { useForceRender, debounce, setAssetPaths, bioLinks } from '../utils';
+
+const INERTIA = 0.95;
+const MINIMUM_SPEED = 0.001;
+const TAP_MOVE_THRESHOLD = 12;
+const ARTICLE_EDGE_THRESHOLD = 20;
+const WHEEL_ACTION_THRESHOLD = 8;
+const WHEEL_ACTION_COOLDOWN = 400;
+const WHEEL_EVENT_OPTIONS = { passive: false };
 
 function Carousel(props) {
-  const { projects, setScrollPercent, setScrollSpeed, selected, setSelected } = props;
+  const { projects, scrollPercent, scrollSpeed, selected, setSelected } = props;
 
   const historyLocation = useLocation();
   const [target, setTarget] = useState(0); // ONLY affects the carousel's position, not whether or not to open a slide
@@ -17,15 +25,31 @@ function Carousel(props) {
   const slidesRef = useRef();
   const carouselRef = useRef();
 
-  const prevTime = useRef(0);
   const stopped = useRef(true);
-  const pointer = useRef({ x: 0, y: 0, previousX: 0, previousY: 0, speedX: 0, speedY: 0, downX: 0, downY: 0, count: 0 });
+  const pointer = useRef({
+    x: 0,
+    y: 0,
+    previousX: 0,
+    previousY: 0,
+    speedX: 0,
+    speedY: 0,
+    down: false,
+    downX: 0,
+    downY: 0,
+    axis: null,
+    dragged: false,
+    count: 0,
+  });
   const width = useRef(0);
   const position = useRef(0);
   const speed = useRef(0);
   const historyNavigated = useRef(false);
-  const resizing = useRef(false);
-  const resizeTimeout = useRef(null);
+  const animationFrame = useRef(null);
+  const hintInterval = useRef(null);
+  const hintTimeout = useRef(null);
+  const videoPlayTimeout = useRef(null);
+  const historySelectionTimeout = useRef(null);
+  const lastWheelActionAt = useRef(0);
 
   // const [slideOpened, setSlideOpened] = useState(false);
   const [showHint, setShowHint] = useState(false); // TODO: implement a hint after a long enough delay without a project being opened
@@ -36,8 +60,11 @@ function Carousel(props) {
     onSwiped: (e) => {
       // alert(e.dir);
       const currentSlide = selected !== null ? slides.current[selected].querySelector('.carousel-slides-slide-body') : null;
+      const horizontalSwipeDistance = Math.abs(e.absX ?? e.deltaX ?? 0);
       // swiping up on a slide that's not open should open it.
-      if (e.dir === 'Up' && selected === null) setSelected(focused.current)
+      if (e.dir === 'Up' && selected === null && horizontalSwipeDistance <= TAP_MOVE_THRESHOLD) {
+        setSelected(focused.current);
+      }
       // swiping down on a slide that's open should close it.
       if (e.dir === 'Down' && selected !== null && currentSlide !== null && currentSlide.scrollTop <= 20) {
         setSelected(null);
@@ -54,75 +81,87 @@ function Carousel(props) {
         setSelected(nextSelected);
         setTarget(nextSelected);
       }
-    }
-  })
+    },
+  });
 
   const carouselRefPassthrough = (el) => {
     swipeHandlers.ref(el);
     carouselRef.current = el;
-  }
+  };
 
   const historyCopy = useRef([]);
 
-  const inertia = 0.95;
-  const minimumSpeed = 0.001;
-
   const forceRender = useForceRender();
 
-  // TODO: swap for a useRef?
-  let animation;
+  const getSelectedSlideBody = () => {
+    if (prevSelected.current === null) return null;
+    return slides.current[prevSelected.current]?.querySelector('.carousel-slides-slide-body') || null;
+  };
 
-  const animate = (time) => {
-    const timeDelta = time - prevTime.current;
-    prevTime.current = time;
+  const canRunWheelAction = () => {
+    const now = Date.now();
+    if (now - lastWheelActionAt.current < WHEEL_ACTION_COOLDOWN) return false;
+    lastWheelActionAt.current = now;
+    return true;
+  };
 
-    if (resizing.current) return;
+  const setSelectedByDirection = (direction) => {
+    if (prevSelected.current === null) return;
+    const nextSelected = (prevSelected.current + direction + slides.current.length) % slides.current.length;
+    setSelected(nextSelected);
+    setTarget(nextSelected);
+  };
 
-    if (Math.abs(speed.current) >= minimumSpeed) {
-      speed.current *= inertia;
-      setScrollSpeed(speed.current);
+  const animate = () => {
+    if (Math.abs(speed.current) >= MINIMUM_SPEED) {
+      speed.current *= INERTIA;
+      scrollSpeed.current = speed.current;
       position.current += speed.current;
-      slides.current.forEach((slide, index) => {
+
+      if (slidesRef.current) {
+        slidesRef.current.style.transform = `translate3d(${position.current}px, 0, 0)`;
+      }
+
+      slides.current.forEach((slide) => {
+        const slidePosition = slide.offset + position.current;
         if (speed.current < 0) {
-          if (parseInt(slide.getBoundingClientRect().left, 10) < -width.current) {
+          if (slidePosition < -width.current) {
             slide.offset += (width.current * slides.current.length);
-            slide.style.transform = `translateX(${slide.offset}px)`;
+            slide.style.transform = `translate3d(${slide.offset}px, 0, 0)`;
           }
-        } else if (parseInt(slide.getBoundingClientRect().left, 10) > width.current) {
+        } else if (slidePosition > width.current) {
           slide.offset -= (width.current * slides.current.length);
-          slide.style.transform = `translateX(${slide.offset}px)`;
+          slide.style.transform = `translate3d(${slide.offset}px, 0, 0)`;
         }
       });
 
       let nextScrollPercent = (-position.current % (width.current * slides.current.length)) / (width.current * slides.current.length);
       if (nextScrollPercent < 0) nextScrollPercent = 1 + nextScrollPercent;
-      setScrollPercent(nextScrollPercent);
-      let nextfocused = Math.round(nextScrollPercent * slides.current.length);
-      if (nextfocused >= slides.current.length) nextfocused = 0;
-      focused.current = nextfocused;
-      forceRender();
+      scrollPercent.current = nextScrollPercent;
+      let nextFocused = Math.round(nextScrollPercent * slides.current.length);
+      if (nextFocused >= slides.current.length) nextFocused = 0;
+      if (nextFocused !== focused.current) {
+        focused.current = nextFocused;
+        forceRender();
+      }
+    } else if (!stopped.current) {
+      stopped.current = true;
+      scrollSpeed.current = 0;
     }
-    else if (!stopped.current) stopped.current = true;
-    animation = requestAnimationFrame(animate);
+    animationFrame.current = requestAnimationFrame(animate);
   };
 
-  const resizeStart = () => {
-    // if (resizeTimeout.current) {
-    //   clearTimeout(resizeTimeout.current);
-    //   resizeTimeout.current = null;
-    // }
-    // resizing.current = true;
-    // resizeTimeout.current = setTimeout(() => {
-    //   resizing.current = false;
-    // }, 1000)
-  }
-
   const resize = () => {
+    if (!carouselRef.current) return;
     width.current = carouselRef.current.getBoundingClientRect().width;
+    position.current = -focused.current * width.current;
+    if (slidesRef.current) {
+      slidesRef.current.style.transform = `translate3d(${position.current}px, 0, 0)`;
+    }
     slides.current.forEach((slide, index) => {
       slide.style.width = `${width.current}px`;
       slide.offset = width.current * index;
-      slide.style.transform = `translateX(${slide.offset}px)`;
+      slide.style.transform = `translate3d(${slide.offset}px, 0, 0)`;
     });
   };
 
@@ -130,30 +169,83 @@ function Carousel(props) {
   useEffect(() => {
     // TODO: if this is app load we should open the project
     const nextSelected = projects.findIndex(p => p.slug === historyLocation.pathname.slice(1));
+    if (historySelectionTimeout.current) {
+      clearTimeout(historySelectionTimeout.current);
+      historySelectionTimeout.current = null;
+    }
     if (nextSelected >= 0) {
       setTarget(nextSelected);
 
       // set this to true momentarily so that the carousel doesn't
       // try to add history states while it navigates
       historyNavigated.current = true;
-      setTimeout(() => {
+      historySelectionTimeout.current = setTimeout(() => {
         // TODO: would be better to fire this when the carousel stops instead
-        historyNavigated.current = false
+        historyNavigated.current = false;
         setSelected(nextSelected);
       }, 1000);
+    } else {
+      historyNavigated.current = false;
     }
+
+    return () => {
+      if (historySelectionTimeout.current) {
+        clearTimeout(historySelectionTimeout.current);
+        historySelectionTimeout.current = null;
+      }
+    };
   }, [historyLocation]);
 
 
   const wheel = (e) => {
-    if (slideOpen.current) return;
-    speed.current = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? -e.deltaY / 3 : -e.deltaX;
-    setScrollSpeed(speed.current);
+    const absX = Math.abs(e.deltaX);
+    const absY = Math.abs(e.deltaY);
+    const isHorizontalGesture = absX > absY;
+
+    if (slideOpen.current) {
+      if (isHorizontalGesture && absX >= WHEEL_ACTION_THRESHOLD && canRunWheelAction()) {
+        e.preventDefault();
+        setSelectedByDirection(e.deltaX > 0 ? 1 : -1);
+        return;
+      }
+
+      const selectedSlideBody = getSelectedSlideBody();
+      if (!selectedSlideBody || absY < WHEEL_ACTION_THRESHOLD) return;
+
+      const isAtTop = selectedSlideBody.scrollTop <= ARTICLE_EDGE_THRESHOLD;
+      const isAtBottom = selectedSlideBody.scrollTop + selectedSlideBody.clientHeight >= (
+        selectedSlideBody.scrollHeight - ARTICLE_EDGE_THRESHOLD
+      );
+
+      if (
+        ((e.deltaY < 0 && isAtTop) || (e.deltaY > 0 && isAtBottom))
+        && canRunWheelAction()
+      ) {
+        e.preventDefault();
+        setSelected(null);
+      }
+      return;
+    }
+
+    if (isHorizontalGesture && absX >= WHEEL_ACTION_THRESHOLD) {
+      e.preventDefault();
+      speed.current = -e.deltaX;
+      scrollSpeed.current = speed.current;
+      stopped.current = false;
+      return;
+    }
+
+    if (e.deltaY > WHEEL_ACTION_THRESHOLD && canRunWheelAction()) {
+      e.preventDefault();
+      speed.current = 0;
+      scrollSpeed.current = 0;
+      centerClosest();
+      setSelected(focused.current);
+    }
   };
 
   const handlePointerDown = (e) => {
     pointer.current.count += 1;
-    if (slideOpen.current) return;
     pointer.current.down = true;
     pointer.current.downX = e.clientX;
     pointer.current.downY = e.clientY;
@@ -161,46 +253,62 @@ function Carousel(props) {
     pointer.current.y = e.clientY;
     pointer.current.previousX = e.clientX;
     pointer.current.previousY = e.clientY;
+    pointer.current.axis = null;
+    pointer.current.dragged = false;
   };
 
   const centerClosest = () => {
+    if (!width.current) return;
     let tempSpeed = speed.current;
     let finalPosition = position.current;
 
-    while (Math.abs(tempSpeed) >= minimumSpeed) {
-      tempSpeed *= inertia;
+    while (Math.abs(tempSpeed) >= MINIMUM_SPEED) {
+      tempSpeed *= INERTIA;
       finalPosition += tempSpeed;
     }
     const snappedFinalPosition = Math.round(finalPosition / width.current) * width.current;
     speed.current += (snappedFinalPosition - finalPosition) / 19;
+    stopped.current = false;
   };
 
   const handlePointerUp = (e) => {
-    pointer.current.count -= .5; // TODO: this probably doesn't need to fire twice
+    pointer.current.count = Math.max(0, pointer.current.count - 1);
     pointer.current.down = false;
-    centerClosest();
+    if (!slideOpen.current) {
+      centerClosest();
+    }
   };
 
   const handlePointerMove = (e) => {
-    // TODO: this works up until you start clicking on projects
-    // if (pointer.current.count > 1) return;
     pointer.current.previousX = pointer.current.x;
     pointer.current.previousY = pointer.current.y;
-    if (pointer.current.down) {
-      speed.current = e.clientX - pointer.current.x;
-      pointer.current.speedX = pointer.current.previousX - e.clientX;
-      pointer.current.speedY = pointer.current.previousY - e.clientY;
-      setScrollSpeed(speed.current);
-    }
     pointer.current.x = e.clientX;
     pointer.current.y = e.clientY;
+
+    if (!pointer.current.down) return;
+
+    const movedX = e.clientX - pointer.current.downX;
+    const movedY = e.clientY - pointer.current.downY;
+    if (!pointer.current.axis) {
+      if (Math.hypot(movedX, movedY) < TAP_MOVE_THRESHOLD) return;
+      pointer.current.axis = Math.abs(movedX) > Math.abs(movedY) ? 'x' : 'y';
+      pointer.current.dragged = true;
+    }
+
+    if (slideOpen.current || pointer.current.axis !== 'x') return;
+
+    speed.current = e.clientX - pointer.current.previousX;
+    pointer.current.speedX = pointer.current.previousX - e.clientX;
+    pointer.current.speedY = pointer.current.previousY - e.clientY;
+    scrollSpeed.current = speed.current;
+    stopped.current = false;
   };
 
   const handleKeyDown = ({ code }) => {
     // TODO: cancel this is the command key is down to allow user to navigate back / forth 
     if (code === 'ArrowRight') setTarget(focused.current + 1 > slides.current.length - 1 ? 0 : focused.current + 1);
     if (code === 'ArrowLeft') setTarget(focused.current - 1 < 0 ? slides.current.length - 1 : focused.current - 1);
-    if (code === 'ArrowUp' && selected === null) setSelected(focused.current);
+    if (code === 'ArrowUp' && !slideOpen.current) setSelected(focused.current);
     if (code === 'ArrowDown') setSelected(null);
     // if (code === "Enter" || code === 'Space') setSelected(selected === null ? focused.current : null)
     forceRender();
@@ -209,13 +317,35 @@ function Carousel(props) {
   const handleArrowClick = (e) => {
     const dir = parseInt(e.target.getAttribute('data-dir'), 10);
     let nextTarget = focused.current + dir;
-    if (nextTarget > slides.current.length) nextTarget = 0;
+    if (nextTarget >= slides.current.length) nextTarget = 0;
     if (nextTarget < 0) nextTarget = slides.current.length - 1;
-    setTarget(nextTarget)
+    setTarget(nextTarget);
+  };
+
+  const handleSlideHeaderClick = (index) => {
+    if (pointer.current.dragged) return;
+
+    if (index === selected) {
+      setSelected(null);
+      return;
+    }
+
+    if (selected === null && index !== focused.current) {
+      setTarget(index);
+      return;
+    }
+
+    setTarget(index);
+    setSelected(index);
   };
 
   // selected slide changed
   useEffect(() => {
+    if (videoPlayTimeout.current) {
+      clearTimeout(videoPlayTimeout.current);
+      videoPlayTimeout.current = null;
+    }
+
     if (selected !== null) {
       slideOpened.current = true;
       setShowHint(false);
@@ -247,12 +377,19 @@ function Carousel(props) {
       if (firstVideo) {
         firstVideo.currentTime = 0;
         // TODO: store this in an array and shut them down on selected changed
-        setTimeout(() => { firstVideo.play(); }, 1000);
+        videoPlayTimeout.current = setTimeout(() => { firstVideo.play(); }, 1000);
       }
     }
 
     slideOpen.current = selected !== null;
     prevSelected.current = selected;
+
+    return () => {
+      if (videoPlayTimeout.current) {
+        clearTimeout(videoPlayTimeout.current);
+        videoPlayTimeout.current = null;
+      }
+    };
   }, [selected]);
 
   // target slide has changed, center it in the viewport
@@ -274,9 +411,12 @@ function Carousel(props) {
   const checkIfSlideOpened = () => {
     if (!slideOpened.current) {
       setShowHint(true);
-      setTimeout(() => { setShowHint(false); }, 2000)
+      if (hintTimeout.current) {
+        clearTimeout(hintTimeout.current);
+      }
+      hintTimeout.current = setTimeout(() => { setShowHint(false); }, 2000);
     }
-  }
+  };
 
   // on load
   useEffect(() => {
@@ -285,8 +425,7 @@ function Carousel(props) {
     animate();
     const debouncedResize = debounce(resize, 250);
 
-    addEventListener('wheel', wheel, false);
-    addEventListener('resize', resizeStart, false);
+    addEventListener('wheel', wheel, WHEEL_EVENT_OPTIONS);
     addEventListener('resize', debouncedResize, false);
     addEventListener('keydown', handleKeyDown, false);
     addEventListener('pointerdown', handlePointerDown, false);
@@ -294,17 +433,21 @@ function Carousel(props) {
     addEventListener('pointerup', handlePointerUp, false);
     addEventListener('pointerleave', handlePointerUp, false);
 
-    setInterval(checkIfSlideOpened, 10000);
+    hintInterval.current = setInterval(checkIfSlideOpened, 10000);
 
     return () => {
-      removeEventListener('resize', resizeStart);
+      removeEventListener('wheel', wheel, WHEEL_EVENT_OPTIONS);
       removeEventListener('resize', debouncedResize);
       removeEventListener('keydown', handleKeyDown);
       removeEventListener('pointerdown', handlePointerDown);
       removeEventListener('pointermove', handlePointerMove);
       removeEventListener('pointerup', handlePointerUp);
       removeEventListener('pointerleave', handlePointerUp);
-      cancelAnimationFrame(animation);
+      clearInterval(hintInterval.current);
+      clearTimeout(hintTimeout.current);
+      clearTimeout(videoPlayTimeout.current);
+      clearTimeout(historySelectionTimeout.current);
+      cancelAnimationFrame(animationFrame.current);
     };
   }, []);
 
@@ -315,7 +458,7 @@ function Carousel(props) {
     >
       <div
         className="carousel-slides"
-        style={{ transform: `translateX(${position.current}px)` }}
+        style={{ transform: `translate3d(${position.current}px, 0, 0)` }}
         ref={slidesRef}
       >
         {projects.map((project, index) => (
@@ -325,13 +468,8 @@ function Carousel(props) {
           >
             <div
               className="carousel-slides-slide-header"
-              onClick={() => {
-                // TODO: before setting selected, lets make sure this was a click and not a drag
-                // if (speed.current <= minimumSpeed) {
-                if (index === selected) setSelected(null);
-                else setSelected(index);
-                // }
-              }}>
+              onClick={() => handleSlideHeaderClick(index)}
+            >
               <h1 className="carousel-slides-slide-header-name">{project.name}</h1>
               <h2 className="carousel-slides-slide-header-title">{project.title}</h2>
             </div>

@@ -20,8 +20,8 @@ const analytics = Analytics({
 });
 
 function App() {
-  const [scrollPercent, setScrollPercent] = useState(0);
-  const [scrollSpeed, setScrollSpeed] = useState(1);
+  const scrollPercent = useRef(0);
+  const scrollSpeed = useRef(1);
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
@@ -43,8 +43,8 @@ function App() {
               />
               <Carousel
                 projects={projects}
-                setScrollPercent={setScrollPercent}
-                setScrollSpeed={setScrollSpeed}
+                scrollPercent={scrollPercent}
+                scrollSpeed={scrollSpeed}
                 selected={selected}
                 setSelected={setSelected}
               />

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Environment } from '@react-three/drei';
 import { PlaneGeometry, Vector2 } from 'three';
@@ -11,6 +11,7 @@ import Cursor from './cursor';
 function Scene(props) {
   const { projects, scrollPercent, scrollSpeed, selected } = props;
   const planeRef = useRef();
+  const planeGeometry = useMemo(() => new PlaneGeometry(10, 10), []);
   const width = useRef(window.innerWidth);
   const height = useRef(window.innerHeight);
   const pointer = useRef(new Vector2());
@@ -32,7 +33,7 @@ function Scene(props) {
       removeEventListener('pointermove', handlePointerMove);
       removeEventListener('resize', handleResize);
     };
-  });
+  }, []);
 
   return (
     <div className="scene">
@@ -46,7 +47,7 @@ function Scene(props) {
         />
         <mesh
           ref={planeRef}
-          geometry={new PlaneGeometry(10, 10)}
+          geometry={planeGeometry}
           visible={false}
         />
         <Environment

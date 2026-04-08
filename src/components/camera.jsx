@@ -1,44 +1,29 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { PerspectiveCamera } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { Vector2, Vector3 } from 'three';
+import { Vector3 } from 'three';
+
+const WIDE_POSITION = new Vector3(0, 0, 5);
+const CLOSE_POSITION = new Vector3(0, 1.5, 2);
+const FOCUS_POINT = new Vector3(0, 0, 0);
 
 function Camera(props) {
   const { selected } = props;
   const cameraRef = useRef();
-  const pointer = useRef(new Vector2());
-  const width = useRef(window.innerWidth);
-  const height = useRef(window.innerHeight);
 
-  const wide = new Vector3(0, 0, 5);
-  const close = new Vector3(0, 1.5, 2); // TODO: evaluate model bounding box here to set better offset
-  const focus = new Vector3(0, 0, 0);
+  useFrame((_, delta) => {
+    const camera = cameraRef.current;
+    if (!camera) return;
 
-  const [cameraPosition, setCameraPosition] = useState(wide);
+    const targetPosition = selected !== null ? CLOSE_POSITION : WIDE_POSITION;
+    const xyLerp = Math.min(1, 1 / Math.max(1000 * delta, 1));
+    const zLerp = Math.min(1, 1 / Math.max(2500 * delta, 1));
 
-  const handlePointerMove = (e) => {
-    // pointer.current.x = (e.clientX / width.current) * 2 - 1;
-    // pointer.current.y = (e.clientY / height.current) * -2 + 1;
-  };
-
-  useFrame((state, delta) => {
-    const nextcameraPosition = new Vector3(
-      cameraPosition.x + ((selected !== null ? close.x : wide.x) + (pointer.current.x / 5) - cameraPosition.x) / (1000 * delta),
-      cameraPosition.y + ((selected !== null ? close.y : wide.y) + (pointer.current.y / 5) - cameraPosition.y) / (1000 * delta),
-      cameraPosition.z + ((selected !== null ? close.z : wide.z) - cameraPosition.z) / (2500 * delta),
-    );
-
-    setCameraPosition(nextcameraPosition);
-
-    // cameraRef.current.position.x = pointer.current.x * 0.25;
-    // cameraRef.current.position.y = pointer.current.y * 0.25;
-    // cameraRef.current.lookAt(focus);
+    camera.position.x += (targetPosition.x - camera.position.x) * xyLerp;
+    camera.position.y += (targetPosition.y - camera.position.y) * xyLerp;
+    camera.position.z += (targetPosition.z - camera.position.z) * zLerp;
+    camera.lookAt(FOCUS_POINT);
   });
-
-  const resize = () => {
-    width.current = window.innerWidth;
-    height.current = window.innerHeight;
-  };
 
   return (
     <PerspectiveCamera
@@ -46,7 +31,7 @@ function Camera(props) {
       far={10}
       near={0.1}
       fov={35}
-      position={[cameraPosition.x, cameraPosition.y, cameraPosition.z]}
+      position={[WIDE_POSITION.x, WIDE_POSITION.y, WIDE_POSITION.z]}
       ref={cameraRef}
     />
   );

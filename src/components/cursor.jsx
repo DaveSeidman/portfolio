@@ -2,8 +2,7 @@
 import React, { useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
-import { Vector3, Raycaster, Color } from 'three';
-import { useForceRender } from '../utils';
+import { Vector3, Raycaster } from 'three';
 
 import cursor from '../assets/models/cursor.gltf';
 
@@ -14,25 +13,26 @@ function Cursor(props) {
   const { camera } = useThree();
   const gltf = useGLTF(cursor);
   const raycaster = useRef(new Raycaster());
-  const forceRender = useForceRender();
-
-  raycaster.current.setFromCamera(pointer, camera);
-  if (planeRef.current) {
-    const intersects = raycaster.current.intersectObjects([planeRef.current], false);
-    if (intersects[0]) { // technically this should always catch at least one point
-      target.current.copy(intersects[0].point);
-    }
-  }
+  const intersects = useRef([]);
 
   useFrame(() => {
+    const plane = planeRef.current;
+    const cursorObject = cursorRef.current;
+    if (!plane || !cursorObject) return;
+
+    raycaster.current.setFromCamera(pointer, camera);
+    intersects.current.length = 0;
+    raycaster.current.intersectObject(plane, false, intersects.current);
+    if (intersects.current[0]) {
+      target.current.copy(intersects.current[0].point);
+    }
+
     const xDiff = (target.current.x - cursorRef.current.position.x);
     const yDiff = (target.current.y - cursorRef.current.position.y);
     const angle = Math.atan2(yDiff, xDiff) - (Math.PI / 2);
-    cursorRef.current.rotation.z = angle;
-    cursorRef.current.position.x += xDiff / 20;
-    cursorRef.current.position.y += yDiff / 20;
-
-    forceRender();
+    cursorObject.rotation.z = angle;
+    cursorObject.position.x += xDiff / 20;
+    cursorObject.position.y += yDiff / 20;
   });
 
   return (

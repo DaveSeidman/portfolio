@@ -37,7 +37,7 @@ html, body {
   color: $white;
   font-family: 'Roboto'; 
   font-size: 16px;
-  overscroll-behavior-x: none;
+  overscroll-behavior: none;
 }
 
 p, a {
@@ -69,7 +69,7 @@ button {
     position: absolute;
     font-size: 0;
     inset: 0;
-    touch-action: none;
+    will-change: transform;
 
     &-slide {
       position: absolute;
@@ -95,6 +95,7 @@ button {
       &-header {
         margin: 1rem;
         cursor: pointer;
+        touch-action: none;
         -webkit-tap-highlight-color: transparent;
         text-align: center;
 
@@ -118,8 +119,11 @@ button {
         box-shadow:inset;
         line-height: 1.5rem;
         mask-image: linear-gradient(black, black calc(100% - 2rem), transparent);
+        overscroll-behavior-y: contain;
         overflow-x: hidden;
         overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
         transition: height $moves, padding $moves;
         
         img, video {
