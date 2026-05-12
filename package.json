@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "media:sync": "node scripts/sync-project-media.mjs",
+    "media:sync:dry-run": "node scripts/sync-project-media.mjs --dry-run"
   },
   "author": "dave seidman",
   "license": "ISC",

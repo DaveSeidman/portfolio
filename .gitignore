@@ -13,4 +13,8 @@ public/videos/*
 !public/videos/*.gif
 !public/videos/*.webp
 
+src/content/projects/**/media/*.mp4
+src/content/projects/**/media/*.mov
+src/content/projects/**/media/*.webm
+
 .DS_Store

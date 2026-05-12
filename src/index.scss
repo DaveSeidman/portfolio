@@ -36,7 +36,7 @@ html, body {
   color: $white;
   color: $white;
   font-family: 'Roboto'; 
-  font-size: 16px;
+  font-size: 17px;
   overscroll-behavior: none;
 }
 
@@ -277,12 +277,12 @@ button {
 
 @media (max-height: $minHeight) {
   html, body {
-    font-size: 10px;
+    font-size: 11px;
   }
 }
 // TODO: Shouldn't need this but it isn't always resetting on ios safari
 @media (min-height: $minHeight) {
   html, body {
-    font-size: 16px;
+    font-size: 17px;
   }
 }

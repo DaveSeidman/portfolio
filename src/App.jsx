@@ -6,7 +6,7 @@ import Analytics from 'analytics';
 import googleAnalytics from '@analytics/google-analytics';
 import Scene from './components/scene';
 import Carousel from './components/carousel';
-import { projects } from './projects.json';
+import { projects } from './content/projects';
 
 import './index.scss';
 
