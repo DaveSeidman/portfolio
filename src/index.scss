@@ -122,9 +122,17 @@ button {
         overscroll-behavior-y: contain;
         overflow-x: hidden;
         overflow-y: auto;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
         touch-action: pan-y;
         transition: height $moves, padding $moves;
+
+        &::-webkit-scrollbar {
+          display: none;
+          width: 0;
+          height: 0;
+        }
         
         img, video {
           width: 100%;
