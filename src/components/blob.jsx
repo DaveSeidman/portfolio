@@ -105,8 +105,8 @@ function Blob(props) {
         transmission={0.97}
         roughness={0.3}
         thickness={10}
-        resolution={128}
-        samples={4}
+        resolution={512}
+        samples={6}
         ior={1.5}
         reflectivity={0.01}
         color={0x777777}
